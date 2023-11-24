@@ -1,9 +1,11 @@
+import {OrderWrite} from "./page/OrderWrite";
+import {ChakraProvider} from "@chakra-ui/react";
 
 function App() {
   return (
-    <div>
-     hello
-    </div>
+    <ChakraProvider>
+    <OrderWrite/>
+    </ChakraProvider>
   );
 }
 
