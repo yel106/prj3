@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function MemberSignup() {
   const [logId, setLogId] = useState("");
@@ -29,7 +29,12 @@ export function MemberSignup() {
   const [role, setRole] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
-
+  const [emailAvailable, setEmailAvailable] = useState(false);
+  let sameOriginEmail = false;
+  let emailChecked = sameOriginEmail || emailAvailable;
+  const [idAvailable, setIdAvailable] = useState(false);
+  let sameOriginId = false;
+  let idChecked = sameOriginId || idAvailable;
   function handleSubmit() {
     axios
       .post("/member/add", {
@@ -68,6 +73,55 @@ export function MemberSignup() {
       })
       .finally(() => console.log("done"));
   }
+  function handleEmailCheck() {
+    const params = new URLSearchParams();
+    params.set("email", email);
+    axios
+      .get("/member/check", {
+        params: params,
+      })
+      .then(() => {
+        setEmailAvailable(false);
+        toast({
+          description: "이미 사용 중인 email입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          setEmailAvailable(true);
+          toast({
+            description: "사용 가능한 email입니다.",
+            status: "success",
+          });
+        }
+      });
+  }
+
+  function handleIdCheck() {
+    const params = new URLSearchParams();
+    params.set("logId", logId);
+    axios
+      .get("/member/check", {
+        params: params,
+      })
+      .then(() => {
+        setIdAvailable(false);
+        toast({
+          description: "이미 사용 중인 Id입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          setIdAvailable(true);
+          toast({
+            description: "사용 가능한 Id입니다.",
+            status: "success",
+          });
+        }
+      });
+  }
 
   return (
     <Box>
@@ -83,8 +137,12 @@ export function MemberSignup() {
                 value={logId}
                 onChange={(e) => {
                   setLogId(e.target.value);
+                  setIdAvailable(false);
                 }}
               />
+              <Button isDisabled={idChecked} onClick={handleIdCheck}>
+                중복확인
+              </Button>
             </Flex>
           </FormControl>
           <FormControl>
@@ -104,8 +162,12 @@ export function MemberSignup() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  setEmailAvailable(false);
                 }}
               />
+              <Button isDisabled={emailChecked} onClick={handleEmailCheck}>
+                중복확인
+              </Button>
             </Flex>
           </FormControl>
           <FormControl>

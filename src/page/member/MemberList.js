@@ -1,5 +1,8 @@
 import {
   Box,
+  Button,
+  ButtonGroup,
+  Center,
   list,
   Spinner,
   Table,
@@ -16,9 +19,17 @@ import axios from "axios";
 export function MemberList() {
   const [list, setList] = useState(null);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호 (0부터 시작)
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+  const itemsPerPage = 20; // 페이지당 항목 수
   useEffect(() => {
-    axios.get("/member/list").then((response) => setList(response.data));
-  }, []);
+    axios
+      .get(`/member/list?page=${currentPage}&size=${itemsPerPage}`)
+      .then((response) => {
+        setList(response.data.content);
+        setTotalPages(response.data.totalPages);
+      });
+  }, [currentPage]);
   if (list === null) {
     return <Spinner />;
   }
@@ -26,6 +37,27 @@ export function MemberList() {
     const params = new URLSearchParams();
     params.set("id", id);
     navigate("/member?" + params.toString());
+  }
+  function handlePreviousPage() {
+    setCurrentPage((prev) => Math.max(prev - 1, 0));
+  }
+
+  function handleNextPage() {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
+  }
+
+  // 페이지 번호 버튼 생성
+  const pageButtons = [];
+  for (let i = 0; i < totalPages; i++) {
+    pageButtons.push(
+      <Button
+        key={i}
+        onClick={() => setCurrentPage(i)}
+        colorScheme={i === currentPage ? "blue" : "gray"}
+      >
+        {i + 1}
+      </Button>,
+    );
   }
   return (
     <Box>
@@ -61,6 +93,20 @@ export function MemberList() {
           ))}
         </Tbody>
       </Table>
+      <Center>
+        <ButtonGroup>
+          <Button onClick={handlePreviousPage} disabled={currentPage === 0}>
+            이전
+          </Button>
+          {pageButtons}
+          <Button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+          >
+            다음
+          </Button>
+        </ButtonGroup>
+      </Center>
     </Box>
   );
 }
