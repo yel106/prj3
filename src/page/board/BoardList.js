@@ -26,14 +26,14 @@ export function BoardList(props) {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     axios
       .get(`/api/board/list?page=${currentPage}&size=${itemsPerPage}`)
       .then((response) => {
         setBoardList(response.data.content);
-        setTotalPage(response.data.totalPage);
+        setTotalPage(response.data.totalPages);
         console.log(response.data.content);
       });
   }, [currentPage]);
