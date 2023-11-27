@@ -61,6 +61,7 @@ export function NavBar(props) {
       </Button>
       <Button
         variant="ghost"
+        size="lg"
         _hover={{ bg: "none" }}
         onClick={() => navigate("/login")}
         leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
@@ -69,6 +70,7 @@ export function NavBar(props) {
       </Button>
       <Button
         variant="ghost"
+        size="lg"
         _hover={{ bg: "none" }}
         onClick={handleLogout}
         leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
