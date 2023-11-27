@@ -1,13 +1,15 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Flex } from "@chakra-ui/react";
+import {Button, Flex, useToast} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {faRightFromBracket, faRightToBracket, faUser, faUserPlus, faUsers} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function NavBar(props) {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams();
   const location = useLocation();
+  const toast = useToast();
 
   function handleLogout() {
     axios
