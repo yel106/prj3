@@ -28,6 +28,7 @@ export function BoardWrite() {
   function handleSubmit() {
     setIsSubmitting(true);
 
+    /* TODO: 이미지 파일 postForm */
     axios
       .post("/api/board/add", {
         title,
