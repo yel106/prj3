@@ -4,10 +4,10 @@ import React from "react";
 import { NavBar } from "../component/NavBar";
 
 export function HomeLayout() {
-    return (
-        <Box>
-            <NavBar />
-            <Outlet />
-        </Box>
-    );
+  return (
+    <Box>
+      <NavBar />
+      <Outlet />
+    </Box>
+  );
 }

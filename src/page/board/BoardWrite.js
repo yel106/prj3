@@ -25,6 +25,7 @@ export function BoardWrite() {
 
   const toast = useToast();
   const navigate = useNavigate();
+
   function handleSubmit() {
     setIsSubmitting(true);
 

@@ -20,7 +20,7 @@ export function BoardEdit() {
   // /edit/:id
   const { id } = useParams();
 
-  //먼저 조회함. updateBoard로 응답 받아옴
+  //먼저 조회함.  updateBoard로 응답 받아옴
   useEffect(() => {
     axios
       .get("/api/board/id/" + id)

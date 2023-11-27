@@ -2,32 +2,15 @@ import { Button, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export function NavBar() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <Flex>
-            <Button onClick={() => navigate("/")}>Records Home</Button>
-            <Button onClick={() => navigate("/write")}>앨범 등록</Button>
-        </Flex>
-    );
+  return (
+    <Flex>
+      <Button onClick={() => navigate("/")}>Records Home</Button>
+      <Button onClick={() => navigate("/write")}>앨범 등록</Button>
+    </Flex>
+  );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { Button, Flex, Spacer, useToast } from "@chakra-ui/react";
 // import { useLocation, useNavigate } from "react-router-dom";
