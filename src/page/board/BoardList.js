@@ -4,39 +4,85 @@ import {
   Button,
   ButtonGroup,
   Center,
+  Flex,
+  Input,
+  Select,
   Spinner,
   Table,
   Tbody,
   Td,
+  Textarea,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
+//검색 관련 컴포넌트
+function Search() {
+  const [keyword, setKeyword] = useState("");
+  const [category, setCategory] = useState("all");
+  const navigate = useNavigate();
+  const params = new URLSearchParams();
+
+  function handleSearch() {
+    params.set("k", keyword);
+    params.set("c", category);
+    navigate("/?" + params);
+  }
+  return (
+    <Flex gap={1} mt={3} mb={10}>
+      <Box>
+        <Select
+          defaultValue="all"
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">상품 분류 선택</option>
+          <option value="itemCD">CD</option>
+          <option value="itemVinyl">vinyl</option>
+          <option value="itemCassette">cassette</option>
+        </Select>
+      </Box>
+      <Box>
+        <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+      </Box>
+      <Button onClick={handleSearch}>
+        <FontAwesomeIcon icon={faSearch} />
+      </Button>
+    </Flex>
+  );
+}
 export function BoardList(props) {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
+    const category = params.get("c");
+    const keyword = params.get("k");
+
     axios
-      .get(`/api/board/list?page=${currentPage}&size=${itemsPerPage}`)
+      .get(
+        `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&k=${keyword}`,
+      )
       .then((response) => {
         setBoardList(response.data.content);
         setTotalPage(response.data.totalPages);
         console.log(response.data.content);
       });
-  }, [currentPage]);
+  }, [currentPage, location.search]); //현재 페이지와 변경될 때마다 실행
 
   if (boardList === null) {
     return <Spinner />;
@@ -48,7 +94,7 @@ export function BoardList(props) {
       <Button
         key={i}
         onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "pink" : "white"}
+        colorScheme={i === currentPage ? "pink" : "gray"}
       >
         {i + 1}
       </Button>,
@@ -66,6 +112,7 @@ export function BoardList(props) {
   return (
     <Box>
       <h1>Album list</h1>
+      <Search /> {/* 검색 컴포넌트*/}
       <Table>
         <Thead>
           <Tr>
@@ -91,7 +138,6 @@ export function BoardList(props) {
           ))}
         </Tbody>
       </Table>
-
       <Center>
         <ButtonGroup>
           <Button onClick={handlePreviousPage} disable={currentPage === 0}>
