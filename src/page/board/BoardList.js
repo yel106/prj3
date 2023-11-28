@@ -28,14 +28,14 @@ import {
 //검색 관련 컴포넌트
 function Search() {
   const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState("");
   const navigate = useNavigate();
-  const params = new URLSearchParams();
 
   function handleSearch() {
+    const params = new URLSearchParams();
     params.set("k", keyword);
     params.set("c", category);
-    navigate("/?" + params);
+    navigate("/" + params);
   }
   return (
     <Flex gap={1} mt={3} mb={10}>
@@ -45,9 +45,9 @@ function Search() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="all">상품 분류 선택</option>
-          <option value="itemCD">CD</option>
-          <option value="itemVinyl">vinyl</option>
-          <option value="itemCassette">cassette</option>
+          <option value="CD">CD</option>
+          {/*<option value="item">vinyl</option>*/}
+          {/*<option value="item">cassette</option>*/}
         </Select>
       </Box>
       <Box>
@@ -70,8 +70,8 @@ export function BoardList(props) {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
-    const category = params.get("c");
     const keyword = params.get("k");
+    const category = params.get("c");
 
     axios
       .get(
@@ -80,7 +80,6 @@ export function BoardList(props) {
       .then((response) => {
         setBoardList(response.data.content);
         setTotalPage(response.data.totalPages);
-        console.log(response.data.content);
       });
   }, [currentPage, location.search]); //현재 페이지와 변경될 때마다 실행
 
