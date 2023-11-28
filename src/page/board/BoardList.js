@@ -129,13 +129,14 @@ export function BoardList(props) {
               key={board.id}
               onClick={() => navigate("/board/" + board.id)}
             >
-              <Td>{/*<Image wit />*/}</Td>
+              <Td>{/* TODO: 앨범 이미지 */}</Td>
               <Td>{board.title}</Td>
               <Td>{board.price}</Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
+
       <Center>
         <ButtonGroup>
           <Button onClick={handlePreviousPage} disable={currentPage === 0}>
