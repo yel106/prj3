@@ -11,13 +11,12 @@ import {
   Table,
   Tbody,
   Td,
-  Textarea,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -35,7 +34,7 @@ function Search() {
     const params = new URLSearchParams();
     params.set("k", keyword);
     params.set("c", category);
-    navigate("/" + params);
+    navigate("/?" + params);
   }
   return (
     <Flex gap={1} mt={3} mb={10}>
@@ -127,7 +126,7 @@ export function BoardList(props) {
               _hover={{
                 cursor: "pointer",
               }}
-              key={board.title}
+              key={board.id}
               onClick={() => navigate("/board/" + board.id)}
             >
               <Td>{/* TODO: 앨범 이미지 */}</Td>
