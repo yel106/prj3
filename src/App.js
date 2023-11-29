@@ -9,6 +9,10 @@ import { HomeLayout } from "./page/layout/HomeLayout";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberList } from "./page/member/MemberList";
+import { OrderWrite } from "./page/order/OrderWrite";
+import Payment from "./page/payment/Payment";
+import { Success } from "./page/payment/Success";
+import { Fail } from "./page/payment/Fail";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +25,10 @@ const routes = createBrowserRouter(
       <Route path="member/list" element={<MemberList />} />
       <Route path="member" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
+      <Route path="order" element={<OrderWrite />} />
+      <Route path="payment" element={<Payment />} />
+      <Route path="success" element={<Success />} />
+      <Route path="fail" element={<Fail />} />
       {/*<Route path="login" element={<MemberLogin />} />*/}
     </Route>,
   ),
