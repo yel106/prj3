@@ -36,27 +36,27 @@ export function NavBar(props) {
         borderRadius={0}
         variant="ghost"
         size="lg"
+        leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
         onClick={() => navigate("/signup")}
       >
-        <FontAwesomeIcon icon={faUserPlus} />
-        sign up
+        회원가입
       </Button>
       <Button
         borderRadius={0}
         variant="ghost"
         size="lg"
+        leftIcon={<FontAwesomeIcon icon={faUser} />}
         onClick={() => navigate("/member?" + urlParams.toString())}
       >
-        <FontAwesomeIcon icon={faUser} />
         회원정보
       </Button>
       <Button
         borderRadius={0}
         variant="ghost"
         size="lg"
+        leftIcon={<FontAwesomeIcon icon={faUsers} />}
         onClick={() => navigate("/member/list")}
       >
-        <FontAwesomeIcon icon={faUsers} />
         회원목록
       </Button>
       <Button
