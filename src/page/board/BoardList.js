@@ -129,7 +129,7 @@ export function BoardList(props) {
               key={board.id}
               onClick={() => navigate("/board/" + board.id)}
             >
-              <Td>{/* TODO: 앨범 이미지 */}</Td>
+              <Td>{/*<Image wit />*/}</Td>
               <Td>{board.title}</Td>
               <Td>{board.price}</Td>
             </Tr>
