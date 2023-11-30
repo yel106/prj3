@@ -68,15 +68,19 @@ export function BoardWrite() {
             <CardBody>
                 {/*//////////////////////////////*/}
                 <FormControl mb={5}>
-                    <FormLabel>앨범 이미지</FormLabel>
-                    <Input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={(e) => setUploadFiles(e.target.files)}
-                    />
-                    <FormHelperText>
-                        한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
+                    {/*<FormLabel>앨범 이미지 URL</FormLabel>*/}
+                    {/*<Input*/}
+                    {/*    type="file"*/}
+                    {/*    accept="image/*"*/}
+                    {/*    multiple*/}
+                    {/*    onChange={(e) => setUploadFiles(e.target.files)}*/}
+                    {/*/>*/}
+                    {/*-------위 코드는 이미지 파일 저장 형식의 코드, 아래 주석처리된 코드는 이미지url저장 방식 - 백엔드도 수정해야 하므로 주석 처리 -jeon602*/}
+                    {/*<Input value={imageURl}*/}
+                    {/*onChange={(e)=> setImageURL(e.target.value)}*/}
+                    {/*placeholder="이미지 url을 입력하세요"></Input>*/}
+                    <FormHelperText color="red">
+                        한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
                     </FormHelperText>
                 </FormControl>
 
