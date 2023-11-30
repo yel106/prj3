@@ -11,13 +11,13 @@ export function MemberLogin() {
 
   function handleLogin() {
     axios
-      .post("/api/member/login", {id, password})
+      .post("/login", {logId: id, password})
       .then(() => {
         toast({
           description: "로그인 되었습니다.",
           status: "success",
         });
-        navigate("/");
+        // navigate("/");
       })
       .catch(() => {
         toast({
