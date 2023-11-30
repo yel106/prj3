@@ -68,7 +68,7 @@ export function MemberLogin() {
     console.log("구글 로그인");
   }
 
-  if(imagePrefix == "") {
+  if(imagePrefix === "") {
     return <Spinner />;
   }
 
