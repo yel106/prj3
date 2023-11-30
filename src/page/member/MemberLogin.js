@@ -50,7 +50,14 @@ export function MemberLogin() {
   }
 
   function handleKakaoLogin() {
-    console.log("카카오 로그인");
+    axios
+      .get("/api/login/kakaoPage")
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data;
+      })
+      .catch((error) => console.log(error))
+      .finally(() => console.log("카카오 로그인"));
   }
 
   function handleNaverLogin() {
