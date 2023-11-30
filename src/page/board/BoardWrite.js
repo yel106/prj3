@@ -20,7 +20,7 @@ export function BoardWrite() {
     const [title, setTitle] = useState("");
     const [artist, setArtist] = useState("");
     const [releaseDate, setReleaseDate] = useState("");
-    const [format, setFormat] = useState("");
+    const [albumFormat, setAlbumFormat] = useState("");
     const [agency, setAgency] = useState("");
     const [price, setPrice] = useState("");
     const [uploadFiles, setUploadFiles] = useState(null);
@@ -34,7 +34,7 @@ export function BoardWrite() {
 
         axios
             .postForm("/api/board/add", {
-                title, price, uploadFiles,
+                uploadFiles,title, artist,albumFormat, releaseDate,agency,price
             })
             .then(() => {
                 toast({
@@ -95,8 +95,8 @@ export function BoardWrite() {
                 <FormControl mt={4}>
                     <FormLabel>Album Format</FormLabel>
                     <Select
-                        value={format}
-                        onChange={(e) => setFormat(e.target.value)}
+                        value={albumFormat}
+                        onChange={(e) => setAlbumFormat(e.target.value)}
                         placeholder="앨범 포맷을 선택하세요"
                     >
                         <option value="CD">CD</option>
