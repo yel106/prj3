@@ -59,12 +59,12 @@ export function BoardView() {
     <Box>
       <p>No.{board.id}</p>
       <p>앨범 타이틀: {board.title}</p>
-      <p>가격: {board.price}</p>
+      <p>앨범 가격: {board.price}</p>
 
-      <Button colorScheme="blue" onClick={() => navigate("/edit/" + id)}>
+      <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
         수정
       </Button>
-      <Button colorScheme="red" onClick={onOpen}>
+      <Button colorScheme="orange" onClick={onOpen}>
         삭제
       </Button>
 

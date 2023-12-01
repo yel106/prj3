@@ -31,13 +31,13 @@ export function BoardEdit() {
     return <Spinner />;
   }
 
-  //값 변경
+  //타이틀 수정
   function handleTitleEdit(e) {
     updateBoard((draft) => {
       draft.title = e.target.value;
     });
   }
-
+//가격 수정
   function handlePriceEdit(e) {
     updateBoard((draft) => {
       draft.price = e.target.value;
@@ -63,7 +63,7 @@ export function BoardEdit() {
         }),
       );
   }
-
+  //등록된 상품 수정 폼
   return (
     <Box>
       <h1>No.{id} 앨범 수정</h1>
@@ -74,9 +74,9 @@ export function BoardEdit() {
         <FormLabel>앨범 타이틀</FormLabel>
         <Input value={board.title} onChange={handleTitleEdit} />
       </FormControl>
-      <br />
+
       <FormControl>
-        <FormLabel>가격</FormLabel>
+        <FormLabel>앨범 가격</FormLabel>
         <Input value={board.price} onChange={handlePriceEdit} />
       </FormControl>
 

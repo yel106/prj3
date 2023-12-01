@@ -29,5 +29,4 @@ function App(props) {
     // </LoginProvider>
   );
 }
-
 export default App;
