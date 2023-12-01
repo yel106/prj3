@@ -16,8 +16,9 @@ const routes = createBrowserRouter(
     <Route path="/" element={<HomeLayout />}>
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
-      <Route path="board/:id" element={<BoardView />} />
-      <Route path="edit/:id" element={<BoardEdit />}></Route>
+      <Route path="board/:id" element={<BoardView />} />{" "}
+      {/*id는 useParams() 사용*/}
+      <Route path="edit/:id" element={<BoardEdit />} />
     </Route>,
   ),
 );

@@ -15,6 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import Comment from "../../component/Comment";
 
 export function BoardView() {
   const { id } = useParams();
@@ -84,6 +85,8 @@ export function BoardView() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      {/* 댓글 */}
+      <Comment boardId={id} />
     </Box>
   );
 }
