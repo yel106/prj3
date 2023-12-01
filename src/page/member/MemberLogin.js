@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {
   Box,
   Button,
@@ -34,12 +34,12 @@ export function MemberLogin() {
   function handleLogin() {
     axios
       .post("/login", {logId: id, password})
-      .then(() => {
+      .then((response) => {
+        localStorage.setItem("accessToken", response.data.accessToken)
         toast({
           description: "로그인 되었습니다.",
           status: "success",
         });
-        // navigate("/");
       })
       .catch(() => {
         toast({

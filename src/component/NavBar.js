@@ -11,6 +11,7 @@ import {
   faUserPlus,
   faUsers
 } from "@fortawesome/free-solid-svg-icons";
+import {LoginContext} from "./LogInProvider";
 
 export function NavBar() {
   const {fetchLogin, login, isAuthenticated, isAdmin} = useContext(LoginContext);
@@ -23,7 +24,7 @@ export function NavBar() {
   }, [location]);
 
   if (login !== "") {
-    urlParams.set("id", login.id);
+    urlParams.set("id", login.logId);
   }
 
   function handleLogout() {

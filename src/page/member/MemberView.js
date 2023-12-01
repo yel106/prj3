@@ -26,16 +26,18 @@ export function MemberView() {
   const navigate = useNavigate();
   const toast = useToast();
   useEffect(() => {
-    axios
-      .get("/member/" + 1)
-      .then((response) => setMember(response.data))
-      .catch((error) => {
-        navigate("/login");
-        toast({
-          description: "권한이 없습니다",
-          status: "warning",
+    const token= localStorage.getItem("accessToken");
+    console.log(token);
+      axios
+        .get("/member",{headers:{Authorization: `Bearer ${token}`}})
+        .then((response) => setMember(response.data))
+        .catch((error) => {
+          // navigate("/login");
+          toast({
+            description: "권한이 없습니다",
+            status: "warning",
+          });
         });
-      });
   }, []);
   if (member === null) {
     return <Spinner />;
