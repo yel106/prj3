@@ -61,7 +61,13 @@ export function MemberLogin() {
   }
 
   function handleNaverLogin() {
-    console.log("네이버 로그인");
+    axios.get("/api/login/naverPage")
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data;
+      })
+      .catch((error) => console.log(error))
+      .finally(()=> console.log("네이버 로그인"));
   }
 
   function handleGoogleLogin() {
