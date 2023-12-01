@@ -10,7 +10,7 @@ import {
     FormHelperText,
     FormLabel,
     Heading,
-    Input, Select,
+    Input, InputGroup, InputLeftAddon, InputRightAddon, InputRightElement, Select,
     useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -131,17 +131,32 @@ export function BoardWrite() {
                 </FormControl>
 
 
-                {/*-----------------------------------*/}
-                <FormControl mb={5}>
-                    <FormLabel>Price</FormLabel>
-                    <Input
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        type="number"
-                        min="0"
-                        h={"sm"}/>
-                </FormControl>
+                {/*-------------------------가격 입력란----------*/}
+                {/*<FormControl mb={5}>*/}
+                {/*    <FormLabel>Price</FormLabel>*/}
+                {/*    <Input*/}
+                {/*        value={price}*/}
+                {/*        onChange={(e) => setPrice(e.target.value)}*/}
+                {/*        type="number"*/}
+                {/*        min="0"*/}
+                {/*        h={"sm"}/>*/}
+                {/*</FormControl>*/}
                 {/*===============================================*/}
+
+
+                {/*// 원화 기호를 사용한 가격 입력 폼*/}
+                <FormControl mb={5}>
+                    <FormLabel>가격</FormLabel>
+                    <InputGroup>
+                        <InputRightAddon children="₩" />
+                        <Input
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                          type="number"
+                          min="0"
+                        />
+                    </InputGroup>
+                </FormControl>
             </CardBody>
 
             <CardFooter>
