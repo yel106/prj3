@@ -18,7 +18,7 @@ import axios from "axios";
 import Comment from "../../component/Comment";
 
 export function BoardView() {
-  const { id } = useParams();
+  const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
   const [board, setBoard] = useState(null);
 
   const toast = useToast();
