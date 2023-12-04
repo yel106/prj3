@@ -59,10 +59,10 @@ export function MemberLogin() {
   }
 
   function handleSocialLogin(socialLoginType) {
-    axios.get(`/api/login/${socialLoginType}`)
+    axios.get(`/api/auth/${socialLoginType}`)
       .then((response) => {
         console.log(response.data);
-        window.location.href = response.data;
+        // window.location.href = response.data;
       })
       .catch((error) => console.log(error))
       .finally(() => console.log(`${socialLoginType} 로그인`));
