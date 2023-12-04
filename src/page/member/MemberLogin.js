@@ -19,6 +19,7 @@ export function MemberLogin() {
   const toast = useToast();
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchImagePrefix = async () => {
       try {
@@ -49,33 +50,22 @@ export function MemberLogin() {
       });
   }
 
-  function handleKakaoLogin() {
-    axios
-      .get("/api/login/kakaoPage")
-      .then((response) => {
-        console.log(response.data);
-        window.location.href = response.data;
-      })
-      .catch((error) => console.log(error))
-      .finally(() => console.log("카카오 로그인"));
-  }
-
-  function handleNaverLogin() {
-    axios.get("/api/login/naverPage")
-      .then((response) => {
-        console.log(response.data);
-        window.location.href = response.data;
-      })
-      .catch((error) => console.log(error))
-      .finally(()=> console.log("네이버 로그인"));
-  }
-
   function handleGoogleLogin() {
     console.log("구글 로그인");
   }
 
   if(imagePrefix === "") {
     return <Spinner />;
+  }
+
+  function handleSocialLogin(socialLoginType) {
+    axios.get(`/api/login/${socialLoginType}Page`)
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data;
+      })
+      .catch((error) => console.log(error))
+      .finally(() => console.log(`${socialLoginType} 로그인`));
   }
 
   return (
@@ -108,7 +98,7 @@ export function MemberLogin() {
             width: '183px',
             height: '45px',
           }}
-          onClick={handleKakaoLogin}
+          onClick={handleSocialLogin("kakao")}
         />
         <Button
           style={{
@@ -117,7 +107,7 @@ export function MemberLogin() {
             height: '45px',
             backgroundSize: '183px 45px',
           }}
-          onClick={handleNaverLogin}
+          onClick={handleSocialLogin("naver")}
         />
         <Button
           backgroundColor="#FFF"
@@ -133,7 +123,7 @@ export function MemberLogin() {
               src={`${imagePrefix}%EA%B5%AC%EA%B8%80+%EB%A1%9C%EA%B3%A0.png`}
             />
           }
-          onClick={handleGoogleLogin}
+          onClick={handleSocialLogin("google")}
           fontFamily="Roboto"
           fontWeight="500"
         >
