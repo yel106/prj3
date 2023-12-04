@@ -1,3 +1,4 @@
+//  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
 import React, {useEffect, useState} from "react";
 import {
   Box,
@@ -7,19 +8,15 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
-  Flex,
+  Center, Container,
+  Flex, Grid,
   Heading,
   Image,
   Input,
   Select,
   SimpleGrid,
   Spinner,
-  Table,
   Text,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -50,39 +47,66 @@ function Search() {
   }
 
   return (
-    <Flex gap={1} mt={3} mb={10}>
-      <Box>
-        <Select
-          defaultValue="all"
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="all">상품 분류 선택</option>
-          <option value="CD">CD</option>
-          <option value="VINYL">VINYL</option>
-          <option value="CASSETTETAPE">CASSETTE_TAPE</option>
-        </Select>
-      </Box>
-      <Box>
-        <Input value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
-      </Box>
-      <Button onClick={handleSearch}>
-        <FontAwesomeIcon icon={faSearch}/>
-      </Button>
-    </Flex>
+    <Center>
+
+      <Container marginLeft="20">
+        <Grid templateColumns='repeat(5, 1fr)' gap={6}>
+          <Button w='100%' h='30' bg='blue.100'>
+            CD
+          </Button>
+          <Button w='100%' h='30' bg='blue.100'>
+            VINYL
+          </Button>
+          <Button w='200%' h='30' bg='blue.100'>
+            CASSETTE_TAPE
+          </Button>
+        </Grid>
+      </Container>
+
+
+      <Flex gap={2} mt={3} mb={10}>
+        <Box>
+          <Select
+            defaultValue="all"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="all">상품 분류 선택</option>
+            <option value="CD">CD</option>
+            <option value="VINYL">VINYL</option>
+            <option value="CASSETTETAPE">CASSETTE_TAPE</option>
+          </Select>
+        </Box>
+        <Box>
+          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+        </Box>
+        <Button onClick={handleSearch}>
+          <FontAwesomeIcon icon={faSearch}/>
+        </Button>
+      </Flex>
+    </Center>
   );
 }
 
 
 CardHeader.propTypes = {children: PropTypes.node};
+const ITEM_PER_PAGE = 16;
 
 export function BoardList(props) {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [paginatedData, setPaginatedData] = useState([]);
+  const [paginatedItems, setPaginatedItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
+  useEffect(() => {
+    const startIndex = currentPage * ITEM_PER_PAGE;
+    const endIndex = startIndex + ITEM_PER_PAGE;
+    const paginationItems = boardList.slice(startIndex, endIndex);
+
+    setPaginatedData(paginatedItems);
+  }, [boardList, currentPage]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
@@ -129,44 +153,49 @@ export function BoardList(props) {
       <h1>Album list</h1>
       <Search/> {/* 검색 컴포넌트*/}
       <SimpleGrid
-        border="1px solid red"
+        border="0px solid red"
         placeItems="center"
         templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-        gap={4} // 카드 사이의 간격
+        gap={3} // 카드 사이의 간격
       >
         {boardList.map((board) => (
-          <Card key={board.id} style={{ width: '100%' }}>
+          <Card key={board.id}
+                style={{width: '100%'}}
+                onClick={() => navigate(`/board/${board.id}`)}>
             <CardHeader>
-              <Image
-                src={board.imageURL}
-                borderRadius="ml"
-                border="1px solid black"
-              />
-                <Heading size='md'>{board.title}</Heading>
-                <Heading size='m'>{board.artist}</Heading>
-                <Heading size='m'>{board.price}</Heading>
-                <Heading size='xs'>{board.releaseDate}</Heading>
-                <Heading size='xs'>{board.albumFormat}</Heading>
-              </CardHeader>
-              <CardBody>
-                <Text>앨범 소개 글</Text>
-              </CardBody>
-              <CardFooter>
-                <ButtonGroup spacing='2'>
-                  <Button variant='solid' colorScheme='blue'>
-                    Wish
-                  </Button>
-                  <Button variant='solid' colorScheme='pink'>
-                    + Cart
-                  </Button>
-                </ButtonGroup>
-              </CardFooter>
+              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Image
+                  src={board.imageURL}
+                  borderRadius="ml"
+                  border="1px solid black"
+                  style={{width: '200px', height: '200px', objectFit: 'cover'}} // 이미지 크기 및 레이아웃 조정
+                />
+              </div>
+              <Heading size='md'>{board.title}</Heading>
+              <Heading size='m'>{board.artist}</Heading>
+              <Heading size='m'>{board.price}</Heading>
+              <Heading size='s'>{board.releaseDate}</Heading>
+              <Heading size='s'>{board.albumFormat}</Heading>
+            </CardHeader>
+            <CardBody>
+              <Text>{board.content}</Text>
+            </CardBody>
+            <CardFooter>
+              <ButtonGroup spacing='2'>
+                {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
+                <Button variant='solid' colorScheme='blue'>
+                  {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
+                  Wish
+                </Button>
+                <Button variant='solid' colorScheme='pink' >
+                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}
+                  + Cart
+                </Button>
+              </ButtonGroup>
+            </CardFooter>
           </Card>
         ))}
       </SimpleGrid>
-
-
-
       {/*-----------------------------------------*/}
       {/*페이지 네이션-------------------------------------------*/}
       <Center>
