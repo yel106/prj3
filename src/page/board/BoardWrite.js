@@ -24,7 +24,6 @@ export function BoardWrite() {
     const [agency, setAgency] = useState("");
     const [content, setContent] = useState("");
     const [price, setPrice] = useState("");
-    const [imageURL, setImageURL] = useState("");
     const [uploadFiles, setUploadFiles] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -36,7 +35,7 @@ export function BoardWrite() {
 
         axios
             .postForm("/api/board/add", {
-                uploadFiles,title, artist, albumFormat, releaseDate,agency, price, imageURL,content
+                uploadFiles,title, artist, albumFormat, releaseDate,agency, price,content
             })
             .then(() => {
                 toast({
@@ -80,9 +79,12 @@ export function BoardWrite() {
                     {/*/>*/}
                     {/*-------위 코드는 이미지 파일 저장 형식의 코드, 아래 주석처리된 코드는 이미지url저장 방식 - 백엔드도 수정해야 하므로 주석 처리 -jeon602*/}
                     <FormLabel>Album Image</FormLabel>
-                    <Input value={imageURl}
-                    onChange={(e)=> setImageURL(e.target.value)}
-                    placeholder="이미지 url을 입력하세요"></Input>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e)=> setUploadFiles(e.target.files)}
+                      placeholder="이미지 url을 입력하세요"></Input>
                     <FormHelperText color="red">
                         한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
                     </FormHelperText>
