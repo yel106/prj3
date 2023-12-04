@@ -59,7 +59,7 @@ export function MemberLogin() {
   }
 
   function handleSocialLogin(socialLoginType) {
-    axios.get(`/api/login/${socialLoginType}Page`)
+    axios.get(`/api/login/${socialLoginType}`)
       .then((response) => {
         console.log(response.data);
         window.location.href = response.data;
