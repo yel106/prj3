@@ -63,10 +63,9 @@ export function BoardView() {
 
   return (
     <Center>
-    <Box>
+    <Box border="2px solid black" w="95%" h="90%">
       <Image
         src={board.imageURL}
-        borderRadius="ml"
         border="1px solid black"
       />
       <Heading size='md'>Title : {board.title}</Heading>
@@ -77,8 +76,8 @@ export function BoardView() {
       <Heading size='m'>Album Price : {board.price}</Heading>
       <Heading size='s'>Album ReleaseDate : {board.releaseDate}</Heading>
       <Heading size='s'>Album Format : {board.albumFormat}</Heading>
-      <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>수정</Button>
-      <Button colorScheme="orange" onClick={onOpen}>삭제</Button>
+      <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>edit</Button>
+      <Button colorScheme="orange" onClick={onOpen}>delete</Button>
 
 
       {/* 삭제 모달 */}

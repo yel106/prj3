@@ -1,4 +1,16 @@
-import {Box, Button, FormControl, FormLabel, Input, Spinner, useToast, Text, Image, Container} from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Spinner,
+  useToast,
+  Text,
+  Image,
+  Container,
+  FormHelperText
+} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
@@ -6,14 +18,19 @@ import axios from "axios";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
-  const navigate = useNavigate();
-  const toast = useToast();
+
   // /edit/:id
   const { id } = useParams();
   const [imageURL, setImageURL] = useState('');
   const [previousImageURL, setPreviousImageURL] = useState('');
   const handleImageUpload=()=>{setPreviousImageURL(imageURL);};
   //먼저 조회함.  updateBoard로 응답 받아옴
+  const navigate = useNavigate();
+  const toast = useToast();
+
+
+
+
   useEffect(() => {
     axios
       .get("/api/board/id/" + id)
@@ -95,7 +112,6 @@ export function BoardEdit() {
       <h1>No.{id} Edit </h1>
       <br />
 
-
       <FormControl>
         <FormLabel>Album Title</FormLabel>
         <Input value={board.title} onChange={handleTitleEdit} />
@@ -119,8 +135,12 @@ export function BoardEdit() {
 
         <Input
           value={imageURL}
-               onchange={(e) => setImageURL(e.target.value)}
-               placeholder="수정하려는 이미지URL을 입력해주세요 "/>
+          onchange={(e) => setImageURL(e.target.value)}
+          placeholder="수정하려는 이미지URL을 입력해주세요 "/>
+        <br/>
+        <FormHelperText color="red.200">
+          한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
+        </FormHelperText>
         {/*<Button onClick={handleImageUpload}>Image Update</Button> ----> ????*/}
       </FormControl>
 
