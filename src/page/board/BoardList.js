@@ -29,6 +29,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
+import category_CD from "../item/Category_CD";
 
 //검색 관련 컴포넌트
 function Search() {
@@ -162,7 +163,7 @@ export function BoardList(props) {
       >
         {boardList.map((board) => (
           <Card
-            border="1px solid black"
+            border="0px solid black"
             key={board.fileUrl}
             style={{ width: "100%" }}
             onClick={() => navigate(`/board/${board.id}`)}
@@ -181,7 +182,7 @@ export function BoardList(props) {
                       key={index}
                       src={url}
                       borderRadius="ml"
-                      border="1px solid black"
+                      border="0px solid black"
                       style={{
                         width: "200px",
                         height: "200px",
@@ -190,6 +191,7 @@ export function BoardList(props) {
                     />
                   ))}
               </div>
+              <br/>
               <Heading size="md">{board.title}</Heading>
               <Heading size="m">{board.artist}</Heading>
               <Heading size="m">{board.price}</Heading>

@@ -25,13 +25,13 @@ import {
 import axios from "axios";
 
 export function BoardView() {
-  const { id } = useParams();
+  const {id} = useParams();
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
 
   const toast = useToast();
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {isOpen, onOpen, onClose} = useDisclosure();
 
   useEffect(() => {
     axios
@@ -49,7 +49,7 @@ export function BoardView() {
   }, []);
 
   if (board === null) {
-    return <Spinner />;
+    return <Spinner/>;
   }
 
   function handleDelete() {
@@ -75,13 +75,13 @@ export function BoardView() {
     <Center>
       <Box border="2px solid black" w="95%" h="90%">
         {fileURL.map((url) => (
-          <Image key={url} src={url} border="1px solid black" />
+          <Image key={url} src={url} border="1px solid black"/>
         ))}
         <Heading size="md">Title : {board.title}</Heading>
-        <br />
+        <br/>
         <Heading size="m">Artist : {board.artist}</Heading>
         <Heading size="m">Album Introduction : {board.content}</Heading>
-        <br />
+        <br/>
         <Heading size="m">Album Price : {board.price}</Heading>
         <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
         <Heading size="s">Album Format : {board.albumFormat}</Heading>
@@ -92,22 +92,22 @@ export function BoardView() {
           delete
         </Button>
 
-        {/* 삭제 모달 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalHeader>삭제 확인</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>삭제 하시겠습니까?</ModalBody>
-          <ModalContent>
-            <ModalFooter>
-              <Button onClose={onClose}>닫기</Button>
-              <Button onClick={handleDelete} colorScheme="red">
-                삭제
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+
+  {/* 삭제 모달 */}
+  <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalOverlay/>
+    <ModalHeader>삭제 확인</ModalHeader>
+    <ModalCloseButton/>
+    <ModalBody>삭제 하시겠습니까?</ModalBody>
+    <ModalContent>
+      <ModalFooter>
+        <Button onClose={onClose}>닫기</Button>
+        <Button onClick={handleDelete} colorScheme="red">
+          삭제
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
       </Box>
-    </Center>
-  );
+</Center>);
 }

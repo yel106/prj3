@@ -1,15 +1,13 @@
 import {
-  Box,
   Button,
+  Container,
   FormControl,
+  FormHelperText,
   FormLabel,
+  Image,
   Input,
   Spinner,
-  useToast,
-  Text,
-  Image,
-  Container,
-  FormHelperText
+  useToast
 } from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
@@ -101,6 +99,26 @@ export function BoardEdit() {
         }),
       );
   }
+  function handleDeleteFileUrl() {
+    axios
+      .delete(`/api/board/file/delete/${id}`) // 해당 아이디에 해당하는 fileUrl 삭제 API endpoint를 호출합니다.
+      .then((response) => {
+        toast({
+          description: `ID ${id}의 파일 URL이 성공적으로 삭제되었습니다.`,
+          status: "success",
+        });
+        setFileUrl(''); // fileUrl 상태를 초기화합니다.
+      })
+      .catch((error) => {
+        toast({
+          description: `파일 URL 삭제 중 문제가 발생하였습니다.`,
+          status: "error",
+        });
+      });
+  }
+
+
+
 
 
 
@@ -122,10 +140,13 @@ export function BoardEdit() {
       </FormControl>
 
       {/*----------------이미지 파일 수정 코드 --------------*/}
+      <Button onClick={handleDeleteFileUrl} colorScheme="red">
+        파일 URL 삭제
+      </Button>
       <FormControl>
         <FormLabel>Album Image Update</FormLabel>
-        <Text>Previous Image URL: {board.fileName}</Text>
-        <Text color="red">수정 이전 등록 된 상품의 이미지는 다음과 같습니다.</Text>
+
+
         <Image
           src={board.fileUrl}
           borderRadius="l"
@@ -135,13 +156,12 @@ export function BoardEdit() {
         <Input
           value={fileUrl}
           onchange={(e) => setFileUrl(e.target.value)}
-          onchange={(e) => setFileUrl(e.target.value)}
           placeholder="수정하려는 이미지URL을 입력해주세요 "/>
         <br/>
         <FormHelperText color="red.200">
           한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
         </FormHelperText>
-        <Button onClick={handleFileUrlChange}>Image Update</Button> ----> ????
+
       </FormControl>
 
       <Button onClick={() => navigate(-1)} colorScheme="red">
