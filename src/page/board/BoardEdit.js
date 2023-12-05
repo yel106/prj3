@@ -124,7 +124,7 @@ export function BoardEdit() {
       {/*----------------이미지 파일 수정 코드 --------------*/}
       <FormControl>
         <FormLabel>Album Image Update</FormLabel>
-        <Text>Previous Image URL: {previousFileUrl}</Text>
+        <Text>Previous Image URL: {board.fileName}</Text>
         <Text color="red">수정 이전 등록 된 상품의 이미지는 다음과 같습니다.</Text>
         <Image
           src={board.fileUrl}
