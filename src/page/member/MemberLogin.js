@@ -50,22 +50,20 @@ export function MemberLogin() {
       });
   }
 
-  function handleGoogleLogin() {
-    console.log("구글 로그인");
-  }
-
   if(imagePrefix === "") {
     return <Spinner />;
   }
 
-  function handleSocialLogin(socialLoginType) {
-    axios.get(`/api/auth/${socialLoginType}`)
-      .then((response) => {
-        console.log(response.data);
-        // window.location.href = response.data;
-      })
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`${socialLoginType} 로그인`));
+  const handleSocialLogin = async (socialLoginType) => {
+    try {
+      const response = await axios.get(`/api/auth/${socialLoginType}`);
+      console.log(response.data);
+      // You can perform additional actions with the response if needed
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log(`${socialLoginType} 로그인`);
+    }
   }
 
   return (
@@ -98,7 +96,7 @@ export function MemberLogin() {
             width: '183px',
             height: '45px',
           }}
-          onClick={handleSocialLogin("kakao")}
+          onClick={() => handleSocialLogin("kakao")}
         />
         <Button
           style={{
@@ -107,7 +105,7 @@ export function MemberLogin() {
             height: '45px',
             backgroundSize: '183px 45px',
           }}
-          onClick={handleSocialLogin("naver")}
+          onClick={() => handleSocialLogin("naver")}
         />
         <Button
           backgroundColor="#FFF"
@@ -123,7 +121,7 @@ export function MemberLogin() {
               src={`${imagePrefix}%EA%B5%AC%EA%B8%80+%EB%A1%9C%EA%B3%A0.png`}
             />
           }
-          onClick={handleSocialLogin("google")}
+          onClick={() => handleSocialLogin("google")}
           fontFamily="Roboto"
           fontWeight="500"
         >
