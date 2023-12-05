@@ -18,12 +18,11 @@ import axios from "axios";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
-
   // /edit/:id
   const { id } = useParams();
-  const [imageURL, setImageURL] = useState('');
-  const [previousImageURL, setPreviousImageURL] = useState('');
-  const handleImageUpload=()=>{setPreviousImageURL(imageURL);};
+  const [fileUrl, setFileUrl] = useState('');
+  const [previousFileUrl, setPreviousFileUrl] = useState('');
+  const handleFileUrl=()=>{setPreviousFileUrl(fileUrl);};
   //먼저 조회함.  updateBoard로 응답 받아옴
   const navigate = useNavigate();
   const toast = useToast();
@@ -39,15 +38,15 @@ export function BoardEdit() {
 
   useEffect(() => {
     if (board !== null) {
-      setPreviousImageURL(board.imageURL); // 이전 이미지 URL 설정
+      setPreviousFileUrl(board.id.fileUrl); // 이전 이미지 URL 설정
     }
   }, [board]);
 
   if (board === null) {
     return <Spinner />;
   }
-  function handleImageURLChange(e){
-    setImageURL(e.target.value);
+  function handleFileUrlChange(e){
+    setFileUrl(e.target.value);
   }
 
 
@@ -87,7 +86,7 @@ export function BoardEdit() {
       .put("/api/board/edit/" + id, {
         title: board.title,
         price: board.price,
-        imageURL:board.imageURL, //이미지도 전송
+        fileUrl:board.fileUrl, //이미지도 전송
       })
       .then((response) =>
         toast({
@@ -125,23 +124,24 @@ export function BoardEdit() {
       {/*----------------이미지 파일 수정 코드 --------------*/}
       <FormControl>
         <FormLabel>Album Image Update</FormLabel>
-        {/*<Text>Previous Image URL: {previousImageURL}</Text>*/}
+        <Text>Previous Image URL: {previousFileUrl}</Text>
         <Text color="red">수정 이전 등록 된 상품의 이미지는 다음과 같습니다.</Text>
         <Image
-          src={board.imageURL}
+          src={board.fileUrl}
           borderRadius="l"
           border="0px solid black"
         />
 
         <Input
-          value={imageURL}
-          onchange={(e) => setImageURL(e.target.value)}
+          value={fileUrl}
+          onchange={(e) => setFileUrl(e.target.value)}
+          onchange={(e) => setFileUrl(e.target.value)}
           placeholder="수정하려는 이미지URL을 입력해주세요 "/>
         <br/>
         <FormHelperText color="red.200">
           한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
         </FormHelperText>
-        {/*<Button onClick={handleImageUpload}>Image Update</Button> ----> ????*/}
+        <Button onClick={handleFileUrlChange}>Image Update</Button> ----> ????
       </FormControl>
 
       <Button onClick={() => navigate(-1)} colorScheme="red">

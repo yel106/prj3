@@ -10,7 +10,10 @@ import {
     FormHelperText,
     FormLabel,
     Heading,
-    Input, InputGroup, InputLeftAddon, InputRightAddon, InputRightElement, Select,
+    Input,
+    InputGroup,
+    InputRightAddon,
+    Select,
     useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -24,9 +27,9 @@ export function BoardWrite() {
     const [agency, setAgency] = useState("");
     const [content, setContent] = useState("");
     const [price, setPrice] = useState("");
-    const [uploadFiles, setUploadFiles] = useState(null);
+    // const [uploadFiles, setUploadFiles] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [fileUrl, setFileUrl] = useState(null);
     const toast = useToast();
     const navigate = useNavigate();
 
@@ -35,7 +38,7 @@ export function BoardWrite() {
 
         axios
             .postForm("/api/board/add", {
-                uploadFiles,title, artist, albumFormat, releaseDate,agency, price,content
+             title, artist, albumFormat, releaseDate,agency, price,content,fileUrl
             })
             .then(() => {
                 toast({
@@ -60,7 +63,6 @@ export function BoardWrite() {
             });
     }
 
-    let imageURl;
     return (<Center>
         <Card w={"lg"}>
             <CardHeader>
@@ -83,7 +85,7 @@ export function BoardWrite() {
                       type="file"
                       accept="image/*"
                       multiple
-                      onChange={(e)=> setUploadFiles(e.target.files)}
+                      onChange={(e)=> setFileUrl(e.target.files)}
                       placeholder="이미지 url을 입력하세요"></Input>
                     <FormHelperText color="red">
                         한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
