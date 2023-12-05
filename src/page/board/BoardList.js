@@ -1,5 +1,5 @@
 //  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -21,9 +21,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import {useLocation, useNavigate} from "react-router-dom";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronLeft, faChevronRight, faSearch,} from "@fortawesome/free-solid-svg-icons";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
 
 //검색 관련 컴포넌트
@@ -50,21 +54,19 @@ function Search() {
 
   return (
     <Center>
-
       <Container marginLeft="20">
-        <Grid templateColumns='repeat(5, 1fr)' gap={6}>
-          <Button w='100%' h='30' bg='blue.100'>
+        <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+          <Button w="100%" h="30" bg="blue.100">
             CD
           </Button>
-          <Button w='100%' h='30' bg='blue.100'>
+          <Button w="100%" h="30" bg="blue.100">
             VINYL
           </Button>
-          <Button w='200%' h='30' bg='blue.100'>
+          <Button w="200%" h="30" bg="blue.100">
             CASSETTE_TAPE
           </Button>
         </Grid>
       </Container>
-
 
       <Flex gap={2} mt={3} mb={10}>
         <Box>
@@ -79,18 +81,17 @@ function Search() {
           </Select>
         </Box>
         <Box>
-          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
         </Box>
         <Button onClick={handleSearch}>
-          <FontAwesomeIcon icon={faSearch}/>
+          <FontAwesomeIcon icon={faSearch} />
         </Button>
       </Flex>
     </Center>
   );
 }
 
-
-CardHeader.propTypes = {children: PropTypes.node};
+CardHeader.propTypes = { children: PropTypes.node };
 const ITEM_PER_PAGE = 16;
 
 export function BoardList(props) {
@@ -98,36 +99,34 @@ export function BoardList(props) {
   const navigate = useNavigate();
   const [fileUrl, setFileUrl] = useState();
   const location = useLocation();
-  const [paginatedData, setPaginatedData] = useState([]);
-  const [paginatedItems, setPaginatedItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
-  useEffect(() => {
-    const startIndex = currentPage * ITEM_PER_PAGE;
-    const endIndex = startIndex + ITEM_PER_PAGE;
-    const paginationItems = boardList.slice(startIndex, endIndex);
-
-    setPaginatedData(paginatedItems);
-  }, [boardList, currentPage]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
     const keyword = params.get("k");
     const category = params.get("c");
-
     axios
       .get(
         `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&k=${keyword}`,
       )
       .then((response) => {
-        setBoardList(response.data.content);
+        const boards = response.data.content;
+
+        // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
+        const updatedBoards = boards.map((board) => {
+          // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
+          const fileUrls = board.boardFiles.map((file) => file.fileUrl);
+          return { ...board, fileUrls };
+        });
+        setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
       });
   }, [currentPage, location.search]); //현재 페이지와 변경될 때마다 실행
 
   if (boardList === null) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   const pageButton = [];
@@ -154,7 +153,7 @@ export function BoardList(props) {
   return (
     <Box>
       <h1>Album list</h1>
-      <Search/> {/* 검색 컴포넌트*/}
+      <Search /> {/* 검색 컴포넌트*/}
       <SimpleGrid
         border="1px solid black"
         placeItems="center"
@@ -163,38 +162,52 @@ export function BoardList(props) {
       >
         {boardList.map((board) => (
           <Card
-          border="1px solid black"
+            border="1px solid black"
             key={board.fileUrl}
-                style={{width: '100%'}}
-                onClick={() => navigate(`/board/file/${board.id}`)}>
+            style={{ width: "100%" }}
+            onClick={() => navigate(`/board/${board.id}`)}
+          >
             <CardHeader>
-              <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                  src={board.fileUrl}
-                  borderRadius="ml"
-                  border="1px solid black"
-                  style={{width: '200px', height: '200px', objectFit: 'cover'}} // 이미지 크기 및 레이아웃 조정
-                />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {board.fileUrls &&
+                  board.fileUrls.map((url, index) => (
+                    <Image
+                      key={index}
+                      src={url}
+                      borderRadius="ml"
+                      border="1px solid black"
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ))}
               </div>
-              <Heading size='md'>{board.title}</Heading>
-              <Heading size='m'>{board.artist}</Heading>
-              <Heading size='m'>{board.price}</Heading>
-              <Heading size='s'>{board.releaseDate}</Heading>
-              <Heading size='s'>{board.albumFormat}</Heading>
+              <Heading size="md">{board.title}</Heading>
+              <Heading size="m">{board.artist}</Heading>
+              <Heading size="m">{board.price}</Heading>
+              <Heading size="s">{board.releaseDate}</Heading>
+              <Heading size="s">{board.albumFormat}</Heading>
             </CardHeader>
             <CardBody>
               <Text>{board.content}</Text>
             </CardBody>
             <CardFooter>
-              <ButtonGroup spacing='2'>
+              <ButtonGroup spacing="2">
                 {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
-                <Button variant='solid' colorScheme='blue'>
+                <Button variant="solid" colorScheme="blue">
                   {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
                   Wish
                 </Button>
-                <Button variant='solid' colorScheme='pink' >
-                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}
-                  + Cart
+                <Button variant="solid" colorScheme="pink">
+                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
                 </Button>
               </ButtonGroup>
             </CardFooter>
@@ -206,14 +219,14 @@ export function BoardList(props) {
       <Center>
         <ButtonGroup>
           <Button onClick={handlePreviousPage} disable={currentPage === 0}>
-            <FontAwesomeIcon icon={faChevronLeft}/>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </Button>
           {pageButton}
           <Button
             onClick={handleNextPage}
             disabled={currentPage === totalPage - 1}
           >
-            <FontAwesomeIcon icon={faChevronRight}/>
+            <FontAwesomeIcon icon={faChevronRight} />
           </Button>
         </ButtonGroup>
       </Center>
