@@ -35,7 +35,7 @@ function Search() {
   const [albumFormat, setAlbumFormat] = useState("");
   const [agency, setAgency] = useState("");
   const [price, setPrice] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const [uploadFiles, setUploadFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -94,7 +94,7 @@ const ITEM_PER_PAGE = 16;
 export function BoardList(props) {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
-  const [uploadFiles, setUploadFiles] = useState([]);
+  const [fileUrl, setFileUrl] = useState();
   const location = useLocation();
   const [paginatedData, setPaginatedData] = useState([]);
   const [paginatedItems, setPaginatedItems] = useState([]);
@@ -154,19 +154,21 @@ export function BoardList(props) {
       <h1>Album list</h1>
       <Search/> {/* 검색 컴포넌트*/}
       <SimpleGrid
-        border="0px solid red"
+        border="1px solid black"
         placeItems="center"
         templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
         gap={3} // 카드 사이의 간격
       >
         {boardList.map((board) => (
-          <Card key={board.id}
+          <Card
+          border="1px solid black"
+            key={board.fileUrl}
                 style={{width: '100%'}}
                 onClick={() => navigate(`/board/file/${board.id}`)}>
             <CardHeader>
               <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <Image
-                  src={board.uploadFiles}
+                  src={board.fileUrl}
                   borderRadius="ml"
                   border="1px solid black"
                   style={{width: '200px', height: '200px', objectFit: 'cover'}} // 이미지 크기 및 레이아웃 조정
