@@ -1,14 +1,16 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 export function MemeberSocialLogin() {
+  let { type } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`/api/auth/KAKAO/callback?` + searchParams)
-      .then((response) => console.log(response.data));
+      .get(`/api/auth/${type}/callback?` + searchParams)
+      .then(() => navigate("/"));
   }, []);
 
   return null;

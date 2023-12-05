@@ -24,7 +24,7 @@ const routes = createBrowserRouter(
       <Route path="member" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
       <Route path="login" element={<MemberLogin />} />
-      <Route path="loginprocess" element={<MemeberSocialLogin />} />
+      <Route path="loginprocess/:type" element={<MemeberSocialLogin />} />
     </Route>,
   ),
 );
