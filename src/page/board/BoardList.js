@@ -94,6 +94,7 @@ const ITEM_PER_PAGE = 16;
 export function BoardList(props) {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
+  const [uploadFiles, setUploadFiles] = useState([]);
   const location = useLocation();
   const [paginatedData, setPaginatedData] = useState([]);
   const [paginatedItems, setPaginatedItems] = useState([]);
@@ -161,11 +162,11 @@ export function BoardList(props) {
         {boardList.map((board) => (
           <Card key={board.id}
                 style={{width: '100%'}}
-                onClick={() => navigate(`/board/${board.id}`)}>
+                onClick={() => navigate(`/board/file/${board.id}`)}>
             <CardHeader>
               <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <Image
-                  src={board.imageURL}
+                  src={board.uploadFiles}
                   borderRadius="ml"
                   border="1px solid black"
                   style={{width: '200px', height: '200px', objectFit: 'cover'}} // 이미지 크기 및 레이아웃 조정

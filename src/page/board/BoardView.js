@@ -65,7 +65,7 @@ export function BoardView() {
     <Center>
     <Box border="2px solid black" w="95%" h="90%">
       <Image
-        src={board.imageURL}
+        src={board.uploadFiles}
         border="1px solid black"
       />
       <Heading size='md'>Title : {board.title}</Heading>
