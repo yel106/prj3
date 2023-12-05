@@ -1,10 +1,16 @@
-import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider,} from "react-router-dom";
-import {MemberSignup} from "./page/member/MemberSignup";
-import {HomeLayout} from "./page/layout/HomeLayout";
-import {MemberView} from "./page/member/MemberView";
-import {MemberEdit} from "./page/member/MemberEdit";
-import {MemberList} from "./page/member/MemberList";
-import {MemberLogin} from "./page/member/MemberLogin";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import { MemberSignup } from "./page/member/MemberSignup";
+import { HomeLayout } from "./page/layout/HomeLayout";
+import { MemberView } from "./page/member/MemberView";
+import { MemberEdit } from "./page/member/MemberEdit";
+import { MemberList } from "./page/member/MemberList";
+import { MemberLogin } from "./page/member/MemberLogin";
+import { MemeberSocialLogin } from "./MemeberSocialLogin";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +24,7 @@ const routes = createBrowserRouter(
       <Route path="member" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
       <Route path="login" element={<MemberLogin />} />
+      <Route path="loginprocess" element={<MemeberSocialLogin />} />
     </Route>,
   ),
 );
