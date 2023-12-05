@@ -54,16 +54,14 @@ export function MemberLogin() {
     return <Spinner />;
   }
 
-  const handleSocialLogin = async (socialLoginType) => {
-    try {
-      const response = await axios.get(`/api/auth/${socialLoginType}`);
-      console.log(response.data);
-      // You can perform additional actions with the response if needed
-    } catch (error) {
-      console.error(error);
-    } finally {
-      console.log(`${socialLoginType} 로그인`);
-    }
+  const handleSocialLogin = (socialLoginType) => {
+    axios.get(`/api/auth/${socialLoginType}`)
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data;
+      })
+      .catch((error) => console.log(error))
+      .finally(() => console.log(`${socialLoginType} 로그인`));
   }
 
   return (
@@ -96,7 +94,7 @@ export function MemberLogin() {
             width: '183px',
             height: '45px',
           }}
-          onClick={() => handleSocialLogin("kakao")}
+          onClick={() => handleSocialLogin("KAKAO")}
         />
         <Button
           style={{
@@ -105,7 +103,7 @@ export function MemberLogin() {
             height: '45px',
             backgroundSize: '183px 45px',
           }}
-          onClick={() => handleSocialLogin("naver")}
+          onClick={() => handleSocialLogin("NAVER")}
         />
         <Button
           backgroundColor="#FFF"
@@ -121,7 +119,7 @@ export function MemberLogin() {
               src={`${imagePrefix}%EA%B5%AC%EA%B8%80+%EB%A1%9C%EA%B3%A0.png`}
             />
           }
-          onClick={() => handleSocialLogin("google")}
+          onClick={() => handleSocialLogin("GOOGLE")}
           fontFamily="Roboto"
           fontWeight="500"
         >
