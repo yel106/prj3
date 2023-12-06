@@ -1,8 +1,16 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {Button, Flex, useToast} from "@chakra-ui/react";
+import { Button, Flex, useToast } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faRightFromBracket, faRightToBracket, faUser, faUserPlus, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faRecordVinyl,
+  faRightFromBracket,
+  faRightToBracket,
+  faUser,
+  faUserPlus,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 export function NavBar(props) {
@@ -32,6 +40,24 @@ export function NavBar(props) {
 
   return (
     <Flex>
+      <Button
+        borderRadius={0}
+        variant="ghost"
+        size="lg"
+        leftIcon={<FontAwesomeIcon icon={faHome} />}
+        onClick={() => navigate("/")}
+      >
+        Records Home
+      </Button>
+      <Button
+        borderRadius={0}
+        variant="ghost"
+        size="lg"
+        leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
+        onClick={() => navigate("/write")}
+      >
+        앨범 등록
+      </Button>
       <Button
         borderRadius={0}
         variant="ghost"
