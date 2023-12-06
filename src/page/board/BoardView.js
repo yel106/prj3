@@ -74,8 +74,8 @@ export function BoardView() {
   return (
     <Center>
       <Box border="2px solid black" w="95%" h="90%">
-        {fileURL.map((url) => (
-          <Image key={url} src={url} border="1px solid black"/>
+        {fileURL.map((url) => (<Box key={url}>
+            <Image src={url} border="1px solid black"/></Box>
         ))}
         <Heading size="md">Title : {board.title}</Heading>
         <br/>
@@ -93,21 +93,21 @@ export function BoardView() {
         </Button>
 
 
-  {/* 삭제 모달 */}
-  <Modal isOpen={isOpen} onClose={onClose}>
-    <ModalOverlay/>
-    <ModalHeader>삭제 확인</ModalHeader>
-    <ModalCloseButton/>
-    <ModalBody>삭제 하시겠습니까?</ModalBody>
-    <ModalContent>
-      <ModalFooter>
-        <Button onClose={onClose}>닫기</Button>
-        <Button onClick={handleDelete} colorScheme="red">
-          삭제
-        </Button>
-      </ModalFooter>
-    </ModalContent>
-  </Modal>
+        {/* 삭제 모달 */}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay/>
+          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalCloseButton/>
+          <ModalBody>삭제 하시겠습니까?</ModalBody>
+          <ModalContent>
+            <ModalFooter>
+              <Button onClose={onClose}>닫기</Button>
+              <Button onClick={handleDelete} colorScheme="red">
+                삭제
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
-</Center>);
+    </Center>);
 }

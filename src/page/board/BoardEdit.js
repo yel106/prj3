@@ -1,16 +1,18 @@
 import {
+  Box,
   Button,
-  Container,
   FormControl,
-  FormHelperText,
   FormLabel,
-  Image,
   Input,
   Spinner,
-  useToast
+  useToast,
+  Text,
+  Image,
+  Container,
+  FormHelperText
 } from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import axios from "axios";
 
@@ -18,25 +20,32 @@ export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
   // /edit/:id
   const { id } = useParams();
-  const [fileUrl, setFileUrl] = useState('');
+  const [fileURL, setFileURL] = useState('');
   const [previousFileUrl, setPreviousFileUrl] = useState('');
-  const handleFileUrl=()=>{setPreviousFileUrl(fileUrl);};
+  const handleFileUrl=()=>{setPreviousFileUrl(fileURL);};
   //먼저 조회함.  updateBoard로 응답 받아옴
   const navigate = useNavigate();
   const toast = useToast();
+  const [boardFiles, setBoardFiles] = useState(null);
 
 
-
+  //
 
   useEffect(() => {
     axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
   }, []);
+  // useEffect(() => {
+  //   axios.get("/api/board/edit/"+ id)
+  //     .then((response)=>setFileURL(response.data))
+  //     .catch((error)=> console.log(error))
+  //     .finally(()=>console.log("얍"));
+  // }, []);
 
   useEffect(() => {
     if (board !== null) {
-      setPreviousFileUrl(board.id.fileUrl); // 이전 이미지 URL 설정
+      setPreviousFileUrl(fileURL); // 이전 이미지 URL 설정
     }
   }, [board]);
 
@@ -44,7 +53,7 @@ export function BoardEdit() {
     return <Spinner />;
   }
   function handleFileUrlChange(e){
-    setFileUrl(e.target.value);
+    setFileURL(e.target.value);
   }
 
 
@@ -84,7 +93,7 @@ export function BoardEdit() {
       .put("/api/board/edit/" + id, {
         title: board.title,
         price: board.price,
-        fileUrl:board.fileUrl, //이미지도 전송
+        fileURL:board.fileURL, //이미지도 전송
       })
       .then((response) =>
         toast({
@@ -99,26 +108,6 @@ export function BoardEdit() {
         }),
       );
   }
-  function handleDeleteFileUrl() {
-    axios
-      .delete(`/api/board/file/delete/${id}`) // 해당 아이디에 해당하는 fileUrl 삭제 API endpoint를 호출합니다.
-      .then((response) => {
-        toast({
-          description: `ID ${id}의 파일 URL이 성공적으로 삭제되었습니다.`,
-          status: "success",
-        });
-        setFileUrl(''); // fileUrl 상태를 초기화합니다.
-      })
-      .catch((error) => {
-        toast({
-          description: `파일 URL 삭제 중 문제가 발생하였습니다.`,
-          status: "error",
-        });
-      });
-  }
-
-
-
 
 
 
@@ -127,35 +116,40 @@ export function BoardEdit() {
 
     <Container>
       <h1>No.{id} Edit </h1>
-      <br />
+      <br/>
+      <FormControl>
+        <FormLabel>Image</FormLabel>
 
+        {board.boardFiles.map(file => <Box key={file.id}>
+          <Image src={file.fileUrl} alt={file.fileName} w="100%"/>
+        </Box>)}
+          {/*<Image key={fileURL} src={board.boardFiles.fileURL} border="1px solid red"/>*/}
+
+      </FormControl>
       <FormControl>
         <FormLabel>Album Title</FormLabel>
-        <Input value={board.title} onChange={handleTitleEdit} />
+        <Input value={board.title} onChange={handleTitleEdit}/>
       </FormControl>
       {/*가격 수정 */}
       <FormControl>
         <FormLabel>Album Price Edit</FormLabel>
-        <Input value={board.price} onChange={handlePriceEdit} />
+        <Input value={board.price} onChange={handlePriceEdit}/>
       </FormControl>
 
       {/*----------------이미지 파일 수정 코드 --------------*/}
-      <Button onClick={handleDeleteFileUrl} colorScheme="red">
-        파일 URL 삭제
-      </Button>
       <FormControl>
         <FormLabel>Album Image Update</FormLabel>
-
-
+        <Text>Previous Image URL: {board.fileName}</Text>
         <Image
-          src={board.fileUrl}
+          src={fileURL}
           borderRadius="l"
           border="0px solid black"
         />
 
         <Input
-          value={fileUrl}
-          onchange={(e) => setFileUrl(e.target.value)}
+          value={fileURL}
+          onchange={(e) => setFileURL(e.target.value)}
+
           placeholder="수정하려는 이미지URL을 입력해주세요 "/>
         <br/>
         <FormHelperText color="red.200">
