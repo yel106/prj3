@@ -70,6 +70,12 @@ export function BoardEdit() {
     });
   }
 
+    function handleContentEdit(e) {
+      updateBoard((draft) => {
+        draft.content = e.target.value;
+      });
+    }
+
 
   // 이미지 수정 코드
   // function handleImageUpload(e){}
@@ -92,7 +98,9 @@ export function BoardEdit() {
     axios
       .put("/api/board/edit/" + id, {
         title: board.title,
+        artist:board.artist,
         price: board.price,
+        content:board.content,
         fileURL:board.fileURL, //이미지도 전송
       })
       .then((response) =>
@@ -132,7 +140,6 @@ export function BoardEdit() {
         <FormLabel>Album Title</FormLabel>
         <Input value={board.title} onChange={handleTitleEdit}/>
       </FormControl>
-
       {/*가수명 편집 */}
       <FormControl>
         <FormLabel>Artist Name Edit</FormLabel>
@@ -149,6 +156,11 @@ export function BoardEdit() {
       <FormControl>
         <FormLabel>Album Price Edit</FormLabel>
         <Input value={board.price} onChange={handlePriceEdit}/>
+      </FormControl>
+      {/*앨범 상세 설명 란*/}
+      <FormControl>
+        <FormLabel>앨범 상품 상세 설명 수정</FormLabel>
+        <Input value={board.content} onChange={handleContentEdit}/>
       </FormControl>
 
       {/*----------------이미지 파일 수정 코드 --------------*/}
