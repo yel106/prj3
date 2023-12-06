@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,10 +6,12 @@ import {
   FormLabel,
   Heading,
   Img,
-  Input, Spinner,
-  useToast, VStack
+  Input,
+  Spinner,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export function MemberLogin() {
@@ -33,9 +35,10 @@ export function MemberLogin() {
 
   function handleLogin() {
     axios
-      .post("/login", {logId: id, password})
+      .post("/login", { logId: id, password })
       .then((response) => {
-        localStorage.setItem("accessToken", response.data.accessToken)
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         toast({
           description: "로그인 되었습니다.",
           status: "success",
@@ -44,7 +47,7 @@ export function MemberLogin() {
       .catch(() => {
         toast({
           description: "아이디나 비밀번호가 틀렸습니다.",
-          status: "error"
+          status: "error",
         });
       });
   }
@@ -61,13 +64,15 @@ export function MemberLogin() {
     console.log("구글 로그인");
   }
 
-  if(imagePrefix == "") {
+  if (imagePrefix == "") {
     return <Spinner />;
   }
 
   return (
     <Box p={10} borderRadius={10} border="1px solid gray">
-      <Heading textAlign="center" mb={10}>Login</Heading>
+      <Heading textAlign="center" mb={10}>
+        Login
+      </Heading>
       <FormControl mb={5}>
         <FormLabel>아이디</FormLabel>
         <Input
@@ -86,23 +91,25 @@ export function MemberLogin() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </FormControl>
-      <Button colorScheme="blue" onClick={handleLogin}>로그인</Button>
+      <Button colorScheme="blue" onClick={handleLogin}>
+        로그인
+      </Button>
 
       <VStack spacing={3}>
         <Button
           style={{
             backgroundImage: `url('${imagePrefix}kakao_login_medium_narrow.png')`,
-            width: '183px',
-            height: '45px',
+            width: "183px",
+            height: "45px",
           }}
           onClick={handleKakaoLogin}
         />
         <Button
           style={{
             backgroundImage: `url('${imagePrefix}btnG_%EC%99%84%EC%84%B1%ED%98%95.png')`,
-            width: '183px',
-            height: '45px',
-            backgroundSize: '183px 45px',
+            width: "183px",
+            height: "45px",
+            backgroundSize: "183px 45px",
           }}
           onClick={handleNaverLogin}
         />
@@ -128,5 +135,5 @@ export function MemberLogin() {
         </Button>
       </VStack>
     </Box>
-  )
+  );
 }

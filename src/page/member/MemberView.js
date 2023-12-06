@@ -22,23 +22,66 @@ import axios from "axios";
 export function MemberView() {
   const [params] = useSearchParams();
   const [member, setMember] = useState(null);
+  const [refresh, setRefresh] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
-  useEffect(() => {
-    const token= localStorage.getItem("accessToken");
-    console.log(token);
-      axios
-        .get("/member",{headers:{Authorization: `Bearer ${token}`}})
-        .then((response) => setMember(response.data))
-        .catch((error) => {
-          // navigate("/login");
-          toast({
-            description: "권한이 없습니다",
-            status: "warning",
-          });
+
+  function getMember() {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("엑세스 토큰", accessToken);
+    axios
+      .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        console.log("getMember()의 then 실행");
+        setMember(response.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          console.log("getMember()의 catch 실행");
+          localStorage.removeItem("accessToken");
+          sendRefreshToken();
+          console.log("sendRefreshToken 호출");
+        } else if (error.response.status === 403) {
+          console.log("403에러");
+        } else {
+          console.log("그 외 에러");
+        }
+      });
+  }
+
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    axios
+      .get("/refreshToken", {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      })
+      .then((response) => {
+        console.log("sendRefreshToken()의 then 실행");
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        console.log("토큰들 업데이트 리프레시 토큰: ");
+        console.log(response.data.refreshToken);
+        getMember();
+      })
+      .catch((error) => {
+        console.log("sendRefreshToken()의 catch 실행");
+        localStorage.removeItem("refreshToken");
+        //navigate("/login");
+        toast({
+          description: "권한이 없습니다",
+          status: "warning",
         });
+      });
+  }
+
+  useEffect(() => {
+    getMember();
   }, []);
+
   if (member === null) {
     return <Spinner />;
   }
