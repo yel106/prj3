@@ -101,7 +101,8 @@ export function BoardEdit() {
         artist:board.artist,
         price: board.price,
         content:board.content,
-        fileURL:board.fileURL, //이미지도 전송
+        fileURL:board.fileURL,
+        releaseDate:board.releaseDate,//이미지도 전송
       })
       .then((response) =>
         toast({
@@ -147,7 +148,7 @@ export function BoardEdit() {
       </FormControl>
       {/*발매일자 편집 */}
       <FormControl>
-        <FormLabel>RelesedDate Edit</FormLabel>
+        <FormLabel>ReleseDate Edit</FormLabel>
         <Input
           type="date"
           value={board.releaseDate} onChange={handleReleaseDateEdit}/>
