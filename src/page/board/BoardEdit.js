@@ -116,7 +116,7 @@ export function BoardEdit() {
 
   function handleSubmit(e) {
     axios
-      .put("/api/board/edit/" + id, {
+      .putForm("/api/board/edit/" + id, {
         title: board.title,
         artist: board.artist,
         price: board.price,
@@ -219,7 +219,9 @@ export function BoardEdit() {
       type="file"
       accept="image/*"
       multiple
-
+      onChange={e => {
+        console.log(e.target.files[0])
+      }}
     />
     {/*<FormHelperText color="red.200">*/}
     {/*  한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.*/}
