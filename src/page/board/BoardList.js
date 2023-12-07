@@ -155,7 +155,8 @@ export function BoardList(props) {
   }
 
   return (
-    <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
+    //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
+    <Box>
       <h1>Album list</h1>
       <Search /> {/* 검색 컴포넌트*/}
       <SimpleGrid
