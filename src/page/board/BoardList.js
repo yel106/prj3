@@ -1,6 +1,7 @@
 //  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
 import React, { useEffect, useState } from "react";
 import {
+  View,
   Box,
   Button,
   ButtonGroup,
@@ -19,6 +20,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
+  Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,6 +28,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faHeart,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
@@ -152,7 +155,7 @@ export function BoardList(props) {
   }
 
   return (
-    <Box>
+    <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
       <h1>Album list</h1>
       <Search /> {/* 검색 컴포넌트*/}
       <SimpleGrid
@@ -191,7 +194,7 @@ export function BoardList(props) {
                     />
                   ))}
               </div>
-              <br/>
+              <br />
               <Heading size="md">{board.title}</Heading>
               <Heading size="m">{board.artist}</Heading>
               <Heading size="m">{board.price}</Heading>
@@ -210,6 +213,9 @@ export function BoardList(props) {
                 </Button>
                 <Button variant="solid" colorScheme="pink">
                   {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
+                </Button>
+                <Button w={"50px"}>
+                  <FontAwesomeIcon icon={faHeart} />
                 </Button>
               </ButtonGroup>
             </CardFooter>
