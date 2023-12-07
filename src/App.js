@@ -11,12 +11,12 @@ import { HomeLayout } from "./layout/HomeLayout";
 import { BoardView } from "./page/board/BoardView";
 import { BoardEdit } from "./page/board/BoardEdit";
 import Category_CD from "./page/item/Category_CD";
-import { ItemAllPage } from "./component/ItemAllPage";
+// import { ItemAllPage } from "./component/ItemAllPage";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<HomeLayout />}>
-      <Route path="/iap" element={<ItemAllPage />} />
+      {/*<Route path="/iap" element={<ItemAllPage />} />*/}
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
       <Route path="board/:id" element={<BoardView />} />

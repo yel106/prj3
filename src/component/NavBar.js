@@ -7,7 +7,7 @@ export function NavBar() {
   return (
     <Flex>
       <Button onClick={() => navigate("/")}>Records Home</Button>
-      <Button onClick={() => navigate("/iap")}>?</Button>
+
 
       <Button onClick={() => navigate("/write")}>앨범 등록</Button>
     </Flex>

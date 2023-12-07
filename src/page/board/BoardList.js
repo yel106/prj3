@@ -1,7 +1,6 @@
 //  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
 import React, { useEffect, useState } from "react";
 import {
-  View,
   Box,
   Button,
   ButtonGroup,
@@ -10,9 +9,7 @@ import {
   CardFooter,
   CardHeader,
   Center,
-  Container,
   Flex,
-  Grid,
   Heading,
   Image,
   Input,
@@ -20,19 +17,17 @@ import {
   SimpleGrid,
   Spinner,
   Text,
-  Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-  faHeart,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
-import category_CD from "../item/Category_CD";
 
 //검색 관련 컴포넌트
 function Search() {
@@ -208,15 +203,15 @@ export function BoardList(props) {
             <CardFooter>
               <ButtonGroup spacing="2">
                 {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
-                <Button variant="solid" colorScheme="blue">
+                <Button w={"30%"} variant="solid" colorScheme="blue">
                   {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
                   Wish
                 </Button>
-                <Button variant="solid" colorScheme="pink">
+                <Button w={"30%"} variant="solid" colorScheme="pink">
                   {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
                 </Button>
-                <Button w={"50px"}>
-                  <FontAwesomeIcon icon={faHeart} />
+                <Button w={"25px"}>
+                  <FontAwesomeIcon icon="bi bi-arrow-through-heart"/>
                 </Button>
               </ButtonGroup>
             </CardFooter>

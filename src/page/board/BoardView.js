@@ -5,10 +5,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Card,
-  CardHeader,
   Center,
-  Container,
   Heading,
   Image,
   Modal,
@@ -72,8 +69,8 @@ export function BoardView() {
   }
 
   return (
-    <Center>
-      <Box border="2px solid black" w="95%" h="90%">
+      <Center bg="tomato">
+      <Box border="2px solid black" w="95%" h="90%" bg="white">
         {fileURL.map((url) => (<Box key={url}>
             <Image src={url} border="1px solid black"/></Box>
         ))}
@@ -96,18 +93,19 @@ export function BoardView() {
         {/* 삭제 모달 */}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay/>
-          <ModalHeader>삭제 확인</ModalHeader>
-          <ModalCloseButton/>
-          <ModalBody>삭제 하시겠습니까?</ModalBody>
           <ModalContent>
-            <ModalFooter>
-              <Button onClose={onClose}>닫기</Button>
-              <Button onClick={handleDelete} colorScheme="red">
-                삭제
-              </Button>
-            </ModalFooter>
+            <ModalHeader>Delete Message</ModalHeader>
+              <ModalCloseButton/>
+              <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClose={onClose}>닫기</Button>
+                  <Button onClick={handleDelete} colorScheme="red">
+                    삭제
+                  </Button>
+                </ModalFooter>
           </ModalContent>
         </Modal>
       </Box>
+
     </Center>);
 }
