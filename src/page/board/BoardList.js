@@ -58,19 +58,19 @@ function Search() {
 
   return (
     <Center>
-      <Container marginLeft="20">
-        <Grid templateColumns="repeat(5, 1fr)" gap={6}>
-          <Button w="100%" h="30" bg="blue.100">
-            CD
-          </Button>
-          <Button w="100%" h="30" bg="blue.100">
-            VINYL
-          </Button>
-          <Button w="200%" h="30" bg="blue.100">
-            CASSETTE_TAPE
-          </Button>
-        </Grid>
-      </Container>
+      {/*<Container marginLeft="20">*/}
+      {/*  <Grid templateColumns="repeat(5, 1fr)" gap={6}>*/}
+      {/*    <Button w="100%" h="30" bg="blue.100">*/}
+      {/*      CD*/}
+      {/*    </Button>*/}
+      {/*    <Button w="100%" h="30" bg="blue.100">*/}
+      {/*      VINYL*/}
+      {/*    </Button>*/}
+      {/*    <Button w="200%" h="30" bg="blue.100">*/}
+      {/*      CASSETTE_TAPE*/}
+      {/*    </Button>*/}
+      {/*  </Grid>*/}
+      {/*</Container>*/}
 
       <Flex gap={2} mt={3} mb={10}>
         <Box>
