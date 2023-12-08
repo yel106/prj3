@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -35,8 +35,10 @@ export function MemberLogin() {
 
   function handleLogin() {
     axios
-      .post("/api/member/login", { id, password })
-      .then(() => {
+      .post("/login", { logId: id, password })
+      .then((response) => {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         toast({
           description: "로그인 되었습니다.",
           status: "success",
@@ -46,7 +48,7 @@ export function MemberLogin() {
       .catch(() => {
         toast({
           description: "아이디나 비밀번호가 틀렸습니다.",
-          status: "error",
+          status: "error"
         });
       });
   }
