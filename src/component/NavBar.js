@@ -1,142 +1,120 @@
-import { Button, Flex } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Button, Center, Heading, Spacer, useToast } from "@chakra-ui/react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useContext, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faRightFromBracket,
+  faRightToBracket,
+  faUser,
+  faUserPlus,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function NavBar() {
+  const { fetchLogin, login, isAuthenticated, isAdmin } =
+    useContext(LoginContext);
+  const toast = useToast();
   const navigate = useNavigate();
+  let location = useLocation(); //uselocation이 적당
+  const urlParams = new URLSearchParams();
+  useEffect(() => {
+    fetchLogin();
+  }, [location]);
+
+  if (login !== "") {
+    urlParams.set("id", login.id);
+  }
+
+  function handleLogout() {
+    axios.post("/api/member/logout").then(() => {
+      toast({
+        description: "로그아웃 되었습니다.",
+        status: "info",
+      });
+      navigate("/");
+    });
+  }
 
   return (
-    <Flex>
-      <Button onClick={() => navigate("/")}>Records Home</Button>
+    <>
+      <Center>
+        <Heading onClick={() => navigate("/")}>💿ReCords_Shop💿</Heading>
+      </Center>
+      {isAuthenteicated() && (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          onClick={() => navigate("/write")}
+        >
+          <FontAwesomeIcon icon={faPen} />
+          Write
+        </Button>
+      )}
+      <Spacer />
 
+      {isAuthenticated() || (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          onClick={() => navigate("/signup")}
+        >
+          <FontAwesomeIcon icon={faUserPlus} />
+          Join
+        </Button>
+      )}
 
-      <Button onClick={() => navigate("/write")}>앨범 등록</Button>
-    </Flex>
+      {isAdmin() && (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          leftIcon={<FontAwesomeIcon icon={faUsers} />}
+          onClick={() => navigate("/member/list")}
+        >
+          MemberList
+        </Button>
+      )}
+
+      {isAuthenticated() && (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          onClick={() => navigate("/member?" + urlParams.toString())}
+        >
+          <FontAwesomeIcon icon={faUser} />
+          Member_Info
+        </Button>
+      )}
+
+      {isAuthenticated() || (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          onClick={() => navigate("/login")}
+        >
+          <FontAwesomeIcon icon={faRightToBracket} />
+          LogIn
+        </Button>
+      )}
+
+      {isAuthenticated() && (
+        <Button borderRadious={0} varient="ghost" onClick={handleLogout}>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+          LogOut
+        </Button>
+      )}
+      {isAuthenticated() && (
+        <Button
+          borderRadious={0}
+          varient="ghost"
+          fontFamily="segoeprint"
+          colorScheme="pink"
+        >
+          {login.nickName}님
+        </Button>
+      )}
+      <Button onClick={() => navigate("order")}>주문</Button>
+    </>
   );
 }
-
-// import { Button, Flex, Spacer, useToast } from "@chakra-ui/react";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { useContext, useEffect } from "react";
-// import { LoginContext } from "./LogInProvider";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//     faAddressBook,
-//     faArrowRightFromBracket,
-//     faArrowRightToBracket,
-//     faCircleInfo,
-//     faFeatherPointed,
-//     faHouse,
-//     faUserPlus,
-// } from "@fortawesome/free-solid-svg-icons";
-//
-// export function NavBar() {
-//     const { fetchLogin, login, isAuthenticated, isAdmin } =
-//         useContext(LoginContext);
-//     const toast = useToast();
-//
-//     const navigate = useNavigate();
-//
-//     const urlParams = new URLSearchParams();
-//
-//     const location = useLocation();
-//
-//     useEffect(() => {
-//         fetchLogin();
-//     }, [location]);
-//
-//     if (login !== "") {
-//         urlParams.set("id", login.id);
-//     }
-//
-//     function handleLogout() {
-//         axios.post("/api/member/logout").then(() => {
-//             toast({
-//                 description: "로그아웃 되었습니다.",
-//                 status: "info",
-//             });
-//             navigate("/");
-//         });
-//     }
-//
-//     return (
-//         <Flex mb={8}>
-//             <Button
-//                 borderRadius={0}
-//                 variant="ghost"
-//                 size="lg"
-//                 leftIcon={<FontAwesomeIcon icon={faHouse} />}
-//                 onClick={() => navigate("/")}
-//             >
-//                 Records Home
-//             </Button>
-//             {isAuthenticated() && (
-//                 <Button
-//                     borderRadius={0}
-//                     variant="ghost"
-//                     size="lg"
-//                     leftIcon={<FontAwesomeIcon icon={faFeatherPointed} />}
-//                     onClick={() => navigate("/write")}
-//                 >
-//                     앨범 등록
-//                 </Button>
-//             )}
-//             {/*<Spacer />*/}
-//             {/*{isAuthenticated() || (*/}
-//             {/*    <Button*/}
-//             {/*        borderRadius={0}*/}
-//             {/*        variant="ghost"*/}
-//             {/*        size="lg"*/}
-//             {/*        leftIcon={<FontAwesomeIcon icon={faUserPlus} />}*/}
-//             {/*        onClick={() => navigate("/signup")}*/}
-//             {/*    >*/}
-//             {/*        회원가입*/}
-//             {/*    </Button>*/}
-//             {/*)}*/}
-//             {/*{isAdmin() && (*/}
-//             {/*    <Button*/}
-//             {/*        borderRadius={0}*/}
-//             {/*        variant="ghost"*/}
-//             {/*        size="lg"*/}
-//             {/*        leftIcon={<FontAwesomeIcon icon={faAddressBook} />}*/}
-//             {/*        onClick={() => navigate("/member/list")}*/}
-//             {/*    >*/}
-//             {/*        회원목록*/}
-//             {/*    </Button>*/}
-//             {/*)}*/}
-//             {/*{isAuthenticated() && (*/}
-//             {/*    <Button*/}
-//             {/*        borderRadius={0}*/}
-//             {/*        variant="ghost"*/}
-//             {/*        size="lg"*/}
-//             {/*        leftIcon={<FontAwesomeIcon icon={faCircleInfo} />}*/}
-//             {/*        onClick={() => navigate("/member?" + urlParams.toString())}*/}
-//             {/*    >*/}
-//             {/*        {login.nickName}님*/}
-//             {/*    </Button>*/}
-//             {/*)}*/}
-//             {/*{isAuthenticated() || (*/}
-//             {/*    <Button*/}
-//             {/*        borderRadius={0}*/}
-//             {/*        variant="ghost"*/}
-//             {/*        size="lg"*/}
-//             {/*        leftIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}*/}
-//             {/*        onClick={() => navigate("/login")}*/}
-//             {/*    >*/}
-//             {/*        로그인*/}
-//             {/*    </Button>*/}
-//             {/*)}*/}
-//             {/*{isAuthenticated() && (*/}
-//             {/*    <Button*/}
-//             {/*        borderRadius={0}*/}
-//             {/*        variant="ghost"*/}
-//             {/*        size="lg"*/}
-//             {/*        leftIcon={<FontAwesomeIcon icon={faArrowRightFromBracket} />}*/}
-//             {/*        onClick={handleLogout}*/}
-//             {/*    >*/}
-//             {/*        로그아웃*/}
-//             {/*    </Button>*/}
-//             {/*)}*/}
-//         </Flex>
-//     );
-// }
