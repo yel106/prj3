@@ -7,11 +7,13 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { MemberSignup } from "./page/member/MemberSignup";
 import { HomeLayout } from "./page/layout/HomeLayout";
+import { MemberSignup } from "./page/member/MemberSignup";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberList } from "./page/member/MemberList";
+import { MemberLogin } from "./page/member/MemberLogin";
+import { MemeberSocialLogin } from "./MemeberSocialLogin";
 import { BoardList } from "./page/board/BoardList";
 import { BoardWrite } from "./page/board/BoardWrite";
 // import { HomeLayout } from "./layout/HomeLayout";
@@ -21,7 +23,6 @@ import { OrderWrite } from "./page/order/OrderWrite";
 import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
-import { MemberLogin } from "./page/member/MemberLogin";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -30,12 +31,13 @@ const routes = createBrowserRouter(
       <Route path="write" element={<BoardWrite />} />
       <Route path="board/:id" element={<BoardView />} />
       <Route path="edit/:id" element={<BoardEdit />}></Route>
-      <Route path="category/:id" element={<Category_CD />} />
+      {/*<Route path="category/:id" element={<Category_CD />} />*/}
       <Route path="signup" element={<MemberSignup />}></Route>
-      <Route path="login" element={<MemberLogin />} />
       <Route path="member/list" element={<MemberList />} />
       <Route path="member" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
+      <Route path="login" element={<MemberLogin />} />
+      <Route path="loginprocess/:type" element={<MemeberSocialLogin />} />
       <Route path="order" element={<OrderWrite />} />
       <Route path="payment" element={<Payment />} />
       <Route path="success" element={<Success />} />
