@@ -9,10 +9,6 @@ import { HomeLayout } from "./page/layout/HomeLayout";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberList } from "./page/member/MemberList";
-import { OrderWrite } from "./page/order/OrderWrite";
-import Payment from "./page/payment/Payment";
-import { Success } from "./page/payment/Success";
-import { Fail } from "./page/payment/Fail";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
