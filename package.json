@@ -17,6 +17,8 @@
     "@testing-library/user-event": "^13.5.0",
     "@tosspayments/payment-widget-sdk": "^0.10.0",
     "axios": "^1.6.1",
+    "bootstrap": "^5.3.1",
+    "bootstrap-icons": "^1.11.2",
     "framer-motion": "^10.16.4",
     "immer": "^10.0.3",
     "nanoid": "^5.0.3",
