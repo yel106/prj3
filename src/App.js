@@ -13,7 +13,7 @@ import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberList } from "./page/member/MemberList";
 import { MemberLogin } from "./page/member/MemberLogin";
-import { MemeberSocialLogin } from "./MemeberSocialLogin";
+import { MemeberSocialLogin } from "./page/member/MemeberSocialLogin";
 import { BoardList } from "./page/board/BoardList";
 import { BoardWrite } from "./page/board/BoardWrite";
 // import { HomeLayout } from "./layout/HomeLayout";
