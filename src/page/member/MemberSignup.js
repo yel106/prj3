@@ -225,8 +225,8 @@ export function MemberSignup() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
-              <option value="ADMIN">관리자</option>
-              <option value="USER">사용자</option>
+              <option value="ROLE_ADMIN">관리자</option>
+              <option value="ROLE_USER">사용자</option>
             </Select>
           </FormControl>
         </CardBody>

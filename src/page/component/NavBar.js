@@ -15,6 +15,7 @@ import axios from "axios";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const urlParams = new URLSearchParams();
   const location = useLocation();
@@ -54,9 +55,14 @@ export function NavBar(props) {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         })
-        .then(() => {
+        .then((response) => {
           console.log("accessToken then 수행");
           setLoggedIn(true);
+          console.log(response.data);
+          if (response.data === "ROLE_ADMIN") {
+            console.log("setIsAdmin(true) 동작");
+            setIsAdmin(true);
+          }
         })
         .catch(() => {
           sendRefreshToken();
@@ -83,6 +89,9 @@ export function NavBar(props) {
           status: "success",
         });
         setLoggedIn(false);
+        if (isAdmin) {
+          setIsAdmin(false);
+        }
         navigate("/");
       })
       .catch((error) => {
@@ -105,15 +114,17 @@ export function NavBar(props) {
       >
         Records Home
       </Button>
-      <Button
-        borderRadius={0}
-        variant="ghost"
-        size="lg"
-        leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-        onClick={() => navigate("/write")}
-      >
-        앨범 등록
-      </Button>
+      {isAdmin && (
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
+          onClick={() => navigate("/write")}
+        >
+          앨범 등록
+        </Button>
+      )}
       {loggedIn || (
         <Button
           borderRadius={0}
@@ -136,15 +147,17 @@ export function NavBar(props) {
           회원정보
         </Button>
       )}
-      <Button
-        borderRadius={0}
-        variant="ghost"
-        size="lg"
-        leftIcon={<FontAwesomeIcon icon={faUsers} />}
-        onClick={() => navigate("/member/list")}
-      >
-        회원목록
-      </Button>
+      {isAdmin && (
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faUsers} />}
+          onClick={() => navigate("/member/list")}
+        >
+          회원목록
+        </Button>
+      )}
       {loggedIn || (
         <Button
           variant="ghost"
