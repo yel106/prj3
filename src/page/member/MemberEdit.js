@@ -15,6 +15,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
   Spinner,
   useDisclosure,
   useToast,
@@ -26,12 +32,17 @@ export function MemberEdit() {
   const [member, setMember] = useState(null);
   const toast = useToast();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-  const [emailAvailable, setEmailAvailable] = useState(false);
+  const [age, setAge] = useState(0);
+  const [gender, setGender] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  let sameOriginEmail = false;
+
+  // 멤버 불러오기
+  useEffect(() => {
+    getMember();
+  }, []);
 
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
@@ -56,6 +67,7 @@ export function MemberEdit() {
       });
   }
 
+  // 토큰 리프레쉬
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -76,26 +88,21 @@ export function MemberEdit() {
       .catch((error) => {
         console.log("sendRefreshToken()의 catch 실행");
         localStorage.removeItem("refreshToken");
-        //navigate("/login");
         toast({
           description: "권한이 없습니다",
           status: "warning",
         });
-        navigate("/login");
+        //navigate("/login");
       });
   }
 
-  useEffect(() => {
-    getMember();
-  }, []);
-
+  // 해당 멤버 존재하지 않을 경우 Spinner
   if (member === null) {
     return <Spinner />;
   }
-  if (member !== null) {
-    sameOriginEmail = member.email === email;
-  }
-  let emailChecked = sameOriginEmail || emailAvailable;
+
+  // 수정 여부 확인해서 Status 설정
+  // 이름, 패스워드(필수), 주소, 나이, 성별
   let passwordChecked = false;
   if (passwordCheck === password) {
     passwordChecked = true;
@@ -103,35 +110,16 @@ export function MemberEdit() {
   if (password.length === 0) {
     passwordChecked = true;
   }
-  function handleEmailCheck() {
-    const params = new URLSearchParams();
-    params.set("email", email);
-    axios
-      .get("/member/check?" + params)
-      .then(() => {
-        setEmailAvailable(false);
-        toast({
-          description: "이미 사용 중인 email입니다.",
-          status: "warning",
-        });
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          setEmailAvailable(true);
-          toast({
-            description: "사용 가능한 email입니다.",
-            status: "success",
-          });
-        }
-      });
-  }
+
   function handleEdit() {
     axios
       .put("/member/edit/" + member.id, {
         id: member.id,
+        name,
         password,
-        email,
         address,
+        age,
+        gender,
       })
       .then(() => {
         toast({
@@ -161,7 +149,7 @@ export function MemberEdit() {
       <FormControl>
         <FormLabel>password</FormLabel>
         <Input
-          type="text"
+          type="password"
           value={member.password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -178,33 +166,50 @@ export function MemberEdit() {
       )}
 
       <FormControl>
-        <FormLabel>email</FormLabel>
-        <Flex>
-          <Input
-            type="email"
-            value={member.email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailAvailable(false);
-            }}
-          />
-          <Button isDisabled={emailChecked} onClick={handleEmailCheck}>
-            중복확인
-          </Button>
-        </Flex>
+        <FormLabel>Name</FormLabel>
+        <Input
+          type="text"
+          value={member.name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </FormControl>
       <FormControl>
-        <FormLabel>address</FormLabel>
+        <FormLabel>Address</FormLabel>
         <Input
           type="text"
           value={member.address}
           onChange={(e) => setAddress(e.target.value)}
         />
       </FormControl>
+      <FormControl>
+        <FormLabel>Age</FormLabel>
+        <NumberInput
+          defaultValue={member.age !== null ? member.age : 20}
+          min={15}
+          max={99}
+          onChange={(value) => setAge(value)}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Gender</FormLabel>
+        <Select
+          placeholder={member.gender !== null ? member.gender : "male"}
+          onChange={(e) => setGender(e.target.value)}
+        >
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </Select>
+      </FormControl>
 
       <Button
         colorScheme="purple"
-        isDisabled={!(emailChecked && passwordChecked)}
+        isDisabled={!passwordChecked}
         onClick={onOpen}
       >
         수정

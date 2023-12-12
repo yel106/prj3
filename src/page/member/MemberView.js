@@ -33,6 +33,7 @@ export function MemberView() {
       .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         console.log("getMember()의 then 실행");
+        console.log(response.data);
         setMember(response.data);
       })
       .catch((error) => {
@@ -109,10 +110,6 @@ export function MemberView() {
       <FormControl>
         <FormLabel>gender</FormLabel>
         <Input type="text" value={member.gender} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>role</FormLabel>
-        <Input type="text" value={member.role} readOnly />
       </FormControl>
       <Button
         colorScheme="purple"
