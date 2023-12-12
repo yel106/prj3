@@ -31,6 +31,7 @@ export function MemberEdit() {
   const [emailAvailable, setEmailAvailable] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState("");
   let sameOriginEmail = false;
+
   useEffect(() => {
     axios.get("/member/" + 1).then((response) => {
       setMember(response.data);
