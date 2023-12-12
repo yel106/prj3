@@ -37,16 +37,24 @@ export function BoardWrite() {
     setIsSubmitting(true);
 
     axios
-      .postForm("/api/board/add", {
-        title,
-        artist,
-        albumFormat,
-        releaseDate,
-        agency,
-        price,
-        content,
-        uploadFiles,
-      })
+      .postForm(
+        "/api/board/add",
+        {
+          title,
+          artist,
+          albumFormat,
+          releaseDate,
+          agency,
+          price,
+          content,
+          uploadFiles,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      )
       .then(() => {
         toast({
           description: "새 상품이 저장되었습니다",

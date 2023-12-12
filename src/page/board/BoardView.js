@@ -22,13 +22,14 @@ import {
 import axios from "axios";
 
 export function BoardView() {
-  const {id} = useParams();
+  const { id } = useParams();
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
-  const {isOpen, onOpen, onClose} = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     axios
@@ -45,8 +46,55 @@ export function BoardView() {
       .finally(() => console.log("끝"));
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("accessToken") !== null) {
+      console.log(localStorage.getItem("accessToken"));
+      axios
+        .get("/accessToken", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => {
+          console.log("accessToken then 수행");
+          console.log(response.data);
+          if (response.data === "ROLE_ADMIN") {
+            console.log("setIsAdmin(true) 동작");
+            setIsAdmin(true);
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("accessToken");
+          sendRefreshToken();
+        })
+        .finally(() => console.log());
+    }
+  }, []);
+
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    axios
+      .get("/refreshToken", {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      })
+      .then((response) => {
+        console.log("sendRefreshToken()의 then 실행");
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        console.log("토큰들 업데이트 리프레시 토큰: ");
+        console.log(response.data.refreshToken);
+      })
+      .catch((error) => {
+        console.log("sendRefreshToken()의 catch 실행");
+        localStorage.removeItem("refreshToken");
+      });
+  }
+
   if (board === null) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   function handleDelete() {
@@ -69,43 +117,48 @@ export function BoardView() {
   }
 
   return (
-      <Center bg="tomato">
+    <Center bg="tomato">
       <Box border="2px solid black" w="95%" h="90%" bg="white">
-        {fileURL.map((url) => (<Box key={url}>
-            <Image src={url} border="1px solid black"/></Box>
+        {fileURL.map((url) => (
+          <Box key={url}>
+            <Image src={url} border="1px solid black" />
+          </Box>
         ))}
         <Heading size="md">Title : {board.title}</Heading>
-        <br/>
+        <br />
         <Heading size="m">Artist : {board.artist}</Heading>
         <Heading size="m">Album Introduction : {board.content}</Heading>
-        <br/>
+        <br />
         <Heading size="m">Album Price : {board.price}</Heading>
         <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
         <Heading size="s">Album Format : {board.albumFormat}</Heading>
-        <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
-          edit
-        </Button>
-        <Button colorScheme="orange" onClick={onOpen}>
-          delete
-        </Button>
-
+        {isAdmin && (
+          <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
+            edit
+          </Button>
+        )}
+        {isAdmin && (
+          <Button colorScheme="orange" onClick={onOpen}>
+            delete
+          </Button>
+        )}
 
         {/* 삭제 모달 */}
         <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay/>
+          <ModalOverlay />
           <ModalContent>
             <ModalHeader>Delete Message</ModalHeader>
-              <ModalCloseButton/>
-              <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
-                <ModalFooter>
-                  <Button onClose={onClose}>닫기</Button>
-                  <Button onClick={handleDelete} colorScheme="red">
-                    삭제
-                  </Button>
-                </ModalFooter>
+            <ModalCloseButton />
+            <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Button onClose={onClose}>닫기</Button>
+              <Button onClick={handleDelete} colorScheme="red">
+                삭제
+              </Button>
+            </ModalFooter>
           </ModalContent>
         </Modal>
       </Box>
-
-    </Center>);
+    </Center>
+  );
 }
