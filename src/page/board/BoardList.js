@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   Button,
   ButtonGroup,
   Center,
-  Flex,
-  Input,
-  Select,
   Spinner,
   Table,
   Tbody,
@@ -14,132 +11,52 @@ import {
   Th,
   Thead,
   Tr,
+  Image,
+  Flex
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChevronLeft, faChevronRight,} from "@fortawesome/free-solid-svg-icons";
+import {Search} from "./Search";
 
-//검색 관련 컴포넌트
-function Search() {
-  const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState("");
-  const [genre, setGenre] = useState([]);
-  const navigate = useNavigate();
-
-  function handleSearch() {
-    const params = new URLSearchParams();
-    params.set("k", keyword);
-    params.set("c", category);
-    genre.forEach((g) => params.append("g", g));
-    navigate("/?" + params);
-  }
-
-  return (
-    <React.Fragment>
-      {/*<Flex mt={5} mb={3}>*/}
-      {/*  앨범 형식*/}
-      {/*  <Button size="sm">CD</Button> <Button size="sm">VINYL</Button>*/}
-      {/*  <Button size="sm">CASSETTE</Button>*/}
-      {/*</Flex>*/}
-      {/*<Flex mt={3} mb={3}>*/}
-      {/*  세부 카테고리*/}
-      {/*  <Button size="sm" colorScheme="gray">*/}
-      {/*    INDIE*/}
-      {/*  </Button>{" "}*/}
-      {/*  <Button size="sm">OST</Button>*/}
-      {/*  <Button size="sm">K-POP</Button>*/}
-      {/*  <Button size="sm">POP</Button>*/}
-      {/*</Flex>*/}
-      {/*<Flex mb={7}>*/}
-      {/*  가격 직접입력*/}
-      {/*  <Input*/}
-      {/*    type="number"*/}
-      {/*    value={minPrice}*/}
-      {/*    onChange={(e) => setMinPrice(e.target.value)}*/}
-      {/*    min="0"*/}
-      {/*    max="10000000"*/}
-      {/*    style={{ width: "200px" }}*/}
-      {/*  />*/}
-      {/*  <Input*/}
-      {/*    type="number"*/}
-      {/*    value={maxPrice}*/}
-      {/*    onChange={(e) => setMaxPrice(e.target.value)}*/}
-      {/*    min="0"*/}
-      {/*    max="10000000"*/}
-      {/*    style={{ width: "200px" }}*/}
-      {/*  />*/}
-      {/*  <Button onClick={handleSearchAlbum}>조회</Button>*/}
-      {/*</Flex>*/}
-
-      <Flex gap={1} mt={3} mb={10}>
-        <Flex>
-          <Select
-            defaultValue="all"
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="all">상품 분류 선택</option>
-            <option value="CD">CD</option>
-            <option value="vinyl">vinyl</option>
-            <option value="cassettetape">cassetteTape</option>
-          </Select>
-          <Select
-            multiple="multiple"
-            size="5"
-            defaultValue="all"
-            value={genre}
-            onChange={(e) =>
-              setGenre(
-                Array.from(e.target.selectedOptions, (option) => option.value),
-              )
-            }
-          >
-            <option value="all">장르 선택</option>
-            <option value="INDIE">INDIE</option>
-            <option value="OST">OST</option>
-            <option value="K_POP">K-POP</option>
-            <option value="POP">POP</option>
-          </Select>
-        </Flex>
-
-        <Box>
-          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-        </Box>
-        <Button onClick={handleSearch}>
-          <FontAwesomeIcon icon={faSearch} />
-        </Button>
-      </Flex>
-    </React.Fragment>
-  );
-}
-export function BoardList(props) {
+export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
-
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
-
+  // 검색 조건을 상태로 관리.
+  const [searchParams, setSearchParams] = useState({
+    title: '',
+    albumFormat: '',
+    albumDetails: []
+  });
+  // 검색 조건을 업데이트하는 함수.
+  const handleSearch = (params) => {
+    setSearchParams(params);
+    setCurrentPage(0); // 검색 시 첫 페이지로 이동.
+  };
   useEffect(() => {
-    const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
-    const keyword = params.get("k");
-    const genre = params.get("g");
-    const category = params.get("c");
-
+    // searchParams 상태를 사용하여 API 호출을 업데이트.
     axios
-      .get(
-        `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&g=${genre}&k=${keyword}`,
-      )
-      .then((response) => {
-        setBoardList(response.data.content);
-        setTotalPage(response.data.totalPages);
-      });
-  }, [currentPage, location.search]); //현재 페이지와 변경될 때마다 실행
+        .get(`/api/board/list`, {
+          params: {
+            page: currentPage,
+            size: itemsPerPage,
+            title: searchParams.title,
+            albumFormat: searchParams.format,
+            // albumDetails가 undefined가 아닌 경우에만 join을 호출.
+            albumDetails: searchParams.genres ? searchParams.genres.join(',') : '',
+            minPrice: searchParams.minPrice,
+            maxPrice: searchParams.maxPrice
+          }
+        })
+        .then((response) => {
+          setBoardList(response.data.content);
+          setTotalPage(response.data.totalPages);
+        });
+  }, [currentPage, searchParams]);
 
   if (boardList === null) {
     return <Spinner />;
@@ -169,7 +86,7 @@ export function BoardList(props) {
   return (
     <Box>
       <h1>Album list</h1>
-      <Search /> {/* 검색 컴포넌트*/}
+      <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
       <Table>
         <Thead>
           <Tr>
@@ -188,7 +105,20 @@ export function BoardList(props) {
               key={board.id}
               onClick={() => navigate("/board/" + board.id)}
             >
-              <Td>{/* TODO: 앨범 이미지 */}</Td>
+              <Td>
+                <Flex justify="center" align="center">
+                  {board.boardFiles && board.boardFiles.length > 0 && (
+                      <Image
+                          src={board.boardFiles[0].fileUrl}
+                          borderRadius="ml"
+                          border="0px solid black"
+                          w="200px"
+                          h="200px"
+                          objectFit="cover"
+                      />
+                  )}
+                </Flex>
+              </Td>
               <Td>{board.title}</Td>
               <Td>{board.price}</Td>
             </Tr>
