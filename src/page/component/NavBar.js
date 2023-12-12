@@ -31,6 +31,7 @@ export function NavBar(props) {
       })
       .then((response) => {
         console.log("sendRefreshToken()의 then 실행");
+
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
@@ -78,7 +79,7 @@ export function NavBar(props) {
     axios
       .get("/api/logout", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
         },
       })
       .then(() => {
@@ -100,7 +101,9 @@ export function NavBar(props) {
           status: "error",
         });
       })
-      .finally(() => console.log("useContext 관련 무언가 삽입해야함"));
+      .finally(() => {
+        console.log("로그아웃 finally");
+      });
   }
 
   return (
