@@ -3,8 +3,8 @@ import axios from "axios";
 import {
   Box,
   Button,
-  Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -38,6 +38,14 @@ export function MemberEdit() {
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [initialData, setInitialData] = useState(null);
+
+  // 수정 여부 체크하는 hook
+  const [isNameEdited, setIsNameEdited] = useState(false);
+  const [isPasswordEdited, setIsPasswordEdited] = useState(false);
+  const [isAddressEdited, setIsAddressEdited] = useState(false);
+  const [isAgeEdited, setIsAgeEdited] = useState(false);
+  const [isGenderEdited, setIsGenderEdited] = useState(false);
 
   // 멤버 불러오기
   useEffect(() => {
@@ -66,6 +74,45 @@ export function MemberEdit() {
         }
       });
   }
+
+  // 기존 데이터 저장
+  useEffect(() => {
+    if (member !== null) {
+      setInitialData({
+        name: member.name !== null ? member.name : "Anon",
+        password: member.password,
+        address: member.address,
+        age: member.age !== null ? member.age : 20,
+        gender: member.gender !== null ? member.gender : "male",
+      });
+    }
+  }, [member]);
+
+  // 기존 데이터에서 변경이 있을 경우 기록
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    setIsNameEdited(true);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsPasswordEdited(true);
+  };
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+    setIsAddressEdited(true);
+  };
+
+  const handleAgeChange = (value) => {
+    setAge(value);
+    setIsAgeEdited(true);
+  };
+
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+    setIsGenderEdited(true);
+  };
 
   // 토큰 리프레쉬
   function sendRefreshToken() {
@@ -101,8 +148,7 @@ export function MemberEdit() {
     return <Spinner />;
   }
 
-  // 수정 여부 확인해서 Status 설정
-  // 이름, 패스워드(필수), 주소, 나이, 성별
+  // 패스워드 규칙에 맞는지 체크
   let passwordChecked = false;
   if (passwordCheck === password) {
     passwordChecked = true;
@@ -111,22 +157,53 @@ export function MemberEdit() {
     passwordChecked = true;
   }
 
-  function handleEdit() {
+  // 버튼 비활성화 지정
+  // 수정 시 필수로 필요한 데이터 -> 패스워드
+  // 나머지는 수정 안해도 괜찮도록 함
+  const isButtonDisabled = () => {
+    return !(
+      isPasswordEdited &&
+      password !== initialData.password &&
+      passwordChecked
+    );
+  };
+
+  // 백엔드로 전송
+  const handleEdit = () => {
+    const editedData = {};
+
+    // 데이터가 수정됐을 경우만 반영하도록 state hook 사용
+    if (isNameEdited) {
+      editedData.name = name;
+    }
+
+    if (isPasswordEdited) {
+      editedData.password = password;
+    }
+
+    if (isAddressEdited) {
+      editedData.address = address;
+    }
+
+    if (isAgeEdited) {
+      editedData.age = age;
+    }
+
+    if (isGenderEdited) {
+      editedData.gender = gender;
+    }
+
     axios
       .put("/member/edit/" + member.id, {
         id: member.id,
-        name,
-        password,
-        address,
-        age,
-        gender,
+        ...editedData,
       })
       .then(() => {
         toast({
-          description: member.id + "번 회원이 수정 됐습니다",
+          description: member.id + "번 회원이 수정 됐습니다.",
           status: "success",
         });
-        navigate("/member?" + member.id);
+        navigate(-1);
       })
       .catch((error) => {
         if (error.response.status === 401 || error.response.status === 403) {
@@ -142,7 +219,8 @@ export function MemberEdit() {
         }
       })
       .finally(() => onClose());
-  }
+  };
+
   return (
     <Box>
       <Heading>{member.name}님 정보</Heading>
@@ -151,34 +229,31 @@ export function MemberEdit() {
         <Input
           type="password"
           value={member.password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
         />
       </FormControl>
       {password.length > 0 && (
-        <FormControl>
+        <FormControl isInvalid={!passwordChecked}>
           <FormLabel>password 확인</FormLabel>
           <Input
-            type="text"
+            type="password"
             value={passwordCheck}
             onChange={(e) => setPasswordCheck(e.target.value)}
           />
+          <FormErrorMessage>패스워드가 일치하지 않습니다</FormErrorMessage>
         </FormControl>
       )}
 
       <FormControl>
         <FormLabel>Name</FormLabel>
-        <Input
-          type="text"
-          value={member.name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <Input type="text" value={member.name} onChange={handleNameChange} />
       </FormControl>
       <FormControl>
         <FormLabel>Address</FormLabel>
         <Input
           type="text"
           value={member.address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={handleAddressChange}
         />
       </FormControl>
       <FormControl>
@@ -187,7 +262,7 @@ export function MemberEdit() {
           defaultValue={member.age !== null ? member.age : 20}
           min={15}
           max={99}
-          onChange={(value) => setAge(value)}
+          onChange={handleAgeChange}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -200,7 +275,7 @@ export function MemberEdit() {
         <FormLabel>Gender</FormLabel>
         <Select
           placeholder={member.gender !== null ? member.gender : "male"}
-          onChange={(e) => setGender(e.target.value)}
+          onChange={handleGenderChange}
         >
           <option value="male">male</option>
           <option value="female">female</option>
@@ -209,7 +284,7 @@ export function MemberEdit() {
 
       <Button
         colorScheme="purple"
-        isDisabled={!passwordChecked}
+        isDisabled={isButtonDisabled()}
         onClick={onOpen}
       >
         수정
