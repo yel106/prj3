@@ -171,9 +171,10 @@ export function BoardList(props) {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
-  function handleClickHeart(e) {
+  function handleClickHeart(e, board) {
     e.stopPropagation();
     console.log("heart!");
+    axios.postForm("/api/like", { id: board.id });
   }
 
   return (
@@ -242,7 +243,7 @@ export function BoardList(props) {
                 {/*</Button>*/}
                 <FontAwesomeIcon
                   icon={faHeart}
-                  onClick={(e) => handleClickHeart(e)}
+                  onClick={(e) => handleClickHeart(e, board)}
                   style={{ color: "#db7093", fontSize: "30px" }}
                 />
               </ButtonGroup>
