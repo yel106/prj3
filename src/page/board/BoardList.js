@@ -31,25 +31,13 @@ function Search() {
   const [genre, setGenre] = useState([]);
   const navigate = useNavigate();
 
-  // const [minPrice, setMinPrice] = useState(0);
-  // const [maxPrice, setMaxPrice] = useState(0);
-
   function handleSearch() {
     const params = new URLSearchParams();
     params.set("k", keyword);
     params.set("c", category);
-    // params.set("g", genre);
     genre.forEach((g) => params.append("g", g));
     navigate("/?" + params);
   }
-
-  /*검색시 */
-  // function handleSearchAlbum() {
-  //   const params = new URLSearchParams();
-  //   params.set("min", minPrice);
-  //   params.set("max", maxPrice);
-  //   navigate("/?" + params);
-  // }
 
   return (
     <React.Fragment>
@@ -143,19 +131,11 @@ export function BoardList(props) {
     const genre = params.get("g");
     const category = params.get("c");
 
-    // const minPrice = params.get("min");
-    // const maxPrice = params.get("max");
-
     axios
       .get(
         `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&g=${genre}&k=${keyword}`,
-        // `/api/board/list?page=${currentPage}&size=${itemsPerPage}&min=${minPrice}&max=${maxPrice}`,
       )
       .then((response) => {
-        // const filtered = response.data.content.filter((album) => {
-        //   return album.price >= minPrice && album.price <= maxPrice;
-        // });
-        // setBoardList(filtered);
         setBoardList(response.data.content);
         setTotalPage(response.data.totalPages);
       });
