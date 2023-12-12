@@ -25,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faHeart,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
@@ -144,9 +145,35 @@ export function BoardList(props) {
   function handlePreviousPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
+  function LikeButton() {
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
 
+    const handleLikeClick = () => {
+      if (liked) {
+        setLikeCount(likeCount - 1);
+      } else {
+        setLikeCount(likeCount + 1);
+      }
+      setLiked(!liked);
+    };
+    return (
+      <div onClick={handleLikeClick}>
+        <FontAwesomeIcon
+          icon={faHeart}
+          style={{ color: liked ? "#db7093" : "black", fontSize: "30px" }}
+        />
+        {likeCount}
+      </div>
+    );
+  }
   function handleNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
+  }
+
+  function handleClickHeart(e) {
+    e.stopPropagation();
+    console.log("heart!");
   }
 
   return (
@@ -197,22 +224,27 @@ export function BoardList(props) {
               <Heading size="s">{board.releaseDate}</Heading>
               <Heading size="s">{board.albumFormat}</Heading>
             </CardHeader>
+
             <CardBody>
               <Text>{board.content}</Text>
             </CardBody>
+
             <CardFooter>
               <ButtonGroup spacing="2">
-                {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
-                <Button w={"30%"} variant="solid" colorScheme="blue">
-                  {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
-                  Wish
+                <Button w={"60%"} variant="solid" colorScheme="pink">
+                  + Cart
                 </Button>
-                <Button w={"30%"} variant="solid" colorScheme="pink">
-                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
-                </Button>
-                <Button w={"25px"}>
-                  <FontAwesomeIcon icon="bi bi-arrow-through-heart"/>
-                </Button>
+                {/*<Button w={"40%"}>*/}
+                {/*  <FontAwesomeIcon*/}
+                {/*    icon={faHeart}*/}
+                {/*    style={{ color: "#db7093" }}*/}
+                {/*  />*/}
+                {/*</Button>*/}
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  onClick={(e) => handleClickHeart(e)}
+                  style={{ color: "#db7093", fontSize: "30px" }}
+                />
               </ButtonGroup>
             </CardFooter>
           </Card>
