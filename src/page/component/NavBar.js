@@ -21,7 +21,7 @@ export function NavBar(props) {
 
   function handleLogout() {
     axios
-      .post("/api/member/logout")
+      .post("/logout")
       .then(() => {
         toast({
           description: "성공적으로 로그아웃 되었습니다",

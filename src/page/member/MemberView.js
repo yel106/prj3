@@ -86,7 +86,10 @@ export function MemberView() {
     return <Spinner />;
   }
 
-  function handleDelete() {}
+  function handleDelete() {
+    //   axios.delete().then().catch();
+    // 홈 화면으로 이동시킬 것
+  }
 
   return (
     <Box>
