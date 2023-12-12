@@ -1,7 +1,21 @@
 import React, {useEffect, useState} from "react";
-import {Box, Button, ButtonGroup, Center, Spinner, Table, Tbody, Td, Th, Thead, Tr,} from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Center,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Image,
+  Flex
+} from "@chakra-ui/react";
 import axios from "axios";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft, faChevronRight,} from "@fortawesome/free-solid-svg-icons";
 import {Search} from "./Search";
@@ -91,7 +105,20 @@ export function BoardList() {
               key={board.id}
               onClick={() => navigate("/board/" + board.id)}
             >
-              <Td>{/* TODO: 앨범 이미지 */}</Td>
+              <Td>
+                <Flex justify="center" align="center">
+                  {board.boardFiles && board.boardFiles.length > 0 && (
+                      <Image
+                          src={board.boardFiles[0].fileUrl}
+                          borderRadius="ml"
+                          border="0px solid black"
+                          w="200px"
+                          h="200px"
+                          objectFit="cover"
+                      />
+                  )}
+                </Flex>
+              </Td>
               <Td>{board.title}</Td>
               <Td>{board.price}</Td>
             </Tr>
