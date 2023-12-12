@@ -3,6 +3,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -20,9 +21,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function MemberView() {
-  const [params] = useSearchParams();
   const [member, setMember] = useState(null);
-  const [refresh, setRefresh] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
@@ -94,7 +93,7 @@ export function MemberView() {
 
   return (
     <Box>
-      <h1>{member.logId}님 정보</h1>
+      <Heading>{member.logId}님 정보</Heading>
       <FormControl>
         <FormLabel>name</FormLabel>
         <Input value={member.name} readOnly />
@@ -115,7 +114,10 @@ export function MemberView() {
         <FormLabel>role</FormLabel>
         <Input type="text" value={member.role} readOnly />
       </FormControl>
-      <Button colorScheme="purple" onClick={() => navigate("/medit/" + 1)}>
+      <Button
+        colorScheme="purple"
+        onClick={() => navigate("/medit/" + member.id)}
+      >
         수정
       </Button>
       <Button colorScheme="red" onClick={onOpen}>

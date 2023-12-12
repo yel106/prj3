@@ -6,6 +6,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -32,13 +33,62 @@ export function MemberEdit() {
   const [passwordCheck, setPasswordCheck] = useState("");
   let sameOriginEmail = false;
 
+  function getMember() {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("엑세스 토큰", accessToken);
+    axios
+      .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        console.log("getMember()의 then 실행");
+        setMember(response.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          console.log("getMember()의 catch 실행");
+          localStorage.removeItem("accessToken");
+          sendRefreshToken();
+          console.log("sendRefreshToken 호출");
+        } else if (error.response.status === 403) {
+          console.log("403에러");
+        } else {
+          console.log("그 외 에러");
+        }
+      });
+  }
+
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    axios
+      .get("/refreshToken", {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      })
+      .then((response) => {
+        console.log("sendRefreshToken()의 then 실행");
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        console.log("토큰들 업데이트 리프레시 토큰: ");
+        console.log(response.data.refreshToken);
+        getMember();
+      })
+      .catch((error) => {
+        console.log("sendRefreshToken()의 catch 실행");
+        localStorage.removeItem("refreshToken");
+        //navigate("/login");
+        toast({
+          description: "권한이 없습니다",
+          status: "warning",
+        });
+        navigate("/login");
+      });
+  }
+
   useEffect(() => {
-    axios.get("/member/" + 1).then((response) => {
-      setMember(response.data);
-      setEmail(response.data.email);
-      setAddress(response.data.address);
-    });
+    getMember();
   }, []);
+
   if (member === null) {
     return <Spinner />;
   }
@@ -77,13 +127,18 @@ export function MemberEdit() {
   }
   function handleEdit() {
     axios
-      .put("/member/edit/" + 1, { id: member.id, password, email, address })
+      .put("/member/edit/" + member.id, {
+        id: member.id,
+        password,
+        email,
+        address,
+      })
       .then(() => {
         toast({
-          description: 1 + "번 회원이 수정 됐습니다",
+          description: member.id + "번 회원이 수정 됐습니다",
           status: "success",
         });
-        navigate("/member?" + 1);
+        navigate("/member?" + member.id);
       })
       .catch((error) => {
         if (error.response.status === 401 || error.response.status === 403) {
@@ -102,12 +157,12 @@ export function MemberEdit() {
   }
   return (
     <Box>
-      <h1>{member.name}님 정보</h1>
+      <Heading>{member.name}님 정보</Heading>
       <FormControl>
         <FormLabel>password</FormLabel>
         <Input
           type="text"
-          value={password}
+          value={member.password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </FormControl>
@@ -127,7 +182,7 @@ export function MemberEdit() {
         <Flex>
           <Input
             type="email"
-            value={email}
+            value={member.email}
             onChange={(e) => {
               setEmail(e.target.value);
               setEmailAvailable(false);
@@ -142,7 +197,7 @@ export function MemberEdit() {
         <FormLabel>address</FormLabel>
         <Input
           type="text"
-          value={address}
+          value={member.address}
           onChange={(e) => setAddress(e.target.value)}
         />
       </FormControl>

@@ -152,7 +152,7 @@ export function BoardList(props) {
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <h1>Album list</h1>
+      <Heading>Album list</Heading>
       <Search /> {/* 검색 컴포넌트*/}
       <SimpleGrid
         border="1px solid black"
@@ -211,7 +211,7 @@ export function BoardList(props) {
                   {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
                 </Button>
                 <Button w={"25px"}>
-                  <FontAwesomeIcon icon="bi bi-arrow-through-heart"/>
+                  <FontAwesomeIcon icon="bi bi-arrow-through-heart" />
                 </Button>
               </ButtonGroup>
             </CardFooter>
