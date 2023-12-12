@@ -131,9 +131,6 @@ export function BoardList(props) {
     const genre = params.get("g");
     const category = params.get("c");
 
-    // const minPrice = params.get("min");
-    // const maxPrice = params.get("max");
-
     axios
       .get(
         `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&g=${genre}&k=${keyword}`,
