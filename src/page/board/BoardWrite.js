@@ -6,13 +6,15 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Checkbox,
+  CheckboxGroup,
   FormControl,
   FormHelperText,
   FormLabel,
   Heading,
   Input,
   Select,
-  Textarea,
+  Stack,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -23,7 +25,7 @@ export function BoardWrite() {
   const [artist, setArtist] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [albumFormat, setAlbumFormat] = useState("");
-  const [albumDetail, setAlbumDetail] = useState("");
+  const [albumDetails, setAlbumDetails] = useState([]);
   const [agency, setAgency] = useState("");
   const [price, setPrice] = useState("");
   const [uploadFiles, setUploadFiles] = useState(null);
@@ -41,7 +43,10 @@ export function BoardWrite() {
         title,
         artist,
         albumFormat,
-        albumDetail,
+        albumDetails:
+          Array.isArray(albumDetails) && albumDetails.length > 1 //값이 배열이고, 배열길이 1보다 큰지 확인
+            ? albumDetails.join(",")
+            : albumDetails,
         releaseDate,
         agency,
         price,
@@ -113,16 +118,25 @@ export function BoardWrite() {
             >
               <option value="CD">CD</option>
               <option value="VINYL">VINYL</option>
-              <option value="CASSETTE_TAPE">CASSETTE_TAPE</option>
+              <option value="CASSETTE_TAPE">CASSETTE-TAPE</option>
             </Select>
           </FormControl>
 
           <FormControl mb={5}>
-            <FormLabel>Album Detail</FormLabel>
-            <Input
-              value={albumDetail}
-              onChange={(e) => setAlbumDetail(e.target.value)}
-            />
+            <FormLabel>Genres</FormLabel>
+            <CheckboxGroup
+              value={albumDetails}
+              onChange={(selectedAlbumGenres) =>
+                setAlbumDetails(selectedAlbumGenres)
+              }
+            >
+              <Stack spacing={2} direction="row">
+                <Checkbox value="INDIE">Indie</Checkbox>
+                <Checkbox value="OST">OST</Checkbox>
+                <Checkbox value="K_POP">K-POP</Checkbox>
+                <Checkbox value="POP">Pop</Checkbox>
+              </Stack>
+            </CheckboxGroup>
           </FormControl>
 
           {/* 릴리스 날짜 입력란 */}
