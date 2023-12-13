@@ -89,10 +89,22 @@ export function MemberView() {
 
   function handleDelete() {
     axios
-      .delete("/api/delete")
-      .then()
-      .catch()
-      .finally(() => console.log("해치웠나"));
+      .delete("/member/delete/" + member.id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        console.log("회원 탈퇴 성공");
+      })
+      .catch(() => console.log("회원 탈퇴 실패"))
+      .finally(() => {
+        console.log("해치웠나");
+        onClose();
+        navigate("/");
+      });
     //   axios.delete().then().catch();
     // 홈 화면으로 이동시킬 것
   }
