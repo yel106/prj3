@@ -194,10 +194,19 @@ export function MemberEdit() {
     }
 
     axios
-      .put("/member/edit/" + member.id, {
-        id: member.id,
-        ...editedData,
-      })
+      .put(
+        "/member/edit/" + member.id,
+        {
+          id: member.id,
+          logId: member.logId,
+          ...editedData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      )
       .then(() => {
         toast({
           description: member.id + "번 회원이 수정 됐습니다.",
