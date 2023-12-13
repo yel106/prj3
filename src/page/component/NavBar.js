@@ -66,7 +66,7 @@ export function NavBar(props) {
           }
         })
         .catch(() => {
-          sendRefreshToken();
+          sendRefreshToken(); //TODO: 이런 곳에 axios. 해서 토큰 갱신
           localStorage.removeItem("accessToken");
         })
         .finally(() => console.log("finally loggedIn: ", loggedIn));
@@ -82,24 +82,47 @@ export function NavBar(props) {
           Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
         },
       })
-      .then(() => {
+      .then((response) => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        toast({
-          description: "성공적으로 로그아웃 되었습니다",
-          status: "success",
-        });
         setLoggedIn(false);
         if (isAdmin) {
           setIsAdmin(false);
         }
+        toast({
+          description: "성공적으로 로그아웃 되었습니다",
+          status: "success",
+        });
         navigate("/");
       })
       .catch((error) => {
-        toast({
-          description: "로그아웃 도중 에러가 발생했습니다",
-          status: "error",
-        });
+        if (error.response.status === 302) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          setLoggedIn(false);
+          if (isAdmin) {
+            setIsAdmin(false);
+          }
+          // Open a new popup window for the logout URL
+          const popupWindow = window.open(
+            "http://nid.naver.com/nidlogin.logout?url=http://localhost:8080",
+            "_blank",
+          );
+          if (popupWindow) {
+            setTimeout(() => {
+              popupWindow.close();
+            }, 0); //바로 닫기
+          }
+          toast({
+            description: "성공적으로 로그아웃 되었습니다",
+            status: "success",
+          });
+        } else {
+          toast({
+            description: "로그아웃 도중 에러가 발생했습니다",
+            status: "error",
+          });
+        }
       })
       .finally(() => {
         console.log("로그아웃 finally");

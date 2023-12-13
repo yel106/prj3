@@ -60,6 +60,10 @@ export function MemberEdit() {
       .then((response) => {
         console.log("getMember()의 then 실행");
         setMember(response.data);
+        setName(response.data.name);
+        setAddress(response.data.address);
+        setGender(response.data.gender);
+        setAge(response.data.age);
       })
       .catch((error) => {
         if (error.response.status === 401) {
@@ -170,43 +174,39 @@ export function MemberEdit() {
 
   // 백엔드로 전송
   const handleEdit = () => {
-    const editedData = {};
-
     // 데이터가 수정됐을 경우만 반영하도록 state hook 사용
     if (isNameEdited) {
-      editedData.name = name;
+      initialData.name = name;
     }
 
     if (isPasswordEdited) {
-      editedData.password = password;
+      initialData.password = password;
     }
 
     if (isAddressEdited) {
-      editedData.address = address;
+      initialData.address = address;
     }
 
     if (isAgeEdited) {
-      editedData.age = age;
+      initialData.age = age;
     }
 
     if (isGenderEdited) {
-      editedData.gender = gender;
+      initialData.gender = gender;
     }
 
     axios
-      .put(
-        "/member/edit/" + member.id,
-        {
-          id: member.id,
-          logId: member.logId,
-          ...editedData,
-        },
+      .put("/member/edit/" + member.id, {
+        id: member.id,
+        logId: member.logId,
+        ...initialData,
+      },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         },
-      )
+        )
       .then(() => {
         toast({
           description: member.id + "번 회원이 수정 됐습니다.",
@@ -255,20 +255,16 @@ export function MemberEdit() {
 
       <FormControl>
         <FormLabel>Name</FormLabel>
-        <Input type="text" value={member.name} onChange={handleNameChange} />
+        <Input type="text" value={name} onChange={handleNameChange} />
       </FormControl>
       <FormControl>
         <FormLabel>Address</FormLabel>
-        <Input
-          type="text"
-          value={member.address}
-          onChange={handleAddressChange}
-        />
+        <Input type="text" value={address} onChange={handleAddressChange} />
       </FormControl>
       <FormControl>
         <FormLabel>Age</FormLabel>
         <NumberInput
-          defaultValue={member.age !== null ? member.age : 20}
+          defaultValue={age !== null ? age : 20}
           min={15}
           max={99}
           onChange={handleAgeChange}
@@ -283,7 +279,7 @@ export function MemberEdit() {
       <FormControl>
         <FormLabel>Gender</FormLabel>
         <Select
-          placeholder={member.gender !== null ? member.gender : "male"}
+          placeholder={gender !== null ? gender : "male"}
           onChange={handleGenderChange}
         >
           <option value="male">male</option>

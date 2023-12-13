@@ -88,6 +88,11 @@ export function MemberView() {
   }
 
   function handleDelete() {
+    axios
+      .delete("/api/delete")
+      .then()
+      .catch()
+      .finally(() => console.log("해치웠나"));
     //   axios.delete().then().catch();
     // 홈 화면으로 이동시킬 것
   }
@@ -124,14 +129,14 @@ export function MemberView() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalHeader>탈퇴 확인</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>삭제 하시겠습니까?</ModalBody>
+          <ModalBody>탈퇴 하시겠습니까?</ModalBody>
 
           <ModalFooter>
             <Button onClick={onClose}>닫기</Button>
             <Button onClick={handleDelete} colorScheme="red">
-              삭제
+              탈퇴
             </Button>
           </ModalFooter>
         </ModalContent>
