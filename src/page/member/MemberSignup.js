@@ -12,6 +12,8 @@ import {
   Heading,
   Input,
   Select,
+  useRadio,
+  useRadioGroup,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -27,14 +29,15 @@ export function MemberSignup() {
   const [birthDate, setBirthDate] = useState("");
   const [firstDigit, setFirstDigit] = useState("");
   const [role, setRole] = useState("");
+  const [emailAvailable, setEmailAvailable] = useState(false);
+  const [idAvailable, setIdAvailable] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  const [emailAvailable, setEmailAvailable] = useState(false);
   let sameOriginEmail = false;
   let emailChecked = sameOriginEmail || emailAvailable;
-  const [idAvailable, setIdAvailable] = useState(false);
   let sameOriginId = false;
   let idChecked = sameOriginId || idAvailable;
+
   function handleSubmit() {
     axios
       .post("/member/add", {
