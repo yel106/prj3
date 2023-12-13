@@ -5,6 +5,7 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -22,6 +23,7 @@ import {
   NumberInputStepper,
   Select,
   Spinner,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -83,11 +85,11 @@ export function MemberEdit() {
   useEffect(() => {
     if (member !== null) {
       setInitialData({
-        name: member.name !== null ? member.name : "Anon",
+        name: member.name,
         password: member.password,
         address: member.address,
-        age: member.age !== null ? member.age : 20,
-        gender: member.gender !== null ? member.gender : "male",
+        age: member.age,
+        gender: member.gender,
       });
     }
   }, [member]);
@@ -196,17 +198,19 @@ export function MemberEdit() {
     }
 
     axios
-      .put("/member/edit/" + member.id, {
-        id: member.id,
-        logId: member.logId,
-        ...initialData,
-      },
+      .put(
+        "/member/edit/" + member.id,
+        {
+          id: member.id,
+          logId: member.logId,
+          ...initialData,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         },
-        )
+      )
       .then(() => {
         toast({
           description: member.id + "번 회원이 수정 됐습니다.",
@@ -233,7 +237,10 @@ export function MemberEdit() {
   return (
     <Box>
       <Heading>{member.name}님 정보</Heading>
-      <FormControl>
+      <FormControl isRequired>
+        <FormHelperText size="sm">
+          수정하지 않을 시 기존 정보가 보존됩니다
+        </FormHelperText>
         <FormLabel>password</FormLabel>
         <Input
           type="password"
@@ -264,7 +271,7 @@ export function MemberEdit() {
       <FormControl>
         <FormLabel>Age</FormLabel>
         <NumberInput
-          defaultValue={age !== null ? age : 20}
+          defaultValue={age !== null ? age : 0}
           min={15}
           max={99}
           onChange={handleAgeChange}

@@ -97,6 +97,18 @@ export function MemberView() {
     // 홈 화면으로 이동시킬 것
   }
 
+  const formattedEmail = () => {
+    const email = member.email;
+
+    if (email) {
+      const [username, domain] = email.split("@");
+      const maskedUsername =
+        username.slice(0, 2) + "*".repeat(username.length - 2);
+      return `${maskedUsername}@${domain}`;
+    }
+    return "";
+  };
+
   return (
     <Box>
       <Heading>{member.logId}님 정보</Heading>
@@ -110,7 +122,11 @@ export function MemberView() {
       </FormControl>
       <FormControl>
         <FormLabel>email</FormLabel>
-        <Input value={member.email} readOnly />
+        <Input value={formattedEmail()} readOnly />
+      </FormControl>
+      <FormControl>
+        <FormLabel>age</FormLabel>
+        <Input type="text" value={member.age} readOnly />
       </FormControl>
       <FormControl>
         <FormLabel>gender</FormLabel>
