@@ -7,7 +7,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { HomeLayout } from "./page/layout/HomeLayout";
+// import { HomeLayout } from "./page/layout/HomeLayout";
 import { MemberSignup } from "./page/member/MemberSignup";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
@@ -29,10 +29,9 @@ const routes = createBrowserRouter(
     <Route path="/" element={<HomeLayout />}>
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
-      <Route path="board/:id" element={<BoardView />} />{" "}
+      <Route path="board/:id" element={<BoardView />} />
       {/*id는 useParams() 사용*/}
       <Route path="edit/:id" element={<BoardEdit />} />
-
       {/*<Route path="category/:id" element={<Category_CD />} />*/}
       <Route path="signup" element={<MemberSignup />}></Route>
       <Route path="member/list" element={<MemberList />} />
