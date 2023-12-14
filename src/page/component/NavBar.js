@@ -153,17 +153,6 @@ export function NavBar(props) {
 
   return (
     <Flex flexDirection="column">
-      <HStack marginLeft={"100%"} spacing="24px">
-        <Box w="50px" h="40px" bg="yellow.200">
-          1
-        </Box>
-        <Box w="50px" h="40px" bg="tomato">
-          2
-        </Box>
-        <Box w="50px" h="40px" bg="pink.100">
-          3
-        </Box>
-      </HStack>
       <Box position="fixed" top={0} left={0}>
         <Button
           variant="ghost"
