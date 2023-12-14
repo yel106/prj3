@@ -133,19 +133,17 @@ export function BoardList() {
   }
 
   return (
-    //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <h1>Album list</h1>
       <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
       <SimpleGrid
-        border="1px solid black"
+        border="0px solid black"
         placeItems="center"
         templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
         gap={3} // 카드 사이의 간격
       >
         {boardList.map((board) => (
           <Card
-            border="0px solid black"
+            border="1px solid black"
             key={board.fileUrl}
             style={{ width: "100%" }}
             onClick={() => navigate(`/board/${board.id}`)}
@@ -164,7 +162,7 @@ export function BoardList() {
                       key={index}
                       src={url}
                       borderRadius="ml"
-                      border="0px solid black"
+                      border="1px solid black"
                       style={{
                         width: "200px",
                         height: "200px",
@@ -174,30 +172,32 @@ export function BoardList() {
                   ))}
               </div>
               <br />
-              <Heading size="md">{board.title}</Heading>
-              <Heading size="m">{board.artist}</Heading>
-              <Heading size="m">{board.price}</Heading>
-              <Heading size="s">{board.releaseDate}</Heading>
-              <Heading size="s">{board.albumFormat}</Heading>
+
+              <div>
+                <Heading size="md">{board.title}</Heading>
+                <Heading size="m">{board.artist}</Heading>
+                {/*<Heading size="m">{board.price}</Heading>*/}
+                {/*<Heading size="s">{board.releaseDate}</Heading>*/}
+                {/*<Heading size="s">{board.albumFormat}</Heading>*/}
+              </div>
             </CardHeader>
-            <CardBody>
-              <Text>{board.content}</Text>
-            </CardBody>
+            {/*<CardBody>*/}
+            {/*  <Text>{board.content}</Text>*/}
+            {/*</CardBody>*/}
             <CardFooter>
               <ButtonGroup spacing="2">
                 <Button w={"60%"} variant="solid" colorScheme="pink">
                   + Cart
                 </Button>
-                {/*<Button w={"40%"}>*/}
-                {/*  <FontAwesomeIcon*/}
-                {/*    icon={faHeart}*/}
-                {/*    style={{ color: "#db7093" }}*/}
-                {/*  />*/}
-                {/*</Button>*/}
+
                 <FontAwesomeIcon
                   icon={faHeart}
                   onClick={(e) => handleClickHeart(e, board)}
-                  style={{ color: "#db7093", fontSize: "30px" }}
+                  style={{
+                    color: "#db7093",
+                    fontSize: "29px",
+                    marginLeft: "140px",
+                  }}
                 />
               </ButtonGroup>
             </CardFooter>
