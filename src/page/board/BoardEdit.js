@@ -4,6 +4,7 @@ import {
   Container,
   FormControl,
   FormLabel,
+  Heading,
   Image,
   Input,
   Spinner,
@@ -152,7 +153,7 @@ export function BoardEdit() {
   //--------------------------------------등록된 상품 수정 폼
   return (
     <Container>
-      <h1>No.{id} Edit </h1>
+      <Heading>No.{id} Edit </Heading>
       <br />
       <FormControl>
         <FormLabel>Image</FormLabel>

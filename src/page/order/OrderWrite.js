@@ -1,4 +1,4 @@
-import { Button, Input, useToast } from "@chakra-ui/react";
+import { Button, Input, Heading, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -112,7 +112,7 @@ export function OrderWrite() {
 
   return (
     <div>
-      <h1>주문 페이지</h1>
+      <Heading>주문 페이지</Heading>
       <Input
         type="text"
         value={name}
