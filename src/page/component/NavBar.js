@@ -11,7 +11,7 @@ import {
   useDisclosure,
   useToast,
   Box,
-  DrawerFooter,
+  HStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -34,9 +34,15 @@ export function NavBar(props) {
   const urlParams = new URLSearchParams();
   const location = useLocation();
   const toast = useToast();
+  const [titleIconOpen, setTitleIconOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [placement, setPlacement] = React.useState("left");
 
+  const onCloseDrawer = () => {
+    // Drawer를 닫는 함수를 정의합니다.
+    setTitleIconOpen(false);
+  };
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -147,6 +153,17 @@ export function NavBar(props) {
 
   return (
     <Flex flexDirection="column">
+      <HStack marginLeft={"100%"} spacing="24px">
+        <Box w="50px" h="40px" bg="yellow.200">
+          1
+        </Box>
+        <Box w="50px" h="40px" bg="tomato">
+          2
+        </Box>
+        <Box w="50px" h="40px" bg="pink.100">
+          3
+        </Box>
+      </HStack>
       <Box position="fixed" top={0} left={0}>
         <Button
           variant="ghost"
@@ -163,10 +180,17 @@ export function NavBar(props) {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">
-            🎵 MUSIC IS MY LIFE 🎵
+          <DrawerHeader
+            borderBottomWidth="1px"
+            onClick={() => {
+              onCloseDrawer();
+              navigate("/");
+            }}
+          >
+            > 🎵 MUSIC IS MY LIFE 🎵
           </DrawerHeader>
           <DrawerBody>
+            {/*새로운 음반 등록 시스템 : 관리자만이 접근 가능.*/}
             {isAdmin && (
               <Button
                 border="1px solid black"
@@ -179,6 +203,7 @@ export function NavBar(props) {
                 ALBUM REGISTER SYSTEM
               </Button>
             )}
+            {/*로그인으로 가기 */}
             {loggedIn || (
               <Button
                 variant="ghost"
@@ -190,6 +215,7 @@ export function NavBar(props) {
                 Log in
               </Button>
             )}
+            {/*멤버로 가입하기 */}
             {loggedIn || (
               <Button
                 borderRadius={0}
@@ -202,6 +228,7 @@ export function NavBar(props) {
               </Button>
             )}{" "}
             <br />
+            {/*회원들의 정보" 관리자의 경우 열람 가능 */}
             {loggedIn && (
               <Button
                 borderRadius={0}
@@ -213,6 +240,7 @@ export function NavBar(props) {
                 Member Info
               </Button>
             )}
+            {/*회원 리스트*/}
             {isAdmin && (
               <Button
                 borderRadius={0}
@@ -226,6 +254,7 @@ export function NavBar(props) {
             )}
             <br />
             <br />
+            {/*주문 버튼 */}
             <Button
               borderRadius={0}
               variant="ghost"
@@ -236,15 +265,16 @@ export function NavBar(props) {
               Order
             </Button>
             <br />
-            <Button
-              borderRadius={0}
-              variant="ghost"
-              size="lg"
-              leftIcon={<FontAwesomeIcon icon={faMusic} />}
-              onClick={() => navigate("/")}
-            >
-              All Item
-            </Button>
+            {/*<Button*/}
+            {/*  borderRadius={0}*/}
+            {/*  variant="ghost"*/}
+            {/*  size="lg"*/}
+            {/*  leftIcon={<FontAwesomeIcon icon={faMusic} />}*/}
+            {/*  onClick={() => navigate("/")}*/}
+            {/*>*/}
+            {/*  All Item*/}
+            {/*</Button>*/}
+            {/*로그아웃 버튼 : 로그인 한 경우 */}
             {loggedIn && (
               <Button
                 variant="ghost"
@@ -258,28 +288,34 @@ export function NavBar(props) {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      {loggedIn || (
-        <Button
-          borderRadius={0}
-          variant="ghost"
-          size="lg"
-          leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-          onClick={() => navigate("/signup")}
-        >
-          Sign Up
-        </Button>
-      )}
-      {loggedIn || (
-        <Button
-          variant="ghost"
-          size="lg"
-          _hover={{ bg: "none" }}
-          onClick={() => navigate("/login")}
-          leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-        >
-          Log in
-        </Button>
-      )}
+      {/*회원 가입 버튼*/}
+
+      <>
+        {" "}
+        {loggedIn || (
+          <Button
+            borderRadius={0}
+            variant="ghost"
+            size="lg"
+            leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </Button>
+        )}
+        {/*로그인 버튼 */}
+        {loggedIn || (
+          <Button
+            variant="ghost"
+            size="lg"
+            _hover={{ bg: "none" }}
+            onClick={() => navigate("/login")}
+            leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+          >
+            Log in
+          </Button>
+        )}
+      </>
     </Flex>
   );
 }
