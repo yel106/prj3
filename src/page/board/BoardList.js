@@ -19,97 +19,52 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faHeart,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import * as PropTypes from "prop-types";
+import { Search } from "./Search";
+import CommentComponent from "../../component/CommentComponent";
 
-//검색 관련 컴포넌트
-function Search() {
-  const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState("");
-  const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [releaseDate, setReleaseDate] = useState("");
-  const [albumFormat, setAlbumFormat] = useState("");
-  const [agency, setAgency] = useState("");
-  const [price, setPrice] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
-  const [uploadFiles, setUploadFiles] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  function handleSearch() {
-    const params = new URLSearchParams();
-    params.set("k", keyword);
-    params.set("c", category);
-    navigate("/?" + params);
-  }
-
-  return (
-    <Center>
-      {/*<Container marginLeft="20">*/}
-      {/*  <Grid templateColumns="repeat(5, 1fr)" gap={6}>*/}
-      {/*    <Button w="100%" h="30" bg="blue.100">*/}
-      {/*      CD*/}
-      {/*    </Button>*/}
-      {/*    <Button w="100%" h="30" bg="blue.100">*/}
-      {/*      VINYL*/}
-      {/*    </Button>*/}
-      {/*    <Button w="200%" h="30" bg="blue.100">*/}
-      {/*      CASSETTE_TAPE*/}
-      {/*    </Button>*/}
-      {/*  </Grid>*/}
-      {/*</Container>*/}
-
-      <Flex gap={2} mt={3} mb={10}>
-        <Box>
-          <Select
-            defaultValue="all"
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="all">상품 분류 선택</option>
-            <option value="CD">CD</option>
-            <option value="VINYL">VINYL</option>
-            <option value="CASSETTETAPE">CASSETTE_TAPE</option>
-          </Select>
-        </Box>
-        <Box>
-          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-        </Box>
-        <Button onClick={handleSearch}>
-          <FontAwesomeIcon icon={faSearch} />
-        </Button>
-      </Flex>
-    </Center>
-  );
-}
-
-CardHeader.propTypes = { children: PropTypes.node };
-const ITEM_PER_PAGE = 16;
-
-export function BoardList(props) {
+export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
   const [fileUrl, setFileUrl] = useState();
-  const location = useLocation();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
-
+  // 검색 조건을 상태로 관리.
+  const [searchParams, setSearchParams] = useState({
+    title: "",
+    albumFormat: "",
+    albumDetails: [],
+  });
+  // 검색 조건을 업데이트하는 함수.
+  const handleSearch = (params) => {
+    setSearchParams(params);
+    setCurrentPage(0); // 검색 시 첫 페이지로 이동.
+  };
   useEffect(() => {
-    const params = new URLSearchParams(location.search); // search속성: URL의 쿼리 문자열을 포함
-    const keyword = params.get("k");
-    const category = params.get("c");
+    // searchParams 상태를 사용하여 API 호출을 업데이트.
     axios
-      .get(
-        `/api/board/list?page=${currentPage}&size=${itemsPerPage}&c=${category}&k=${keyword}`,
-      )
+      .get(`/api/board/list`, {
+        params: {
+          page: currentPage,
+          size: itemsPerPage,
+          title: searchParams.title,
+          albumFormat: searchParams.format,
+          // albumDetails가 undefined가 아닌 경우에만 join을 호출.
+          albumDetails: searchParams.genres
+            ? searchParams.genres.join(",")
+            : "",
+          minPrice: searchParams.minPrice,
+          maxPrice: searchParams.maxPrice,
+        },
+      })
       .then((response) => {
         const boards = response.data.content;
 
@@ -119,10 +74,11 @@ export function BoardList(props) {
           const fileUrls = board.boardFiles.map((file) => file.fileUrl);
           return { ...board, fileUrls };
         });
+
         setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
       });
-  }, [currentPage, location.search]); //현재 페이지와 변경될 때마다 실행
+  }, [currentPage, searchParams]);
 
   if (boardList === null) {
     return <Spinner />;
@@ -144,16 +100,43 @@ export function BoardList(props) {
   function handlePreviousPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
+  function LikeButton() {
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
 
+    const handleLikeClick = () => {
+      if (liked) {
+        setLikeCount(likeCount - 1);
+      } else {
+        setLikeCount(likeCount + 1);
+      }
+      setLiked(!liked);
+    };
+    return (
+      <div onClick={handleLikeClick}>
+        <FontAwesomeIcon
+          icon={faHeart}
+          style={{ color: liked ? "#db7093" : "black", fontSize: "30px" }}
+        />
+        {likeCount}
+      </div>
+    );
+  }
   function handleNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
+  }
+
+  function handleClickHeart(e, board) {
+    e.stopPropagation();
+    console.log("heart!");
+    axios.postForm("/api/like", { id: board.id });
   }
 
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <Heading>Album list</Heading>
-      <Search /> {/* 검색 컴포넌트*/}
+      <h1>Album list</h1>
+      <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
       <SimpleGrid
         border="1px solid black"
         placeItems="center"
@@ -202,17 +185,20 @@ export function BoardList(props) {
             </CardBody>
             <CardFooter>
               <ButtonGroup spacing="2">
-                {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
-                <Button w={"30%"} variant="solid" colorScheme="blue">
-                  {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
-                  Wish
+                <Button w={"60%"} variant="solid" colorScheme="pink">
+                  + Cart
                 </Button>
-                <Button w={"30%"} variant="solid" colorScheme="pink">
-                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
-                </Button>
-                <Button w={"25px"}>
-                  <FontAwesomeIcon icon="bi bi-arrow-through-heart" />
-                </Button>
+                {/*<Button w={"40%"}>*/}
+                {/*  <FontAwesomeIcon*/}
+                {/*    icon={faHeart}*/}
+                {/*    style={{ color: "#db7093" }}*/}
+                {/*  />*/}
+                {/*</Button>*/}
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  onClick={(e) => handleClickHeart(e, board)}
+                  style={{ color: "#db7093", fontSize: "30px" }}
+                />
               </ButtonGroup>
             </CardFooter>
           </Card>
@@ -234,6 +220,7 @@ export function BoardList(props) {
           </Button>
         </ButtonGroup>
       </Center>
+      <CommentComponent />
     </Box>
   );
 }

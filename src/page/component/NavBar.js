@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Flex, useToast } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faDollarSign,
   faHome,
   faRecordVinyl,
   faRightFromBracket,
@@ -184,6 +185,15 @@ export function NavBar(props) {
           회원목록
         </Button>
       )}
+      <Button
+        borderRadius={0}
+        variant="ghost"
+        size="lg"
+        leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
+        onClick={() => navigate("/order")}
+      >
+        주문하기
+      </Button>
       {loggedIn || (
         <Button
           variant="ghost"
