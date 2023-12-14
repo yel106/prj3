@@ -25,6 +25,7 @@ export function MemberView() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
+  const [orderNames, setOrderNames] = useState([]);
 
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
@@ -35,20 +36,41 @@ export function MemberView() {
         console.log("getMember()의 then 실행");
         console.log(response.data);
         setMember(response.data);
+        return axios.get(`/member/${response.data.logId}/orders`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      })
+      .then((response) => {
+        setOrderNames(response.data);
       })
       .catch((error) => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           console.log("getMember()의 catch 실행");
           localStorage.removeItem("accessToken");
           sendRefreshToken();
           console.log("sendRefreshToken 호출");
-        } else if (error.response.status === 403) {
+        } else if (error.response && error.response.status === 403) {
+          toast({
+            description: "접근이 거부되었습니다",
+            status: "error",
+          });
           console.log("403에러");
         } else {
+          toast({
+            description: "오류가 발생했습니다",
+            status: "error",
+          });
           console.log("그 외 에러");
         }
       });
   }
+  // 주문 이름들을 표시하는 폼 컨트롤
+  const orderNameControls = orderNames.map((orderName, index) => (
+    <FormControl key={index}>
+      <FormLabel>Order Name {index + 1}</FormLabel>
+      <Input type="text" value={orderName} readOnly />
+    </FormControl>
+  ));
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -137,6 +159,7 @@ export function MemberView() {
       <Button colorScheme="red" onClick={onOpen}>
         탈퇴
       </Button>
+      {orderNameControls}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

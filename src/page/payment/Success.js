@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "@chakra-ui/react";
 import { useEffect } from "react";
 import axios from "axios";
+import data from "bootstrap/js/src/dom/data";
 
 export function Success() {
   const navigate = useNavigate();
@@ -29,12 +30,10 @@ export function Success() {
           requestData,
           {
             headers: {
-              Authorization: encryptedSecretKey,
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           },
         );
-
         console.log(response.data); // 성공 응답 데이터 출력
         // TODO: 구매 완료 비즈니스 로직 구현
         // 예: 성공 메시지 표시, 다른 페이지로 리디렉션 등
@@ -50,6 +49,16 @@ export function Success() {
         }
       }
     }
+    confirm();
+    // confirm().then(() => {
+    //   axios
+    //     .post("/api/order/add", requestData, {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    //       },
+    //     })
+    //     .then(() => console.log("성공"));
+    // });
   }, []);
 
   return (

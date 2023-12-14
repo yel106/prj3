@@ -3,7 +3,7 @@ import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
 import { Button, useQuery } from "@chakra-ui/react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 const clientKey = "test_ck_QbgMGZzorzz0oMebq4lvrl5E1em4";
 const customerKey = nanoid();
 const selector = "#payment-widget";
@@ -25,23 +25,57 @@ export function Payment() {
   const paymentWidgetRef = useRef(null);
   const paymentMethodsWidgetRef = useRef(null);
   const [price, setPrice] = useState(amount);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
-      const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-      if (paymentWidget == null) {
+    const checkLoginAndLoadWidget = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        navigate("/login");
         return;
       }
-      const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
-        selector,
-        price,
-        { variantKey: "DEFAULT" },
-      );
-      paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
-      paymentWidgetRef.current = paymentWidget;
-      paymentMethodsWidgetRef.current = paymentMethodsWidget;
-    })();
-  }, [paymentWidget]);
+      try {
+        // 토큰이 유효한 경우, 결제 위젯 로드
+        const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+        if (paymentWidget == null) {
+          return;
+        }
+        const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+          selector,
+          price,
+          { variantKey: "DEFAULT" },
+        );
+
+        paymentWidget.renderAgreement("#agreement", {
+          variantKey: "AGREEMENT",
+        });
+        paymentWidgetRef.current = paymentWidget;
+        paymentMethodsWidgetRef.current = paymentMethodsWidget;
+      } catch (error) {
+        // 토큰이 유효하지 않거나 로드 중 에러 발생 시 로그인 페이지로 리디렉션
+        navigate("/login");
+      }
+    };
+
+    checkLoginAndLoadWidget();
+  }, [navigate]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+  //     if (paymentWidget == null) {
+  //       return;
+  //     }
+  //     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+  //       selector,
+  //       price,
+  //       { variantKey: "DEFAULT" },
+  //     );
+  //     paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
+  //     paymentWidgetRef.current = paymentWidget;
+  //     paymentMethodsWidgetRef.current = paymentMethodsWidget;
+  //   })();
+  // }, [paymentWidget]);
   useEffect(() => {
     const paymentMethodsWidget = paymentMethodsWidgetRef.current;
     if (paymentMethodsWidget == null) {
@@ -79,6 +113,7 @@ export function Payment() {
           </div>
         </div>
         <div className="result wrapper">
+          <p>총액 {price}원</p>
           <Button
             onClick={async () => {
               const paymentWidget = paymentWidgetRef.current;
@@ -101,41 +136,6 @@ export function Payment() {
         </div>
       </div>
     </div>
-    // <div>
-    //   <h1>주문서</h1>
-    //   <div id="payment-widget"></div>
-    //   <div>
-    //     <Checkbox
-    //       borderColor="black"
-    //       borderWidth="2px"
-    //       mt={1}
-    //       onChange={(event) => {
-    //         // 여기에 updateAmount할 예정
-    //         setPrice(event.target.checked ? price - 5_000 : price + 5_000);
-    //       }}
-    //     />
-    //     <label>5,000월 할인 쿠폰 적용</label>
-    //   </div>
-    //   <Button
-    //     onClick={async () => {
-    //       const paymentWidget = paymentWidgetRef.current;
-    //       try {
-    //         await paymentWidget?.requestPayment({
-    //           orderId: nanoid(),
-    //           orderName: "토스 티셔츠 외 2건",
-    //           customerName: "김토스",
-    //           customerEmail: "customer123@gmail.com",
-    //           successUrl: `${window.location.origin}/success`,
-    //           failUrl: `${window.location.origin}/fail`,
-    //         });
-    //       } catch (err) {
-    //         console.log(err);
-    //       }
-    //     }}
-    //   >
-    //     결제하기
-    //   </Button>
-    // </div>
   );
 }
 
