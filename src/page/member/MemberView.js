@@ -54,7 +54,7 @@ export function MemberView() {
             description: "접근이 거부되었습니다",
             status: "error",
           });
-          console.log("403에러");
+          console.log("403에러!!!");
         } else {
           toast({
             description: "오류가 발생했습니다",
