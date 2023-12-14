@@ -3,6 +3,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -20,9 +21,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function MemberView() {
-  const [params] = useSearchParams();
   const [member, setMember] = useState(null);
-  const [refresh, setRefresh] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
@@ -35,6 +34,7 @@ export function MemberView() {
       .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         console.log("getMember()의 then 실행");
+        console.log(response.data);
         setMember(response.data);
         return axios.get(`/member/${response.data.logId}/orders`, {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -97,6 +97,7 @@ export function MemberView() {
           description: "권한이 없습니다",
           status: "warning",
         });
+        navigate("/login");
       });
   }
 
@@ -108,11 +109,31 @@ export function MemberView() {
     return <Spinner />;
   }
 
-  function handleDelete() {}
+  function handleDelete() {
+    axios
+      .delete("/member/delete/" + member.id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        console.log("회원 탈퇴 성공");
+      })
+      .catch(() => console.log("회원 탈퇴 실패"))
+      .finally(() => {
+        console.log("해치웠나");
+        onClose();
+        navigate("/");
+      });
+    //   axios.delete().then().catch();
+    // 홈 화면으로 이동시킬 것
+  }
 
   return (
     <Box>
-      <h1>{member.logId}님 정보</h1>
+      <Heading>{member.logId}님 정보</Heading>
       <FormControl>
         <FormLabel>name</FormLabel>
         <Input value={member.name} readOnly />
@@ -129,11 +150,10 @@ export function MemberView() {
         <FormLabel>gender</FormLabel>
         <Input type="text" value={member.gender} readOnly />
       </FormControl>
-      <FormControl>
-        <FormLabel>role</FormLabel>
-        <Input type="text" value={member.role} readOnly />
-      </FormControl>
-      <Button colorScheme="purple" onClick={() => navigate("/medit/" + 1)}>
+      <Button
+        colorScheme="purple"
+        onClick={() => navigate("/medit/" + member.id)}
+      >
         수정
       </Button>
       <Button colorScheme="red" onClick={onOpen}>
@@ -144,14 +164,14 @@ export function MemberView() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>삭제 확인</ModalHeader>
+          <ModalHeader>탈퇴 확인</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>삭제 하시겠습니까?</ModalBody>
+          <ModalBody>탈퇴 하시겠습니까?</ModalBody>
 
           <ModalFooter>
             <Button onClick={onClose}>닫기</Button>
             <Button onClick={handleDelete} colorScheme="red">
-              삭제
+              탈퇴
             </Button>
           </ModalFooter>
         </ModalContent>
