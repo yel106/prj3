@@ -172,16 +172,20 @@ function CommentComponent({ boardId }) {
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  useEffect(() => {
-    if (!isSubmitting) {
-      const params = new URLSearchParams();
-      params.set("id", boardId); //url에서 id에 boardId가 들어감
+  useEffect(
+    () => {
+      if (!isSubmitting) {
+        const params = new URLSearchParams();
+        params.set("id", boardId); //url에서 id에 boardId가 들어감
 
-      axios
-        .get("/api/comment/list?" + params)
-        .then((response) => setCommentList(response.data.content));
-    }
-  }, [isSubmitting]);
+        axios
+          .get("/api/comment/list?" + params)
+          .then((response) => setCommentList(response.data.content));
+      }
+    },
+    [isSubmitting],
+    boardId,
+  );
 
   function handleSubmit(content) {
     setIsSubmitting(true);

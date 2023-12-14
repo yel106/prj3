@@ -1,5 +1,4 @@
 import React from "react";
-import Category_CD from "./page/item/Category_CD";
 // import { ItemAllPage } from "./component/ItemAllPage";
 import {
   createBrowserRouter,

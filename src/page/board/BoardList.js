@@ -9,11 +9,8 @@ import {
   CardFooter,
   CardHeader,
   Center,
-  Flex,
   Heading,
   Image,
-  Input,
-  Select,
   SimpleGrid,
   Spinner,
   Text,
@@ -25,10 +22,8 @@ import {
   faChevronLeft,
   faChevronRight,
   faHeart,
-  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import CommentComponent from "../../component/CommentComponent";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -220,7 +215,6 @@ export function BoardList() {
           </Button>
         </ButtonGroup>
       </Center>
-      <CommentComponent />
     </Box>
   );
 }
