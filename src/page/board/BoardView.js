@@ -1,5 +1,3 @@
-//상품 선택했을 때 확인 가능한 상품 정보 페이지
-
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,9 +18,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import CommentComponent from "../../component/CommentComponent";
 
 export function BoardView() {
-  const { id } = useParams();
+  const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -158,6 +157,8 @@ export function BoardView() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        {/* 댓글 */}
+        <CommentComponent boardId={id} />
       </Box>
     </Center>
   );
