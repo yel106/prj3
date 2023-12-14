@@ -7,16 +7,15 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { HomeLayout } from "./page/layout/HomeLayout";
 import { MemberSignup } from "./page/member/MemberSignup";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";
 import { MemberList } from "./page/member/MemberList";
 import { MemberLogin } from "./page/member/MemberLogin";
-import { MemeberSocialLogin } from "./MemeberSocialLogin";
+import { MemeberSocialLogin } from "./page/member/MemeberSocialLogin";
 import { BoardList } from "./page/board/BoardList";
 import { BoardWrite } from "./page/board/BoardWrite";
-// import { HomeLayout } from "./layout/HomeLayout";
+import { HomeLayout } from "./layout/HomeLayout";
 import { BoardView } from "./page/board/BoardView";
 import { BoardEdit } from "./page/board/BoardEdit";
 import { OrderWrite } from "./page/order/OrderWrite";
@@ -30,7 +29,9 @@ const routes = createBrowserRouter(
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
       <Route path="board/:id" element={<BoardView />} />
-      <Route path="edit/:id" element={<BoardEdit />}></Route>
+      {/*id는 useParams() 사용*/}
+      <Route path="edit/:id" element={<BoardEdit />} />
+      {/*<Route path="category/:id" element={<Category_CD />} />*/}
       <Route path="signup" element={<MemberSignup />}></Route>
       <Route path="member/list" element={<MemberList />} />
       <Route path="member" element={<MemberView />} />
@@ -45,8 +46,12 @@ const routes = createBrowserRouter(
   ),
 );
 
-function App() {
-  return <RouterProvider router={routes} />;
+function App(props) {
+  return (
+    // <LoginProvider>
+    <RouterProvider router={routes} />
+    // </LoginProvider>
+  );
 }
 
 export default App;
