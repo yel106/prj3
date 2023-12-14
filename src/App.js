@@ -7,7 +7,6 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-// import { HomeLayout } from "./page/layout/HomeLayout";
 import { MemberSignup } from "./page/member/MemberSignup";
 import { MemberView } from "./page/member/MemberView";
 import { MemberEdit } from "./page/member/MemberEdit";

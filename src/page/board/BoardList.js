@@ -1,3 +1,4 @@
+//  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -8,8 +9,11 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Flex,
   Heading,
   Image,
+  Input,
+  Select,
   SimpleGrid,
   Spinner,
   Text,
@@ -20,14 +24,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faHeart,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
 import CommentComponent from "../../component/CommentComponent";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
-  // const [fileUrl, setFileUrl] = useState();
   const navigate = useNavigate();
+  const [fileUrl, setFileUrl] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
@@ -94,12 +100,40 @@ export function BoardList() {
   function handlePreviousPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
+  function LikeButton() {
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
 
+    const handleLikeClick = () => {
+      if (liked) {
+        setLikeCount(likeCount - 1);
+      } else {
+        setLikeCount(likeCount + 1);
+      }
+      setLiked(!liked);
+    };
+    return (
+      <div onClick={handleLikeClick}>
+        <FontAwesomeIcon
+          icon={faHeart}
+          style={{ color: liked ? "#db7093" : "black", fontSize: "30px" }}
+        />
+        {likeCount}
+      </div>
+    );
+  }
   function handleNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
+  function handleClickHeart(e, board) {
+    e.stopPropagation();
+    console.log("heart!");
+    axios.postForm("/api/like", { id: board.id });
+  }
+
   return (
+    //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
       <h1>Album list</h1>
       <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
@@ -151,22 +185,26 @@ export function BoardList() {
             </CardBody>
             <CardFooter>
               <ButtonGroup spacing="2">
-                {/* TODO: 클릭하면 위시템 or 카트 페이지로 상품이 등록되도록 하기 */}
-                <Button w={"30%"} variant="solid" colorScheme="blue">
-                  {/*onClick={() => navigate("//" + id) 클릭하면 위시템으로 들어가게하기 */}
-                  Wish
+                <Button w={"60%"} variant="solid" colorScheme="pink">
+                  + Cart
                 </Button>
-                <Button w={"30%"} variant="solid" colorScheme="pink">
-                  {/*onClick={()=> navigate("/cart/"+ id)}얘도 마찬가지*/}+ Cart
-                </Button>
-                <Button w={"25px"}>
-                  <FontAwesomeIcon icon="bi bi-arrow-through-heart" />
-                </Button>
+                {/*<Button w={"40%"}>*/}
+                {/*  <FontAwesomeIcon*/}
+                {/*    icon={faHeart}*/}
+                {/*    style={{ color: "#db7093" }}*/}
+                {/*  />*/}
+                {/*</Button>*/}
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  onClick={(e) => handleClickHeart(e, board)}
+                  style={{ color: "#db7093", fontSize: "30px" }}
+                />
               </ButtonGroup>
             </CardFooter>
           </Card>
         ))}
       </SimpleGrid>
+      {/*-----------------------------------------*/}
       {/*페이지 네이션-------------------------------------------*/}
       <Center>
         <ButtonGroup>
