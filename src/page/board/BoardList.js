@@ -135,7 +135,7 @@ export function BoardList() {
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <h1>Album list</h1>
+      <Heading>Album list</Heading>
       <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
       <SimpleGrid
         border="1px solid black"

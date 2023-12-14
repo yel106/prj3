@@ -17,6 +17,7 @@ import axios from "axios";
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const navigate = useNavigate();
   const urlParams = new URLSearchParams();
   const location = useLocation();
@@ -61,18 +62,73 @@ export function NavBar(props) {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
+
           if (response.data === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log(response.data);
+          setIsSocial(true);
         })
         .catch(() => {
-          sendRefreshToken(); //TODO: 이런 곳에 axios. 해서 토큰 갱신
+          sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
         .finally(() => console.log("finally loggedIn: ", loggedIn));
     }
     console.log("loggedIn: ", loggedIn);
+  }, [location]);
+
+  useEffect(() => {
+    let countdownTimer;
+
+    if (loggedIn && isSocial) {
+      const accessTokenExpiry = 3600; // 액세스 토큰 유효 기간
+      const refreshThreshold = 300; // 5분 남았을 때 요청할 것
+
+      // 카운트다운 시작
+      const startCountdownTimer = async (expiresIn) => {
+        clearTimeout(countdownTimer);
+        countdownTimer = setTimeout(
+          async () => {
+            await refreshSocialAccessToken();
+          },
+          (expiresIn - refreshThreshold) * 1000,
+        );
+      };
+
+      const refreshSocialAccessToken = async () => {
+        try {
+          // 백엔드에 갱신 요청
+          const response = await axios.get("/api/auth/refreshToken", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          const newExpiresIn = response.data.expiresIn; //TODO: Q
+          await startCountdownTimer(newExpiresIn);
+        } catch (error) {
+          toast({
+            description: "다시 로그인해주세요.",
+            status: "error",
+          });
+          navigate("/login");
+        }
+      };
+
+      startCountdownTimer(accessTokenExpiry);
+
+      return () => clearTimeout(countdownTimer);
+      console.log("소셜 로그인 멤버입니다.");
+    }
   }, [location]);
 
   function handleLogout() {
