@@ -34,7 +34,6 @@ export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
   const [fileUrl, setFileUrl] = useState();
-  const location = useLocation();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
