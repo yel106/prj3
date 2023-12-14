@@ -11,11 +11,13 @@ import {
   useDisclosure,
   useToast,
   Box,
+  DrawerFooter,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faDollarSign,
+  faMusic,
   faRecordVinyl,
   faRightFromBracket,
   faRightToBracket,
@@ -32,14 +34,6 @@ export function NavBar(props) {
   const urlParams = new URLSearchParams();
   const location = useLocation();
   const toast = useToast();
-  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  // const handleDrawerOpen = () => {
-  //   setIsDrawerOpen(true);
-  // };
-  //
-  // const handleDrawerClose = () => {
-  //   setIsDrawerOpen(false);
-  // };
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [placement, setPlacement] = React.useState("left");
 
@@ -152,182 +146,6 @@ export function NavBar(props) {
   }
 
   return (
-    // <Flex>
-    //   <Button
-    //     borderRadius={0}
-    //     variant="ghost"
-    //     size="lg"
-    //     leftIcon={<FontAwesomeIcon icon={faHome} />}
-    //     onClick={() => navigate("/")}
-    //   >
-    //     Records Home
-    //   </Button>
-    //   {isAdmin && (
-    //     <Button
-    //       borderRadius={0}
-    //       variant="ghost"
-    //       size="lg"
-    //       leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-    //       onClick={() => navigate("/write")}
-    //     >
-    //       앨범 등록
-    //     </Button>
-    //   )}
-    //   {loggedIn || (
-    //     <Button
-    //       borderRadius={0}
-    //       variant="ghost"
-    //       size="lg"
-    //       leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-    //       onClick={() => navigate("/signup")}
-    //     >
-    //       회원가입
-    //     </Button>
-    //   )}
-    //   {loggedIn && (
-    //     <Button
-    //       borderRadius={0}
-    //       variant="ghost"
-    //       size="lg"
-    //       leftIcon={<FontAwesomeIcon icon={faUser} />}
-    //       onClick={() => navigate("/member?" + urlParams.toString())}
-    //     >
-    //       회원정보
-    //     </Button>
-    //   )}
-    //   {isAdmin && (
-    //     <Button
-    //       borderRadius={0}
-    //       variant="ghost"
-    //       size="lg"
-    //       leftIcon={<FontAwesomeIcon icon={faUsers} />}
-    //       onClick={() => navigate("/member/list")}
-    //     >
-    //       회원목록
-    //     </Button>
-    //   )}
-    //   <Button
-    //     borderRadius={0}
-    //     variant="ghost"
-    //     size="lg"
-    //     leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
-    //     onClick={() => navigate("/order")}
-    //   >
-    //     주문하기
-    //   </Button>
-    //   {loggedIn || (
-    //     <Button
-    //       variant="ghost"
-    //       size="lg"
-    //       _hover={{ bg: "none" }}
-    //       onClick={() => navigate("/login")}
-    //       leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-    //     >
-    //       로그인
-    //     </Button>
-    //   )}
-    //   {loggedIn && (
-    //     <Button
-    //       variant="ghost"
-    //       size="lg"
-    //       _hover={{ bg: "none" }}
-    //       onClick={handleLogout}
-    //       leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-    //     >
-    //       로그아웃
-    //     </Button>
-    //   )}
-    // </Flex>
-    // 12381034675834829084753920-48
-    // <Flex flexDirection="column">
-    //   <Button
-    //     variant="ghost"
-    //     size="lg"
-    //     leftIcon={<FontAwesomeIcon icon={faBars} />}
-    //     onClick={handleDrawerOpen}
-    //   >
-    //     메뉴
-    //   </Button>
-    //   <Drawer open={isDrawerOpen} onClose={handleDrawerClose} placement="left">
-    //     <Flex flexDirection="column">
-    //       {/* 여기에 위에 작성된 코드 속 버튼들을 추가하세요. */}
-    //       {isAdmin && (
-    //         <Button
-    //           borderRadius={0}
-    //           variant="ghost"
-    //           size="lg"
-    //           leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-    //           onClick={() => navigate("/write")}
-    //         >
-    //           앨범 등록
-    //         </Button>
-    //       )}
-    //       {loggedIn || (
-    //         <Button
-    //           borderRadius={0}
-    //           variant="ghost"
-    //           size="lg"
-    //           leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-    //           onClick={() => navigate("/signup")}
-    //         >
-    //           회원가입
-    //         </Button>
-    //       )}
-    //       {loggedIn && (
-    //         <Button
-    //           borderRadius={0}
-    //           variant="ghost"
-    //           size="lg"
-    //           leftIcon={<FontAwesomeIcon icon={faUser} />}
-    //           onClick={() => navigate("/member?" + urlParams.toString())}
-    //         >
-    //           회원정보
-    //         </Button>
-    //       )}
-    //       {isAdmin && (
-    //         <Button
-    //           borderRadius={0}
-    //           variant="ghost"
-    //           size="lg"
-    //           leftIcon={<FontAwesomeIcon icon={faUsers} />}
-    //           onClick={() => navigate("/member/list")}
-    //         >
-    //           회원목록
-    //         </Button>
-    //       )}
-    //       <Button
-    //         borderRadius={0}
-    //         variant="ghost"
-    //         size="lg"
-    //         leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
-    //         onClick={() => navigate("/order")}
-    //       >
-    //         주문하기
-    //       </Button>
-    //       {loggedIn || (
-    //         <Button
-    //           variant="ghost"
-    //           size="lg"
-    //           _hover={{ bg: "none" }}
-    //           onClick={() => navigate("/login")}
-    //           leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-    //         >
-    //           로그인
-    //         </Button>
-    //       )}
-    //       {loggedIn && (
-    //         <Button
-    //           variant="ghost"
-    //           size="lg"
-    //           onClick={handleLogout}
-    //           leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-    //         >
-    //           로그아웃
-    //         </Button>
-    //       )}
-    //     </Flex>
-    //   </Drawer>
-    // </Flex>
     <Flex flexDirection="column">
       <Box position="fixed" top={0} left={0}>
         <Button
@@ -337,7 +155,12 @@ export function NavBar(props) {
           onClick={onOpen}
         />
       </Box>
-      <Drawer placement={placement} isOpen={isOpen} onClose={onClose}>
+      <Drawer
+        bg="gray.100"
+        placement={placement}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">
@@ -346,6 +169,7 @@ export function NavBar(props) {
           <DrawerBody>
             {isAdmin && (
               <Button
+                border="1px solid black"
                 borderRadius={0}
                 variant="ghost"
                 size="lg"
@@ -353,6 +177,17 @@ export function NavBar(props) {
                 onClick={() => navigate("/write")}
               >
                 ALBUM REGISTER SYSTEM
+              </Button>
+            )}
+            {loggedIn || (
+              <Button
+                variant="ghost"
+                size="lg"
+                _hover={{ bg: "none" }}
+                onClick={() => navigate("/login")}
+                leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+              >
+                Log in
               </Button>
             )}
             {loggedIn || (
@@ -365,7 +200,8 @@ export function NavBar(props) {
               >
                 Sign Up
               </Button>
-            )}
+            )}{" "}
+            <br />
             {loggedIn && (
               <Button
                 borderRadius={0}
@@ -388,6 +224,8 @@ export function NavBar(props) {
                 Member List
               </Button>
             )}
+            <br />
+            <br />
             <Button
               borderRadius={0}
               variant="ghost"
@@ -398,17 +236,15 @@ export function NavBar(props) {
               Order
             </Button>
             <br />
-            {loggedIn || (
-              <Button
-                variant="ghost"
-                size="lg"
-                _hover={{ bg: "none" }}
-                onClick={() => navigate("/login")}
-                leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-              >
-                Log in
-              </Button>
-            )}
+            <Button
+              borderRadius={0}
+              variant="ghost"
+              size="lg"
+              leftIcon={<FontAwesomeIcon icon={faMusic} />}
+              onClick={() => navigate("/")}
+            >
+              All Item
+            </Button>
             {loggedIn && (
               <Button
                 variant="ghost"
@@ -422,6 +258,28 @@ export function NavBar(props) {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+      {loggedIn || (
+        <Button
+          borderRadius={0}
+          variant="ghost"
+          size="lg"
+          leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+          onClick={() => navigate("/signup")}
+        >
+          Sign Up
+        </Button>
+      )}
+      {loggedIn || (
+        <Button
+          variant="ghost"
+          size="lg"
+          _hover={{ bg: "none" }}
+          onClick={() => navigate("/login")}
+          leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+        >
+          Log in
+        </Button>
+      )}
     </Flex>
   );
 }
