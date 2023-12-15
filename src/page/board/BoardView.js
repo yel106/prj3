@@ -97,8 +97,13 @@ export function BoardView() {
   }
 
   function handleDelete() {
+    const accessToken = localStorage.getItem("accessToken");
     axios
-      .delete("/api/board/remove/" + id)
+      .delete("/api/board/remove/" + id, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((response) => {
         toast({
           description: id + "번 앨범이 삭제되었습니다.",

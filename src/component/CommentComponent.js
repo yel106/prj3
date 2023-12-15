@@ -156,7 +156,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   const toast = useToast();
 
   function handleSubmit() {
-    onSubmit({ boardId, content });
+    onSubmit(content);
   }
   return (
     <Box>
@@ -201,11 +201,10 @@ function CommentComponent({ boardId }) {
     }
   }, [isSubmitting, boardId, currentPage, pageSize]);
 
-  function handleSubmit(content) {
+  function handleSubmit({ content }) {
     setIsSubmitting(true);
-
     axios
-      .post("/api/comment/add", content)
+      .post(`/api/comment/add/${boardId}`, content)
       .then(() =>
         toast({
           description: "리뷰가 저장되었습니다.",
