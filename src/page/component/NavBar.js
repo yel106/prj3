@@ -94,13 +94,12 @@ export function NavBar(props) {
     let countdownTimer;
 
     if (loggedIn && isSocial) {
-      const accessTokenExpiry = 360; // 액세스 토큰 유효 기간 // 5분
+      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 5분
       const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
       console.log("타이머 작동되는지 확인");
 
       // 카운트다운 시작
       const startCountdownTimer = async (expiresIn) => {
-        clearInterval(countdownTimer);
         countdownTimer = setInterval(
           async () => {
             await refreshSocialAccessToken();
@@ -118,14 +117,15 @@ export function NavBar(props) {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
           });
-          console.log("expiresIn을 출력: " + response.data.expiresIn);
-          const newExpiresIn = response.data.expiresIn; //TODO: Q
+          const newExpiresIn = response.data;
+          console.log("expiresIn:", newExpiresIn);
           await startCountdownTimer(newExpiresIn);
         } catch (error) {
           toast({
             description: "다시 로그인해주세요.",
             status: "error",
           });
+          console.log(error.response.data);
           navigate("/login");
         }
       };
@@ -133,6 +133,7 @@ export function NavBar(props) {
       startCountdownTimer(accessTokenExpiry);
 
       console.log("소셜 로그인 멤버입니다.");
+      console.log("==========" + new Date() + "==========");
 
       return () => clearInterval(countdownTimer);
     }
