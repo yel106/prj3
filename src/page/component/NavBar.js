@@ -70,19 +70,22 @@ export function NavBar(props) {
 
           return axios.get("/isSocialMember", {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
           });
         })
         .then((response) => {
-          console.log(response.data);
+          console.log("isSocialMember = " + response.data);
           setIsSocial(true);
         })
-        .catch(() => {
+        .catch((error) => {
           sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
-        .finally(() => console.log("finally loggedIn: ", loggedIn));
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
@@ -91,13 +94,14 @@ export function NavBar(props) {
     let countdownTimer;
 
     if (loggedIn && isSocial) {
-      const accessTokenExpiry = 3600; // 액세스 토큰 유효 기간
-      const refreshThreshold = 300; // 5분 남았을 때 요청할 것
+      const accessTokenExpiry = 360; // 액세스 토큰 유효 기간 // 5분
+      const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
+      console.log("타이머 작동되는지 확인");
 
       // 카운트다운 시작
       const startCountdownTimer = async (expiresIn) => {
-        clearTimeout(countdownTimer);
-        countdownTimer = setTimeout(
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(
           async () => {
             await refreshSocialAccessToken();
           },
@@ -107,12 +111,14 @@ export function NavBar(props) {
 
       const refreshSocialAccessToken = async () => {
         try {
+          console.log("백엔드에 갱신 요청");
           // 백엔드에 갱신 요청
           const response = await axios.get("/api/auth/refreshToken", {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
           });
+          console.log("expiresIn을 출력: " + response.data.expiresIn);
           const newExpiresIn = response.data.expiresIn; //TODO: Q
           await startCountdownTimer(newExpiresIn);
         } catch (error) {
@@ -126,10 +132,11 @@ export function NavBar(props) {
 
       startCountdownTimer(accessTokenExpiry);
 
-      return () => clearTimeout(countdownTimer);
       console.log("소셜 로그인 멤버입니다.");
+
+      return () => clearInterval(countdownTimer);
     }
-  }, [location]);
+  }, [loggedIn, isSocial]);
 
   function handleLogout() {
     console.log("handleLogout");
