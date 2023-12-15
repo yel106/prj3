@@ -5,6 +5,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Modal,
@@ -22,6 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { isContentEditable } from "@testing-library/user-event/dist/utils";
 
 function CommentContent({
   comment,
@@ -89,12 +91,20 @@ function CommentContent({
 
         <Box>
           {isEditing || (
-            <Button size="xs" onClick={() => setIsEditing(true)}>
+            <Button
+              size="xs"
+              colorScheme="blue"
+              onClick={() => setIsEditing(true)}
+            >
               수정
             </Button>
           )}
           {isEditing && (
-            <Button size="xs" onClick={() => setIsEditing(false)}>
+            <Button
+              size="xs"
+              colorScheme="red"
+              onClick={() => setIsEditing(false)}
+            >
               취소
             </Button>
           )}
@@ -116,24 +126,27 @@ function CommentList({
   const toast = useToast();
 
   return (
-    <Card>
-      <CardHeader>
-        <Heading size="sm">REVIEW</Heading>
-      </CardHeader>
-      <CardBody>
-        <Stack divider={<StackDivider />} spacing="3">
-          {commentList.map((comment) => (
-            <CommentContent
-              key={comment.id}
-              comment={comment}
-              isSubmitting={isSubmitting}
-              setIsSubmitting={setIsSubmitting}
-              onDeleteModalOpen={onDeleteModalOpen}
-            />
-          ))}
-        </Stack>
-      </CardBody>
-    </Card>
+    <Center mt="20">
+      <Card w="xl">
+        <CardHeader>
+          <Heading size="sm">REVIEW</Heading>
+        </CardHeader>
+        <CardBody>
+          <Stack divider={<StackDivider />} spacing="3">
+            {commentList &&
+              commentList.map((comment) => (
+                <CommentContent
+                  key={comment.id}
+                  comment={comment}
+                  isSubmitting={isSubmitting}
+                  setIsSubmitting={setIsSubmitting}
+                  onDeleteModalOpen={onDeleteModalOpen}
+                />
+              ))}
+          </Stack>
+        </CardBody>
+      </Card>
+    </Center>
   );
 }
 
@@ -164,6 +177,9 @@ function CommentComponent({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false); //제출이 됐는지 알 수 있는 상태를 씀
   //submit했으면 isDisabled가 true되도록 설정
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   // const [id, setId] = useState(0); //id를 렌더링 할 필요없는 경우 useState쓸 필요없음
   const commentIdRef = useRef(0); // current를 통해 현재 참조하는 값을 가져오거나 변경
   const toast = useToast();
@@ -172,20 +188,18 @@ function CommentComponent({ boardId }) {
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  useEffect(
-    () => {
-      if (!isSubmitting) {
-        const params = new URLSearchParams();
-        params.set("id", boardId); //url에서 id에 boardId가 들어감
+  useEffect(() => {
+    if (!isSubmitting) {
+      const params = new URLSearchParams();
+      params.set("id", boardId); //url에서 id에 boardId가 들어감
+      params.append("page", currentPage);
+      params.append("size", pageSize);
 
-        axios
-          .get("/api/comment/list?" + params)
-          .then((response) => setCommentList(response.data.content));
-      }
-    },
-    [isSubmitting],
-    boardId,
-  );
+      axios
+        .get("/api/comment/list?" + params)
+        .then((response) => setCommentList(response.data.content)); // .data.content
+    }
+  }, [isSubmitting, boardId, currentPage, pageSize]);
 
   function handleSubmit(content) {
     setIsSubmitting(true);
@@ -213,12 +227,12 @@ function CommentComponent({ boardId }) {
     setIsSubmitting(true);
     axios
       .delete("/api/comment/delete/" + commentIdRef.current)
-      .then(() =>
+      .then(() => {
         toast({
           description: "리뷰를 삭제하였습니다.",
           status: "success",
-        }),
-      )
+        });
+      })
       .catch(() =>
         toast({
           description: "삭제 중 문제가 발생하였습니다.",
@@ -241,11 +255,16 @@ function CommentComponent({ boardId }) {
     <Box>
       {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
        부모인 Comment컴포넌트가 그 상태를 갖고있으면 됨. 그리고 prop으로 받기*/}
-      <CommentForm
-        boardId={boardId}
-        isSubmitting={isSubmitting}
-        onSubmit={handleSubmit}
-      />
+      <Center mt="10">
+        <Box w="xl">
+          <CommentForm
+            boardId={boardId}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </Box>
+      </Center>
+
       <CommentList
         boardId={boardId}
         isSubmitting={isSubmitting}
