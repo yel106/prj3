@@ -122,21 +122,24 @@ export function BoardView() {
   }
 
   return (
-    <Center bg="tomato">
-      <Box border="2px solid black" w="95%" h="90%" bg="white">
-        {fileURL.map((url) => (
-          <Box key={url}>
-            <Image src={url} border="1px solid black" />
-          </Box>
-        ))}
-        <Heading size="md">Title : {board.title}</Heading>
-        <br />
-        <Heading size="m">Artist : {board.artist}</Heading>
-        <Heading size="m">Album Introduction : {board.content}</Heading>
-        <br />
-        <Heading size="m">Album Price : {board.price}</Heading>
-        <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
-        <Heading size="s">Album Format : {board.albumFormat}</Heading>
+    <Center>
+      <Box margin="0" justifyContent="">
+        <Box border="2px solid black" w="95%" h="90%" bg="white">
+          {fileURL.map((url) => (
+            <Box key={url}>
+              <Image src={url} border="1px solid black" />
+            </Box>
+          ))}
+        </Box>
+        <Box border="1px solid red">
+          <Heading size="md">Title : {board.title}</Heading>
+          <Heading size="m">Artist : {board.artist}</Heading>
+          <Heading size="m">Album Introduction : {board.content}</Heading>
+          <Heading size="m">Album Price : {board.price}</Heading>
+          <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
+          <Heading size="s">Album Format : {board.albumFormat}</Heading>
+        </Box>
+
         {isAdmin && (
           <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
             edit
@@ -164,7 +167,7 @@ export function BoardView() {
           </ModalContent>
         </Modal>
         {/* 댓글 */}
-        <CommentComponent boardId={id} />
+        {/*<CommentComponent boardId={id} />*/}
       </Box>
     </Center>
   );

@@ -1,6 +1,5 @@
 import React from "react";
-import Category_CD from "./page/item/Category_CD";
-// import { ItemAllPage } from "./component/ItemAllPage";
+
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -22,12 +21,15 @@ import { OrderWrite } from "./page/order/OrderWrite";
 import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
+import { BoardHome } from "./page/board/BoardHome";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<HomeLayout />}>
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
+      <Route path="hohome" element={<BoardHome />} />
+      {/*전희연 hohome*/}
       <Route path="board/:id" element={<BoardView />} />
       {/*id는 useParams() 사용*/}
       <Route path="edit/:id" element={<BoardEdit />} />
