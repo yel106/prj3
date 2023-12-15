@@ -21,19 +21,15 @@ import { OrderWrite } from "./page/order/OrderWrite";
 import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
-import { BoardHome } from "./page/board/BoardHome";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<HomeLayout />}>
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
-      <Route path="hohome" element={<BoardHome />} />
-      {/*전희연 hohome*/}
       <Route path="board/:id" element={<BoardView />} />
       {/*id는 useParams() 사용*/}
       <Route path="edit/:id" element={<BoardEdit />} />
-      {/*<Route path="category/:id" element={<Category_CD />} />*/}
       <Route path="signup" element={<MemberSignup />}></Route>
       <Route path="member/list" element={<MemberList />} />
       <Route path="member" element={<MemberView />} />

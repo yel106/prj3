@@ -48,7 +48,7 @@ export function MemberLogin() {
       .catch(() => {
         toast({
           description: "아이디나 비밀번호가 틀렸습니다.",
-          status: "error"
+          status: "error",
         });
       });
   }

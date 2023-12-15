@@ -5,9 +5,11 @@ import React from "react";
 
 export function HomeLayout() {
   return (
-    <Box mx={{ base: 0, md: 10, lg: 40 }}>
+    <Box backgroundColor="beige">
       <NavBar />
       <Outlet />
+      <Box mx={{ base: 0, md: 10, lg: 40 }}></Box>
     </Box>
   );
 }
+//주석
