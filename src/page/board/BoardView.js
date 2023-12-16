@@ -18,13 +18,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import CommentComponent from "../../component/CommentComponent";
+import CommentComponent from "../component/CommentComponent";
 
 export function BoardView() {
   const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ export function BoardView() {
         .then((response) => {
           console.log("accessToken then 수행");
           console.log(response.data);
+          setLoggedIn(true);
           if (response.data === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
@@ -85,11 +87,14 @@ export function BoardView() {
 
         console.log("토큰들 업데이트 리프레시 토큰: ");
         console.log(response.data.refreshToken);
+        setLoggedIn(true);
       })
       .catch((error) => {
         console.log("sendRefreshToken()의 catch 실행");
         localStorage.removeItem("refreshToken");
-      });
+        setLoggedIn(false);
+      })
+      .finally(() => console.log(loggedIn));
   }
 
   if (board === null) {
@@ -163,7 +168,7 @@ export function BoardView() {
           </ModalContent>
         </Modal>
         {/* 댓글 */}
-        <CommentComponent boardId={id} />
+        <CommentComponent boardId={id} loggedIn={loggedIn} />
       </Box>
     </Center>
   );

@@ -34,6 +34,7 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -65,7 +66,6 @@ function CommentContent({
       <Flex justifyContent="space-between">
         {/* TODO: member.name을 가져와야함 */}
         <Heading size="xs">{comment.id}님</Heading>
-        <Text fontSize="xs">{/*TODO: 댓글 단 시간  {comment. }*/}</Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
@@ -156,7 +156,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   const toast = useToast();
 
   function handleSubmit() {
-    onSubmit(content);
+    onSubmit({ content });
   }
   return (
     <Box>
@@ -173,11 +173,11 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentComponent({ boardId }) {
+function CommentComponent({ boardId, loggedIn }) {
   const [isSubmitting, setIsSubmitting] = useState(false); //제출이 됐는지 알 수 있는 상태를 씀
   //submit했으면 isDisabled가 true되도록 설정
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState("");
   const [pageSize, setPageSize] = useState(10);
 
   // const [id, setId] = useState(0); //id를 렌더링 할 필요없는 경우 useState쓸 필요없음
@@ -192,19 +192,20 @@ function CommentComponent({ boardId }) {
     if (!isSubmitting) {
       const params = new URLSearchParams();
       params.set("id", boardId); //url에서 id에 boardId가 들어감
-      params.append("page", currentPage);
-      params.append("size", pageSize);
+      params.set("page", currentPage);
+      params.set("size", pageSize);
 
       axios
         .get("/api/comment/list?" + params)
-        .then((response) => setCommentList(response.data.content)); // .data.content
+        .then((response) => setCommentList(response.data.content));
     }
   }, [isSubmitting, boardId, currentPage, pageSize]);
 
   function handleSubmit({ content }) {
     setIsSubmitting(true);
+    console.log(content);
     axios
-      .post(`/api/comment/add/${boardId}`, content)
+      .post(`/api/comment/add/${boardId}`, { content })
       .then(() =>
         toast({
           description: "리뷰가 저장되었습니다.",
@@ -254,15 +255,17 @@ function CommentComponent({ boardId }) {
     <Box>
       {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
        부모인 Comment컴포넌트가 그 상태를 갖고있으면 됨. 그리고 prop으로 받기*/}
-      <Center mt="10">
-        <Box w="xl">
-          <CommentForm
-            boardId={boardId}
-            isSubmitting={isSubmitting}
-            onSubmit={handleSubmit}
-          />
-        </Box>
-      </Center>
+      {loggedIn && (
+        <Center mt="10">
+          <Box w="xl">
+            <CommentForm
+              boardId={boardId}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
+            />
+          </Box>
+        </Center>
+      )}
 
       <CommentList
         boardId={boardId}
