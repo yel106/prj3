@@ -64,7 +64,6 @@ function CommentContent({
   return (
     <Box>
       <Flex justifyContent="space-between">
-        {/* TODO: member.name을 가져와야함 */}
         <Heading size="xs">{comment.member.logId}님</Heading>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
