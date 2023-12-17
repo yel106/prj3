@@ -55,9 +55,10 @@ export const Search = ({ onSearch }) => {
     <Box as="form" onSubmit={handleSubmit}>
       <Button
         type="button"
-        colorScheme="blue"
+        colorScheme='orange'
         onClick={toggleSearchOptions}
         mb={4}
+
       >
         {showSearchOptions ? "Hide Search" : "Show Search"}
       </Button>
