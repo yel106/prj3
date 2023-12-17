@@ -177,7 +177,7 @@ export function NavBar(props) {
                                 onCloseDrawer();
                                 navigate("/");
                             }}
-                            display="flex">
+                            display="flex"                          >
                             🎵 MUSIC IS MY LIFE 🎵
                             <CloseButton
                                 size="md"
