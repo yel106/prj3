@@ -221,8 +221,9 @@ function CommentComponent({ boardId, loggedIn }) {
     pageButton.push(
       <Button
         key={i}
+        size="sm"
         onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "pink" : "gray"}
+        colorScheme={i === currentPage ? "orange" : "gray"}
       >
         {i + 1}
       </Button>,
@@ -325,7 +326,7 @@ function CommentComponent({ boardId, loggedIn }) {
           <ModalBody>삭제 하시겠습니까?</ModalBody>
 
           <ModalFooter>
-            <Button onClose={onClose}>닫기</Button>
+            <Button onClick={onClose}>닫기</Button>
             <Button
               isDisabled={isSubmitting}
               onClick={handleDelete}
@@ -339,13 +340,18 @@ function CommentComponent({ boardId, loggedIn }) {
 
       <Center>
         <ButtonGroup>
-          <Button onClick={handlePreviousPage} disable={currentPage === 0}>
+          <Button
+            onClick={handlePreviousPage}
+            disable={currentPage === 0}
+            size="sm"
+          >
             <FontAwesomeIcon icon={faChevronLeft} />
           </Button>
           {pageButton}
           <Button
             onClick={handleNextPage}
             disabled={currentPage === totalPage - 1}
+            size="sm"
           >
             <FontAwesomeIcon icon={faChevronRight} />
           </Button>
