@@ -141,6 +141,7 @@ export function BoardView() {
         <Heading size="m">Album Price : {board.price}</Heading>
         <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
         <Heading size="s">Album Format : {board.albumFormat}</Heading>
+        <Heading size="s">Album Genre : {board.albumDetails}</Heading>
         {isAdmin && (
           <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
             edit

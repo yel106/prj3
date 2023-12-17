@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardHeader,
@@ -24,6 +25,11 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { isContentEditable } from "@testing-library/user-event/dist/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 function CommentContent({
   comment,
@@ -34,7 +40,7 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false); //로그인 했을 때만 댓글 보이는거 안 됨
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -64,13 +70,19 @@ function CommentContent({
   return (
     <Box>
       <Flex justifyContent="space-between">
-        <Heading size="xs">{comment.member.logId}님</Heading>
+        <Text fontSize="sm" color="dimgrey">
+          {comment.member.logId}님
+        </Text>{" "}
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
-          <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="sm">
+          <Text fontSize="xs" color="gray">
+            {comment.member.updateTime}
+          </Text>
+          <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
             {comment.content}
           </Text>
+
           {isEditing && (
             <Box>
               <Textarea
@@ -176,8 +188,9 @@ function CommentComponent({ boardId, loggedIn }) {
   const [isSubmitting, setIsSubmitting] = useState(false); //제출이 됐는지 알 수 있는 상태를 씀
   //submit했으면 isDisabled가 true되도록 설정
 
-  const [currentPage, setCurrentPage] = useState("");
-  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const commentPerPage = 10;
 
   // const [id, setId] = useState(0); //id를 렌더링 할 필요없는 경우 useState쓸 필요없음
   const commentIdRef = useRef(0); // current를 통해 현재 참조하는 값을 가져오거나 변경
@@ -193,13 +206,35 @@ function CommentComponent({ boardId, loggedIn }) {
       const params = new URLSearchParams();
       params.set("id", boardId); //url에서 id에 boardId가 들어감
       params.set("page", currentPage);
-      params.set("size", pageSize);
+      // params.set("size", pageSize);
+      params.set("size", commentPerPage);
 
-      axios
-        .get("/api/comment/list?" + params)
-        .then((response) => setCommentList(response.data.content));
+      axios.get("/api/comment/list?" + params).then((response) => {
+        setCommentList(response.data.content);
+        setTotalPage(response.data.totalPages);
+      });
     }
-  }, [isSubmitting, boardId, currentPage, pageSize]);
+  }, [isSubmitting, boardId, currentPage]); //pageSize 삭제
+
+  const pageButton = [];
+  for (let i = 0; i < totalPage; i++) {
+    pageButton.push(
+      <Button
+        key={i}
+        onClick={() => setCurrentPage(i)}
+        colorScheme={i === currentPage ? "pink" : "gray"}
+      >
+        {i + 1}
+      </Button>,
+    );
+  }
+
+  function handlePreviousPage() {
+    setCurrentPage((prev) => Math.max(prev - 1, 0));
+  }
+  function handleNextPage() {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
+  }
 
   function handleSubmit({ content }) {
     setIsSubmitting(true);
@@ -301,6 +336,21 @@ function CommentComponent({ boardId, loggedIn }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Center>
+        <ButtonGroup>
+          <Button onClick={handlePreviousPage} disable={currentPage === 0}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </Button>
+          {pageButton}
+          <Button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPage - 1}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Button>
+        </ButtonGroup>
+      </Center>
     </Box>
   );
 }
