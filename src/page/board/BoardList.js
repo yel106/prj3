@@ -10,6 +10,7 @@ import {
   CardHeader,
   Center,
   Heading,
+  IconButton,
   Image,
   SimpleGrid,
   Spinner,
@@ -19,11 +20,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCartPlus,
   faChevronLeft,
   faChevronRight,
   faHeart,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
+import CommentComponent from "../../component/CommentComponent";
+import { Icon } from "@chakra-ui/icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -127,10 +132,20 @@ export function BoardList() {
     axios.postForm("/api/like", { id: board.id });
   }
 
+  function handleInCart(board) {
+    console.log("카트 클릭");
+    axios.postForm("/api/cart", {
+      id: board.id,
+      price: board.price,
+      fileUrl: board.fileUrl,
+    });
+    // TODO: djfskldjfkl
+  }
+
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <h1>Album list</h1>
+      <Heading>Album list</Heading>
       <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
       <SimpleGrid
         border="1px solid black"
@@ -180,9 +195,13 @@ export function BoardList() {
             </CardBody>
             <CardFooter>
               <ButtonGroup spacing="2">
-                <Button w={"60%"} variant="solid" colorScheme="pink">
-                  + Cart
-                </Button>
+                <IconButton
+                  aria-label="cart"
+                  variant="solid"
+                  colorScheme="pink"
+                  onClick={handleInCart}
+                  icon={<FontAwesomeIcon icon={faCartPlus} />}
+                />
                 {/*<Button w={"40%"}>*/}
                 {/*  <FontAwesomeIcon*/}
                 {/*    icon={faHeart}*/}
