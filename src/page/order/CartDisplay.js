@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -13,9 +13,12 @@ import {
   IconButton,
   Input,
   Image,
+  useToast,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useNumberInput } from "@chakra-ui/react";
+import axios from "axios";
+import toast from "bootstrap/js/src/toast";
 
 function MyNumberInput({ max, onQuantityChange }) {
   const {
@@ -50,17 +53,29 @@ function MyNumberInput({ max, onQuantityChange }) {
 
 export function CartDisplay() {
   const [quantities, setQuantities] = useState({});
+  const accessToken = localStorage.getItem("accessToken");
+  const [items, setItems] = useState([]);
+  const toast = useToast();
 
-  // useEffect(() => {
-  //   axios.post('요청 날리기', { 헤더로 토큰 보내서 로그 아이디 추출 })
-  //     .then((response) => setItems(response.data))
-  //     .catch((error) => console.error('Error fetching data:', error));
-  // }, []);
+  useEffect(() => {
+    axios
+      .post("/cart/fetch", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((response) => setItems(response.data))
+      .catch((error) => {
+        console.log(error.response.data);
+        toast({
+          description: "상품 불러오기에 실패했습니다.",
+          status: "error",
+        });
+      });
+  }, []);
 
-  const items = [
-    { name: "item1", info: "info", max: 6, price: 12000, fileUrl: "1" },
-    { name: "item2", info: "item2 info", max: 8, price: 15000, fileUrl: "2" },
-  ];
+  // const items = [
+  //   { name: "item1", info: "info", max: 6, price: 12000, fileUrl: "1" },
+  //   { name: "item2", info: "item2 info", max: 8, price: 15000, fileUrl: "2" },
+  // ];
 
   const handleQuantityChange = (itemName, quantity) => {
     setQuantities((prevQuantities) => ({

@@ -24,7 +24,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { isContentEditable } from "@testing-library/user-event/dist/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,

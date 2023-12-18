@@ -15,6 +15,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -27,15 +28,14 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import CommentComponent from "../../component/CommentComponent";
 import { Icon } from "@chakra-ui/icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
-  const navigate = useNavigate();
   const [fileUrl, setFileUrl] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const navigate = useNavigate();
   const itemsPerPage = 10;
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
@@ -43,6 +43,8 @@ export function BoardList() {
     albumFormat: "",
     albumDetails: [],
   });
+  const toast = useToast();
+
   // 검색 조건을 업데이트하는 함수.
   const handleSearch = (params) => {
     setSearchParams(params);
@@ -133,13 +135,34 @@ export function BoardList() {
   }
 
   function handleInCart(board) {
+    const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
-    axios.postForm("/api/cart", {
-      id: board.id,
-      price: board.price,
-      fileUrl: board.fileUrl,
-    });
-    // TODO: djfskldjfkl
+    axios
+      .postForm(
+        "/cart/add",
+        {
+          boardId: board.id,
+          title: board.title,
+          price: board.price,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      )
+      .then((response) => {
+        console.log(board.id + "번 상품 카트에 추가");
+        toast({
+          description: `${board.title} 상품이 장바구니에 추가되었습니다.`,
+          status: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        toast({
+          description: `${board.title} 상품을 장바구니에 추가하지 못했습니다.\n다시 시도해주세요.`,
+          status: "error",
+        });
+      });
   }
 
   return (
@@ -158,9 +181,8 @@ export function BoardList() {
             border="0px solid black"
             key={board.fileUrl}
             style={{ width: "100%" }}
-            onClick={() => navigate(`/board/${board.id}`)}
           >
-            <CardHeader>
+            <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
               <div
                 style={{
                   display: "flex",
@@ -190,7 +212,7 @@ export function BoardList() {
               <Heading size="s">{board.releaseDate}</Heading>
               <Heading size="s">{board.albumFormat}</Heading>
             </CardHeader>
-            <CardBody>
+            <CardBody onClick={() => navigate(`/board/${board.id}`)}>
               <Text>{board.content}</Text>
             </CardBody>
             <CardFooter>
@@ -199,7 +221,7 @@ export function BoardList() {
                   aria-label="cart"
                   variant="solid"
                   colorScheme="pink"
-                  onClick={handleInCart}
+                  onClick={() => handleInCart(board)}
                   icon={<FontAwesomeIcon icon={faCartPlus} />}
                 />
                 {/*<Button w={"40%"}>*/}
