@@ -11,6 +11,7 @@ import {
   Center,
   Flex,
   Heading,
+  IconButton,
   Image,
   Input,
   Select,
@@ -22,6 +23,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCartPlus,
   faChevronLeft,
   faChevronRight,
   faHeart,
@@ -29,6 +31,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
 import CommentComponent from "../../component/CommentComponent";
+import { Icon } from "@chakra-ui/icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -195,14 +198,13 @@ export function BoardList() {
             </CardBody>
             <CardFooter>
               <ButtonGroup spacing="2">
-                <Button
-                  w={"60%"}
+                <IconButton
+                  aria-label="cart"
                   variant="solid"
                   colorScheme="pink"
                   onClick={handleInCart}
-                >
-                  + Cart
-                </Button>
+                  icon={<FontAwesomeIcon icon={faCartPlus} />}
+                />
                 {/*<Button w={"40%"}>*/}
                 {/*  <FontAwesomeIcon*/}
                 {/*    icon={faHeart}*/}

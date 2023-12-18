@@ -76,7 +76,9 @@ export function NavBar(props) {
         })
         .then((response) => {
           console.log("isSocialMember = " + response.data);
-          setIsSocial(true);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch((error) => {
           sendRefreshToken();
@@ -94,6 +96,8 @@ export function NavBar(props) {
     let countdownTimer;
 
     if (loggedIn && isSocial) {
+      console.log("========== 소셜 로그인 멤버입니다 ==========");
+      console.log("==========" + new Date() + "==========");
       const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 3분
       const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
       //2분마다 떠야함
@@ -118,9 +122,15 @@ export function NavBar(props) {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
           });
-          const newExpiresIn = response.data;
-          console.log("expiresIn:", newExpiresIn);
-          await startCountdownTimer(newExpiresIn);
+
+          if (response.status === 204) {
+            // 소셜 회원이 아닌데 타이머가 작동했다면 OAuthException으로 처리하여 HttpStatus.NO_CONTENT 리턴하도록 함
+            setIsSocial(false);
+          } else {
+            const newExpiresIn = response.data;
+            console.log("expiresIn:", newExpiresIn);
+            await startCountdownTimer(newExpiresIn);
+          }
         } catch (error) {
           //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
           toast({
@@ -133,9 +143,7 @@ export function NavBar(props) {
       };
 
       startCountdownTimer(accessTokenExpiry);
-
-      console.log("소셜 로그인 멤버입니다.");
-      console.log("==========" + new Date() + "==========");
+      console.log("========== 소셜 로그인 멤버 검증 완료 ==========");
 
       return () => clearInterval(countdownTimer);
     }

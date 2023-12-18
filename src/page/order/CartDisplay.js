@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -12,23 +12,33 @@ import {
   HStack,
   IconButton,
   Input,
-  useNumberInput,
+  Image,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import * as PropTypes from "prop-types";
+import { useNumberInput } from "@chakra-ui/react";
 
-function MyNumberInput({ max }) {
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 1,
-      min: 1,
-      max: max,
-    });
+function MyNumberInput({ max, onQuantityChange }) {
+  const {
+    getInputProps,
+    getIncrementButtonProps,
+    getDecrementButtonProps,
+    value,
+  } = useNumberInput({
+    step: 1,
+    defaultValue: 1,
+    min: 1,
+    max: max,
+  });
 
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+
+  // Notify the parent component of quantity changes
+  React.useEffect(() => {
+    onQuantityChange(value);
+  }, [value, onQuantityChange]);
+
   return (
     <>
       <IconButton {...inc} aria-label="inc" icon={<AddIcon />} />
@@ -39,10 +49,27 @@ function MyNumberInput({ max }) {
 }
 
 export function CartDisplay() {
+  const [quantities, setQuantities] = useState({});
+
   const items = [
-    { name: "item1", info: "info", max: 6, price: 12000 },
-    { name: "item2", info: "item2 info", max: 8, price: 15000 },
+    { name: "item1", info: "info", max: 6, price: 12000, fileUrl: "1" },
+    { name: "item2", info: "item2 info", max: 8, price: 15000, fileUrl: "2" },
   ];
+
+  const handleQuantityChange = (itemName, quantity) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [itemName]: quantity,
+    }));
+  };
+
+  // Calculate total price based on quantities and item prices
+  const totalPrice = items.reduce((total, item) => {
+    return total + (quantities[item.name] || 0) * item.price;
+  }, 0);
+
+  // Format the total price with commas
+  const formattedTotalPrice = totalPrice.toLocaleString();
 
   return (
     <Card>
@@ -53,18 +80,29 @@ export function CartDisplay() {
         <Stack divider={<StackDivider />} spacing="4">
           {items.map((item, index) => (
             <Box key={index}>
-              <Heading size="xs" textTransform="uppercase">
-                {item.name}
-              </Heading>
+              <Heading size="xs">{item.name}</Heading>
               <HStack justifyContent="space-between">
-                <Text pt="2" fontSize="sm">
-                  {item.info}
-                </Text>
+                <Image
+                  src={item.fileUrl}
+                  alt={`Thumbnail for ${item.name}`}
+                  boxSize="30px"
+                  border="1px solid red"
+                />
+                <Box flex="1" marginLeft="4">
+                  <Text pt="2" fontSize="sm">
+                    {item.info}
+                  </Text>
+                </Box>
                 <HStack maxW="150px">
-                  <MyNumberInput max={item.max} value="quantity" />
+                  <MyNumberInput
+                    max={item.max}
+                    onQuantityChange={(quantity) =>
+                      handleQuantityChange(item.name, quantity)
+                    }
+                  />
                 </HStack>
                 <Text fontWeight="bold" fontSize="lx">
-                  {item.price} 원
+                  {item.price.toLocaleString()} 원
                 </Text>
               </HStack>
             </Box>
@@ -73,9 +111,9 @@ export function CartDisplay() {
       </CardBody>
       <CardFooter>
         <HStack justifyContent="space-between" width="100%">
-          <Heading size="md">Price:</Heading>
+          <Heading size="md">Total Price:</Heading>
           <Heading size="md" textAlign="right">
-            200,000원
+            {formattedTotalPrice} 원
           </Heading>
         </HStack>
       </CardFooter>
