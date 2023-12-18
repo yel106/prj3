@@ -18,9 +18,8 @@ import {
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useNumberInput } from "@chakra-ui/react";
 import axios from "axios";
-import toast from "bootstrap/js/src/toast";
 
-function MyNumberInput({ max, onQuantityChange }) {
+function MyNumberInput({ max, onQuantityChange, cartItemId }) {
   const {
     getInputProps,
     getIncrementButtonProps,
@@ -37,17 +36,28 @@ function MyNumberInput({ max, onQuantityChange }) {
   const dec = getDecrementButtonProps();
   const input = getInputProps();
 
-  // Notify the parent component of quantity changes
   React.useEffect(() => {
     onQuantityChange(value);
   }, [value, onQuantityChange]);
 
+  const handleAddCount = () => {
+    axios.post(`/cart/addCount/${cartItemId}`).then(() => {
+      onQuantityChange(value + 1);
+    }); //TODO: 가지고 있는 수량 초과시 OutofStockException 발생하도록 함, 토스트로 불가능하다고 알리고 버튼에 조치
+  };
+
+  const handleSubtractCount = () => {
+    axios.post(`/cart/subtractCount/${cartItemId}`).then(() => {
+      onQuantityChange(value - 1);
+    }); //TODO: 가지고 있는 수량 초과시 OutofStockException 발생하도록 함, 토스트로 불가능하다고 알리고 버튼에 조치
+  };
+
   return (
-    <>
-      <IconButton {...inc} aria-label="inc" icon={<AddIcon />} />
-      <Input {...input} readOnly />
-      <IconButton {...dec} aria-label="dec" icon={<MinusIcon />} />
-    </>
+      <>
+        <IconButton {...inc} aria-label="inc" icon={<AddIcon />} onClick={handleAddCount} />
+        <Input {...input} readOnly />
+        <IconButton {...dec} aria-label="dec" icon={<MinusIcon />} onClick={handleSubtractCount} />
+      </>
   );
 }
 
@@ -84,13 +94,28 @@ export function CartDisplay() {
     }));
   };
 
-  // Calculate total price based on quantities and item prices
   const totalPrice = items.reduce((total, item) => {
     return total + (quantities[item.name] || 0) * item.price;
   }, 0);
 
-  // Format the total price with commas
+  //TODO: 위 두 개는 OrderWrite 쪽으로 옮겨서 전달하는 방식으로 수정
+
   const formattedTotalPrice = totalPrice.toLocaleString();
+
+  //TODO: 취소 가능하도록 아이템 삭제하는 함수 완성하기
+
+  // const handleDelete = (itemName) => {
+  //   axios.delete(`/cart/delete/${cartItemId}`)
+  //       .then()
+  //       .catch()
+  //       .finally(() => console.log("아이템 삭제 완료"));
+  //
+  //   setQuantities((prevQuantities) => {
+  //     const { [itemName]: deletedItem, ...rest } = prevQuantities;
+  //     onTotalChange(calculateTotalPrice(rest), calculateTotalQuantity(rest));
+  //     return rest;
+  //   });
+  // }
 
   return (
     <Card>
@@ -125,6 +150,7 @@ export function CartDisplay() {
                 <Text fontWeight="bold" fontSize="lx">
                   {item.price.toLocaleString()} 원
                 </Text>
+                {/*<IconButton onClick={onDelete} aria-label="delete" icon={<CloseIcon />} />*/}
               </HStack>
             </Box>
           ))}
