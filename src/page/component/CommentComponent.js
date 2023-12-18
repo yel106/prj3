@@ -294,7 +294,6 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
-    setIsSubmitting(true);
     if (refreshToken !== null) {
       return axios
         .get("/refreshToken", {
