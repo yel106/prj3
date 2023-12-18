@@ -132,6 +132,16 @@ export function BoardList() {
     axios.postForm("/api/like", { id: board.id });
   }
 
+  function handleInCart(board) {
+    console.log("카트 클릭");
+    axios.postForm("/api/cart", {
+      id: board.id,
+      price: board.price,
+      fileUrl: board.fileUrl,
+    });
+    // TODO: djfskldjfkl
+  }
+
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
@@ -185,7 +195,12 @@ export function BoardList() {
             </CardBody>
             <CardFooter>
               <ButtonGroup spacing="2">
-                <Button w={"60%"} variant="solid" colorScheme="pink">
+                <Button
+                  w={"60%"}
+                  variant="solid"
+                  colorScheme="pink"
+                  onClick={handleInCart}
+                >
                   + Cart
                 </Button>
                 {/*<Button w={"40%"}>*/}

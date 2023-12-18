@@ -1,8 +1,9 @@
-import { Button, Input, Heading, useToast } from "@chakra-ui/react";
+import { Button, Heading, Input, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
+import { CartDisplay } from "./CartDisplay";
 
 export function OrderWrite() {
   const [name, setName] = useState("");
@@ -113,6 +114,7 @@ export function OrderWrite() {
   return (
     <div>
       <Heading>주문 페이지</Heading>
+      <CartDisplay />
       <Input
         type="text"
         value={name}
