@@ -5,6 +5,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CardBody,
   CardFooter,
   CardHeader,
   Center,
@@ -235,14 +236,14 @@ export function BoardList() {
       <Box>
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <SimpleGrid
-          border="0px solid black"
+          borderRadius="ml"
           placeItems="center"
           templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
           gap={3} // 카드 사이의 간격
         >
           {boardList.map((board) => (
             <Card
-              border="1px solid black"
+              border="0px solid black"
               key={board.fileUrl}
               style={{ width: "100%" }}
               onClick={() => navigate(`/board/${board.id}`)}
