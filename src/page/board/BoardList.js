@@ -8,22 +8,78 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Flex,
   Heading,
   Image,
   SimpleGrid,
   Spinner,
+  Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import CommentComponent from "../../component/CommentComponent";
 import YouTube from "react-youtube";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+
+function LikeContainer({ loggedIn, boardId }) {
+  const toast = useToast();
+  const [like, setLike] = useState(null);
+  // const { boardId } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`/api/like/board/${boardId}`)
+      .then((response) => setLike(response.data))
+      .catch((error) => console.error("Error fetching like data: ", error));
+  }, [boardId]);
+  //countLike = {reponse.data}
+  // axios.get -> repsonse
+
+  if (like === null) {
+    return <center Spinner />;
+  }
+  function handleLike() {
+    if (loggedIn) {
+      axios
+        .post("/api/like", { boardId })
+        .then((response) => setLike(response.data))
+        .catch(() => console.log("ERROR"))
+        .finally(() => console.log("Lucky!!!"));
+    } else {
+      toast({
+        description: "로그인 후 이용가능한 서비스입니다",
+        status: "error",
+      });
+    }
+  }
+
+  return (
+    // <Flex gap={3} ml={400}>
+    <Flex>
+      <Tooltip hasArrow label={"로그인 후 이용 가능한 서비스입니다"}>
+        <Button
+          onClick={handleLike}
+          leftIcon={
+            like.like ? (
+              <FontAwesomeIcon icon={fullHeart} size="xl" />
+            ) : (
+              <FontAwesomeIcon icon={emptyHeart} size="xl" />
+            )
+          }
+        >
+          <Heading fontSize="md">{like.countLike}</Heading>
+        </Button>
+      </Tooltip>
+    </Flex>
+  );
+}
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -32,12 +88,85 @@ export function BoardList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
+  const [board, setBoard] = useState();
+  const [like, setLike] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const toast = useToast();
+  // const { id } = useParams();
+  // const boardId = id;
+  const location = useLocation();
+
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    axios
+      .get("/refreshToken", {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      })
+      .then((response) => {
+        console.log("sendRefreshToken()의 then 실행");
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        console.log("토큰들 업데이트 리프레시 토큰: ");
+        console.log(response.data.refreshToken);
+        setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log("sendRefreshToken()의 catch 실행");
+        localStorage.removeItem("refreshToken");
+
+        setLoggedIn(false);
+      });
+  }
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken") !== null) {
+      console.log(localStorage.getItem("accessToken"));
+      axios
+        .get("/accessToken", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => {
+          console.log("accessToken then 수행");
+          setLoggedIn(true);
+          console.log(response.data);
+          if (response.data === "ROLE_ADMIN") {
+            console.log("setIsAdmin(true) 동작");
+            setIsAdmin(true);
+          }
+        })
+        .catch(() => {
+          sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
+          localStorage.removeItem("accessToken");
+        })
+        .finally(() => console.log("finally loggedIn: ", loggedIn));
+    }
+    console.log("loggedIn: ", loggedIn);
+  }, [location]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/like/board/" + id)
+  //     .then((response) => setLike(response.data));
+  // }, []);
+  //
+  // if (board === null) {
+  //   return <Spinner />;
+  // }
+
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
     title: "",
     albumFormat: "",
     albumDetails: [],
   });
+
   // 검색 조건을 업데이트하는 함수.
   const handleSearch = (params) => {
     setSearchParams(params);
@@ -97,37 +226,8 @@ export function BoardList() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
 
-  function LikeButton() {
-    const [liked, setLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
-
-    const handleLikeClick = () => {
-      if (liked) {
-        setLikeCount(likeCount - 1);
-      } else {
-        setLikeCount(likeCount + 1);
-      }
-      setLiked(!liked);
-    };
-    return (
-      <div onClick={handleLikeClick}>
-        <FontAwesomeIcon
-          icon={faHeart}
-          style={{ color: liked ? "#db7093" : "black", fontSize: "30px" }}
-        />
-        {likeCount}
-      </div>
-    );
-  }
-
   function handleNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
-  }
-
-  function handleClickHeart(e, board) {
-    e.stopPropagation();
-    console.log("heart!");
-    axios.postForm("/api/like", { id: board.id });
   }
 
   return (
@@ -182,21 +282,7 @@ export function BoardList() {
               {/*  <Text>{board.content}</Text>*/}
               {/*</CardBody>*/}
               <CardFooter>
-                <ButtonGroup spacing="2">
-                  <Button w={"60%"} variant="solid" colorScheme="pink">
-                    + Cart
-                  </Button>
-
-                  <FontAwesomeIcon
-                    icon={faHeart}
-                    onClick={(e) => handleClickHeart(e, board)}
-                    style={{
-                      color: "#db7093",
-                      fontSize: "29px",
-                      marginLeft: "140px",
-                    }}
-                  />
-                </ButtonGroup>
+                <LikeContainer loggedIn={loggedIn} boardId={board.id} />
               </CardFooter>
             </Card>
           ))}
@@ -211,6 +297,7 @@ export function BoardList() {
             {pageButton}
             <Button
               onClick={handleNextPage}
+              e
               disabled={currentPage === totalPage - 1}
             >
               <FontAwesomeIcon icon={faChevronRight} />
