@@ -94,8 +94,9 @@ export function NavBar(props) {
     let countdownTimer;
 
     if (loggedIn && isSocial) {
-      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 5분
+      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 3분
       const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
+      //2분마다 떠야함
       console.log("타이머 작동되는지 확인");
 
       // 카운트다운 시작
@@ -121,6 +122,7 @@ export function NavBar(props) {
           console.log("expiresIn:", newExpiresIn);
           await startCountdownTimer(newExpiresIn);
         } catch (error) {
+          //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
           toast({
             description: "다시 로그인해주세요.",
             status: "error",
