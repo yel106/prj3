@@ -58,6 +58,7 @@ export function BoardList() {
             : "",
           minPrice: searchParams.minPrice,
           maxPrice: searchParams.maxPrice,
+          stockQuantity: searchParams.stockQuantity,
         },
       })
       .then((response) => {
@@ -130,132 +131,133 @@ export function BoardList() {
   }
 
   return (
-    <Box>
-      <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
-      <SimpleGrid
-        border="0px solid black"
-        placeItems="center"
-        templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-        gap={3} // 카드 사이의 간격
-      >
-        {boardList.map((board) => (
-          <Card
-            border="1px solid black"
-            key={board.fileUrl}
-            style={{ width: "100%" }}
-            onClick={() => navigate(`/board/${board.id}`)}
-          >
-            <CardHeader>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {board.fileUrls &&
-                  board.fileUrls.map((url, index) => (
-                    <Image
-                      key={index}
-                      src={url}
-                      borderRadius="ml"
-                      border="1px solid black"
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ))}
-              </div>
-              <br />
-
-              <div>
-                <Heading size="md">{board.title}</Heading>
-                <Heading size="m">{board.artist}</Heading>
-                {/*<Heading size="m">{board.price}</Heading>*/}
-                {/*<Heading size="s">{board.releaseDate}</Heading>*/}
-                {/*<Heading size="s">{board.albumFormat}</Heading>*/}
-              </div>
-            </CardHeader>
-            {/*<CardBody>*/}
-            {/*  <Text>{board.content}</Text>*/}
-            {/*</CardBody>*/}
-            <CardFooter>
-              <ButtonGroup spacing="2">
-                <Button w={"60%"} variant="solid" colorScheme="pink">
-                  + Cart
-                </Button>
-
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  onClick={(e) => handleClickHeart(e, board)}
+    <>
+      <Box>
+        <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
+        <SimpleGrid
+          border="0px solid black"
+          placeItems="center"
+          templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
+          gap={3} // 카드 사이의 간격
+        >
+          {boardList.map((board) => (
+            <Card
+              border="1px solid black"
+              key={board.fileUrl}
+              style={{ width: "100%" }}
+              onClick={() => navigate(`/board/${board.id}`)}
+            >
+              <CardHeader>
+                <div
                   style={{
-                    color: "#db7093",
-                    fontSize: "29px",
-                    marginLeft: "140px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                />
-              </ButtonGroup>
-            </CardFooter>
-          </Card>
-        ))}
-      </SimpleGrid>
-      {/*-----------------------------------------*/}
-      {/*페이지 네이션-------------------------------------------*/}
-      <Center>
-        <ButtonGroup>
-          <Button onClick={handlePreviousPage} disable={currentPage === 0}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-          {pageButton}
-          <Button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPage - 1}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </ButtonGroup>
-      </Center>
-      <SimpleGrid minChildWidth="90px">
-        <Box>
-          <YouTube
-            videoId="2kCQEnm8nAg" //비디오 영상 주소
-            opts={{
-              width: "100%",
-              height: "270px",
-              playerVars: {
-                autoplay: 1, //자동 재생 여부
-                modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
-                loop: 1, //반복 재생
-                playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
-              },
-            }}
-            onReady={(e) => {
-              e.target.mute(); //소리 끔
-            }}
-          />
-        </Box>
-        <Box>
-          <YouTube
-            videoId="2kCQEnm8nAg" //비디오 영상 주소
-            opts={{
-              width: "100%",
-              height: "270px",
-              playerVars: {
-                autoplay: 1, //자동 재생 여부
-                modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
-                loop: 1, //반복 재생
-                playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
-              },
-            }}
-            onReady={(e) => {
-              e.target.mute(); //소리 끔
-            }}
-          />
-        </Box>
-      </SimpleGrid>
-      {/*<CommentComponent />*/}
-    </Box>
+                >
+                  {board.fileUrls &&
+                    board.fileUrls.map((url, index) => (
+                      <Image
+                        key={index}
+                        src={url}
+                        borderRadius="ml"
+                        border="1px solid black"
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ))}
+                </div>
+                <div>
+                  <Heading size="md">{board.title}</Heading>
+                  <Heading size="m">{board.artist}</Heading>
+                  {/*<Heading size="m">{board.price}</Heading>*/}
+                  {/*<Heading size="s">{board.releaseDate}</Heading>*/}
+                  {/*<Heading size="s">{board.albumFormat}</Heading>*/}
+                </div>
+              </CardHeader>
+              {/*<CardBody>*/}
+              {/*  <Text>{board.content}</Text>*/}
+              {/*</CardBody>*/}
+              <CardFooter>
+                <ButtonGroup spacing="2">
+                  <Button w={"60%"} variant="solid" colorScheme="pink">
+                    + Cart
+                  </Button>
+
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    onClick={(e) => handleClickHeart(e, board)}
+                    style={{
+                      color: "#db7093",
+                      fontSize: "29px",
+                      marginLeft: "140px",
+                    }}
+                  />
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
+          ))}
+        </SimpleGrid>
+        {/*-----------------------------------------*/}
+        {/*페이지 네이션-------------------------------------------*/}
+        <Center>
+          <ButtonGroup>
+            <Button onClick={handlePreviousPage} disable={currentPage === 0}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+            {pageButton}
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPage - 1}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </ButtonGroup>
+        </Center>
+        <SimpleGrid minChildWidth="90px">
+          <Box>
+            <YouTube
+              videoId="2kCQEnm8nAg" //비디오 영상 주소
+              opts={{
+                width: "100%",
+                height: "270px",
+                playerVars: {
+                  autoplay: 1, //자동 재생 여부
+                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
+                  loop: 1, //반복 재생
+                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
+                },
+              }}
+              onReady={(e) => {
+                e.target.mute(); //소리 끔
+              }}
+            />
+          </Box>
+
+          <Box>
+            <YouTube
+              videoId="2kCQEnm8nAg" //비디오 영상 주소
+              opts={{
+                width: "100%",
+                height: "270px",
+                playerVars: {
+                  autoplay: 1, //자동 재생 여부
+                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
+                  loop: 1, //반복 재생
+                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
+                },
+              }}
+              onReady={(e) => {
+                e.target.mute(); //소리 끔
+              }}
+            />
+          </Box>
+        </SimpleGrid>
+        {/*<CommentComponent />*/}
+      </Box>
+    </>
   );
 }
