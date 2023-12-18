@@ -30,25 +30,37 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 function CommentContent({
   comment,
   onDeleteModalOpen,
   isSubmitting,
   setIsSubmitting,
+  userLogId,
+  isAdmin,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  const [loggedIn, setLoggedIn] = useState(false); //로그인 했을 때만 댓글 보이는거 안 됨
+  // const [loggedIn, setLoggedIn] = useState(false); //로그인 했을 때만 댓글 보이는거 안 됨
 
   function handleSubmit() {
     setIsSubmitting(true);
     axios
-      .put("/api/comment/update/" + comment.id, {
-        id: comment.id,
-        content: commentEdit,
-      })
+      .put(
+        "/api/comment/update/" + comment.id,
+        {
+          id: comment.id,
+          content: commentEdit,
+          member: { logId: comment.member.logId },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      )
       .then(() =>
         toast({
           description: "리뷰가 수정 되었습니다.",
@@ -101,7 +113,7 @@ function CommentContent({
         </Box>
 
         <Box>
-          {isEditing || (
+          {comment.member.logId === userLogId && !isEditing && (
             <Button
               size="xs"
               colorScheme="blue"
@@ -119,9 +131,11 @@ function CommentContent({
               취소
             </Button>
           )}
-          <Button size="xs" onClick={() => onDeleteModalOpen(comment.id)}>
-            삭제
-          </Button>
+          {(comment.member.logId === userLogId || isAdmin) && (
+            <Button size="xs" onClick={() => onDeleteModalOpen(comment.id)}>
+              삭제
+            </Button>
+          )}
         </Box>
       </Flex>
     </Box>
@@ -133,6 +147,8 @@ function CommentList({
   onDeleteModalOpen,
   isSubmitting,
   setIsSubmitting,
+  userLogId,
+  isAdmin,
 }) {
   const toast = useToast();
 
@@ -152,6 +168,8 @@ function CommentList({
                   isSubmitting={isSubmitting}
                   setIsSubmitting={setIsSubmitting}
                   onDeleteModalOpen={onDeleteModalOpen}
+                  userLogId={userLogId}
+                  isAdmin={isAdmin}
                 />
               ))}
           </Stack>
@@ -184,7 +202,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentComponent({ boardId, loggedIn }) {
+function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
   const [isSubmitting, setIsSubmitting] = useState(false); //제출이 됐는지 알 수 있는 상태를 씀
   //submit했으면 isDisabled가 true되도록 설정
 
@@ -195,11 +213,13 @@ function CommentComponent({ boardId, loggedIn }) {
   // const [id, setId] = useState(0); //id를 렌더링 할 필요없는 경우 useState쓸 필요없음
   const commentIdRef = useRef(0); // current를 통해 현재 참조하는 값을 가져오거나 변경
   const toast = useToast();
-
+  let navigate = useNavigate();
   const [commentList, setCommentList] = useState([]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const accessToken = localStorage.getItem("accessToken");
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken"),
+  );
 
   useEffect(() => {
     if (!isSubmitting) {
@@ -237,6 +257,35 @@ function CommentComponent({ boardId, loggedIn }) {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    if (refreshToken !== null) {
+      return axios
+        .get("/refreshToken", {
+          headers: { Authorization: `Bearer ${refreshToken}` },
+        })
+        .then((response) => {
+          console.log("sendRefreshToken()의 then 실행");
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+
+          setAccessToken(localStorage.getItem("accessToken"));
+          console.log("토큰들 업데이트 리프레시 토큰: ");
+          console.log(response.data.refreshToken);
+        })
+        .catch((error) => {
+          console.log("sendRefreshToken()의 catch 실행");
+          localStorage.removeItem("refreshToken");
+          toast({
+            description: "로그인 되어 있지 않습니다.",
+            status: "warning",
+          });
+          navigate(0);
+        });
+    }
+  }
   function handleSubmit({ content }) {
     setIsSubmitting(true);
     console.log(content);
@@ -248,27 +297,57 @@ function CommentComponent({ boardId, loggedIn }) {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
       )
-      .then(() =>
+      .then(() => {
         toast({
           description: "리뷰가 저장되었습니다.",
           status: "success",
-        }),
-      )
-      .catch((error) =>
-        toast({
-          description: "저장 중 문제가 발생하였습니다.",
-          status: "error",
-        }),
-      )
-      .finally(
-        () => setIsSubmitting(false), //제출 완료되면 버튼 활성화
-      );
+        });
+      })
+      .catch((error) => {
+        console.log("리프레시 토큰 보내기");
+        const re = sendRefreshToken();
+        if (re !== undefined) {
+          re.then(() => {
+            console.log("다음??");
+            axios
+              .post(
+                `/api/comment/add/${boardId}`,
+                { content },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                      "accessToken",
+                    )}`,
+                  },
+                },
+              )
+              .then(() => {
+                toast({
+                  description: "리뷰가 저장되었습니다.",
+                  status: "success",
+                });
+              })
+              .catch(() => {
+                toast({
+                  description: "저장 중 문제가 발생하였습니다.",
+                  status: "error",
+                });
+              })
+              .finally(() => setIsSubmitting(false));
+          });
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false); //제출 완료되면 버튼 활성화
+      });
   }
 
   function handleDelete() {
     setIsSubmitting(true);
     axios
-      .delete("/api/comment/delete/" + commentIdRef.current)
+      .delete("/api/comment/delete/" + commentIdRef.current, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(() => {
         toast({
           description: "리뷰를 삭제하였습니다.",
@@ -315,6 +394,8 @@ function CommentComponent({ boardId, loggedIn }) {
         setIsSubmitting={setIsSubmitting}
         commentList={commentList}
         onDeleteModalOpen={handleDeleteModalOpen}
+        userLogId={userLogId}
+        isAdmin={isAdmin}
       />
 
       {/*삭제 모달*/}

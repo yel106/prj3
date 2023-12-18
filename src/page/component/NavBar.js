@@ -119,6 +119,14 @@ export function NavBar(props) {
             status: "success",
           });
         } else {
+          console.log(
+            "로컬스토리지 refreshToken 상태: ",
+            localStorage.getItem("refreshToken"),
+          );
+          console.log(
+            "로컬스토리지 accessToken 상태: ",
+            localStorage.getItem("accessToken"),
+          );
           toast({
             description: "로그아웃 도중 에러가 발생했습니다",
             status: "error",
