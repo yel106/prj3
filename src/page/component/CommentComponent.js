@@ -70,15 +70,18 @@ function CommentContent({
   return (
     <Box>
       <Flex justifyContent="space-between">
-        <Text fontSize="sm" color="dimgrey">
+        <Text size={10} fontSize="sm" color="dimgrey">
           {comment.member.logId}님
-        </Text>{" "}
+        </Text>
+        <Text fontSize="xs" color="gray">
+          {comment.member.updateTime}
+        </Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
-          <Text fontSize="xs" color="gray">
-            {comment.member.updateTime}
-          </Text>
+          {/*<Text fontSize="xs" color="gray">*/}
+          {/*  {comment.member.updateTime}*/}
+          {/*</Text>*/}
           <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
             {comment.content}
           </Text>

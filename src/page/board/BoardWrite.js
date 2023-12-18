@@ -40,26 +40,28 @@ export function BoardWrite() {
     setIsSubmitting(true);
 
     axios
-      .postForm("/api/board/add", {
-        title,
-        artist,
-        albumFormat,
-        albumDetails:
-          Array.isArray(albumDetails) && albumDetails.length > 1 //값이 배열이고, 배열길이 1보다 큰지 확인
-            ? albumDetails.join(",")
-            : albumDetails,
-        releaseDate,
-        agency,
-        price,
-        content,
-        uploadFiles,
-      },
-          {
+      .postForm(
+        "/api/board/add",
+        {
+          title,
+          artist,
+          albumFormat,
+          albumDetails:
+            Array.isArray(albumDetails) && albumDetails.length > 1 //값이 배열이고, 배열길이 1보다 큰지 확인
+              ? albumDetails.join(",")
+              : albumDetails.toString(),
+          releaseDate,
+          agency,
+          price,
+          content,
+          uploadFiles,
+        },
+        {
           headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
-      },
-          )
+        },
+      )
       .then(() => {
         toast({
           description: "새 상품이 저장되었습니다",
@@ -109,12 +111,12 @@ export function BoardWrite() {
           </FormControl>
 
           <FormControl mb={5}>
-              <FormLabel>Album Title</FormLabel>
-              <Input
-                  value={title}
-                  placeholder="등록하려는 앨범의 이름을 입력해주세요"
-                  onChange={(e) => setTitle(e.target.value)}
-              />
+            <FormLabel>Album Title</FormLabel>
+            <Input
+              value={title}
+              placeholder="등록하려는 앨범의 이름을 입력해주세요"
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </FormControl>
           {/*================================*/}
           <FormControl mb={5}>
@@ -122,30 +124,29 @@ export function BoardWrite() {
             <Input value={artist} onChange={(e) => setArtist(e.target.value)} />
           </FormControl>
           {/*======================================*/}
-            <FormControl mb={5}>
-                <FormLabel>Album Introduction</FormLabel>
-                <Input
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="음반 소개 글을 입력해주세요"
-                />
-            </FormControl>
-            {/* 앨범 포맷 입력란 */}
-            <FormControl mt={4}>
-                <FormLabel>Album Format</FormLabel>
-                <Select
-                    value={albumFormat}
-                    onChange={(e) => setAlbumFormat(e.target.value)}
-                    placeholder="앨범 포맷을 선택하세요"
-                >
-                    <option value="CD">CD</option>
-                    <option value="VINYL">VINYL</option>
-                    <option value="CASSETTE_TAPE">CASSETTE_TAPE</option>
-                </Select>
-            </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>Album Introduction</FormLabel>
+            <Input
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="음반 소개 글을 입력해주세요"
+            />
+          </FormControl>
+          {/* 앨범 포맷 입력란 */}
+          <FormControl mt={4}>
+            <FormLabel>Album Format</FormLabel>
+            <Select
+              value={albumFormat}
+              onChange={(e) => setAlbumFormat(e.target.value)}
+              placeholder="앨범 포맷을 선택하세요"
+            >
+              <option value="CD">CD</option>
+              <option value="VINYL">VINYL</option>
+              <option value="CASSETTE_TAPE">CASSETTE_TAPE</option>
+            </Select>
+          </FormControl>
 
-
-            <FormControl mb={5}>
+          <FormControl mb={5}>
             <FormLabel>Genres</FormLabel>
             <CheckboxGroup
               value={albumDetails}
@@ -182,19 +183,19 @@ export function BoardWrite() {
             />
           </FormControl>
 
-            {/*사용한 가격 입력 폼*/}
-            <FormControl mb={5}>
-                <FormLabel>Price</FormLabel>
-                <InputGroup>
-                    <InputRightAddon children="₩" />
-                    <Input
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        type="number"
-                        min="0"
-                    />
-                </InputGroup>
-            </FormControl>
+          {/*사용한 가격 입력 폼*/}
+          <FormControl mb={5}>
+            <FormLabel>Price</FormLabel>
+            <InputGroup>
+              <InputRightAddon children="₩" />
+              <Input
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                type="number"
+                min="0"
+              />
+            </InputGroup>
+          </FormControl>
         </CardBody>
         <CardFooter>
           <Button
