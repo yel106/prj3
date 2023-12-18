@@ -40,7 +40,7 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  const [loggedIn, setLoggedIn] = useState(false); //로그인 했을 때만 댓글 보이는거 안 됨
+  const [loggedIn, setLoggedIn] = useState(false);
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -297,17 +297,17 @@ function CommentComponent({ boardId, loggedIn }) {
     <Box>
       {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
        부모인 Comment컴포넌트가 그 상태를 갖고있으면 됨. 그리고 prop으로 받기*/}
-      {loggedIn && (
-        <Center mt="10">
-          <Box w="xl">
-            <CommentForm
-              boardId={boardId}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-            />
-          </Box>
-        </Center>
-      )}
+      {/*{loggedIn && (*/}
+      <Center mt="10">
+        <Box w="xl">
+          <CommentForm
+            boardId={boardId}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </Box>
+      </Center>
+      {/*)}*/}
 
       <CommentList
         boardId={boardId}

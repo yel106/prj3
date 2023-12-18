@@ -12,13 +12,12 @@ import {
   Heading,
   Input,
   Select,
-  useRadio,
-  useRadioGroup,
+  Spacer,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function MemberSignup() {
   const [logId, setLogId] = useState("");
@@ -48,7 +47,7 @@ export function MemberSignup() {
         address,
         birthDate: parseInt(birthDate, 10),
         firstDigit: parseInt(firstDigit, 10),
-        role,
+        // gender: role,
       })
       .then(() => {
         toast({
@@ -128,15 +127,17 @@ export function MemberSignup() {
 
   return (
     <Box>
-      <Card>
-        <CardHeader>
+      <Spacer h={10} />
+      <Card backgroundColor={"#fae0ea"} overflow={"hidden"}>
+        <CardHeader backgroundColor="#b4c0ea">
           <Heading>회원 가입</Heading>
         </CardHeader>
         <CardBody>
           <FormControl>
-            <FormLabel>logId</FormLabel>
+            <FormLabel>아이디</FormLabel>
             <Flex>
               <Input
+                maxWidth={200}
                 value={logId}
                 onChange={(e) => {
                   setLogId(e.target.value);
@@ -149,8 +150,9 @@ export function MemberSignup() {
             </Flex>
           </FormControl>
           <FormControl>
-            <FormLabel>password</FormLabel>
+            <FormLabel>비밀번호</FormLabel>
             <Input
+              maxWidth={250}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -158,9 +160,10 @@ export function MemberSignup() {
             <FormErrorMessage>암호를 입력해 주세요.</FormErrorMessage>
           </FormControl>
           <FormControl>
-            <FormLabel>email</FormLabel>
+            <FormLabel>이메일</FormLabel>
             <Flex>
               <Input
+                maxWidth={300}
                 type="email"
                 value={email}
                 onChange={(e) => {
@@ -174,9 +177,10 @@ export function MemberSignup() {
             </Flex>
           </FormControl>
           <FormControl>
-            <FormLabel>name</FormLabel>
+            <FormLabel>이름</FormLabel>
             <Flex>
               <Input
+                maxWidth={200}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -185,9 +189,10 @@ export function MemberSignup() {
             </Flex>
           </FormControl>
           <FormControl>
-            <FormLabel>address</FormLabel>
+            <FormLabel>주소</FormLabel>
             <Flex>
               <Input
+                maxWidth={500}
                 value={address}
                 onChange={(e) => {
                   setAddress(e.target.value);
@@ -203,6 +208,7 @@ export function MemberSignup() {
               type="text"
               placeholder="YYMMDD"
               maxLength={6}
+              maxWidth={200}
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
             />
@@ -220,24 +226,27 @@ export function MemberSignup() {
               onChange={(e) => setFirstDigit(e.target.value)}
             />
           </FormControl>
-          <FormControl isRequired>
-            <FormLabel htmlFor="role">역할</FormLabel>
-            <Select
-              id="role"
-              placeholder="역할 선택"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="ROLE_ADMIN">관리자</option>
-              <option value="ROLE_USER">사용자</option>
-            </Select>
-          </FormControl>
+          {/*<FormControl isRequired>*/}
+          {/*  <FormLabel htmlFor="role">역할</FormLabel>*/}
+          {/*  <Select*/}
+          {/*    id="role"*/}
+          {/*    placeholder="역할 선택"*/}
+          {/*    value={role}*/}
+          {/*    onChange={(e) => setRole(e.target.value)}*/}
+          {/*  >*/}
+          {/*    <option value="ROLE_ADMIN">관리자</option>*/}
+          {/*    <option value="ROLE_USER">사용자</option>*/}
+          {/*  </Select>*/}
+          {/*</FormControl>*/}
         </CardBody>
+
+        <Spacer h={100} />
         <CardFooter>
-          <Button onClick={handleSubmit} colorScheme="blue">
-            가입
+          <Button onClick={handleSubmit} backgroundColor="#b4c0ea">
+            회원 가입
           </Button>
         </CardFooter>
+        <Spacer h={20} />
       </Card>
     </Box>
   );

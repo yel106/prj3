@@ -12,6 +12,7 @@ import {
   Heading,
   Image,
   SimpleGrid,
+  Spacer,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -130,8 +131,10 @@ export function BoardList() {
   return (
     //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
     <Box>
-      <h1>Album list</h1>
+      <Spacer h={50} />
       <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
+      <Spacer h={50} />
+      <p>Album List</p>
       <SimpleGrid
         border="1px solid black"
         placeItems="center"
@@ -199,8 +202,8 @@ export function BoardList() {
           </Card>
         ))}
       </SimpleGrid>
-      {/*-----------------------------------------*/}
       {/*페이지 네이션-------------------------------------------*/}
+      <Spacer h={50} />
       <Center>
         <ButtonGroup>
           <Button onClick={handlePreviousPage} disable={currentPage === 0}>
@@ -215,6 +218,7 @@ export function BoardList() {
           </Button>
         </ButtonGroup>
       </Center>
+      <Spacer h={200} />
     </Box>
   );
 }
