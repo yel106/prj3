@@ -39,6 +39,8 @@ function CommentContent({
   setIsSubmitting,
   userLogId,
   isAdmin,
+  sendRefreshToken,
+  setAccessToken,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
@@ -67,12 +69,40 @@ function CommentContent({
           status: "success",
         }),
       )
-      .catch(() =>
-        toast({
-          description: "수정 중 문제가 발생하였습니다.",
-          status: "error",
-        }),
-      )
+      .catch(() => {
+        const re = sendRefreshToken();
+        re.then(() =>
+          axios
+            .put(
+              "/api/comment/update/" + comment.id,
+              {
+                id: comment.id,
+                content: commentEdit,
+                member: { logId: comment.member.logId },
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "accessToken",
+                  )}`,
+                },
+              },
+            )
+            .then(() =>
+              toast({
+                description: "리뷰가 수정 되었습니다.",
+                status: "success",
+              }),
+            )
+            .catch(() =>
+              toast({
+                description: "수정 중 문제가 발생하였습니다.",
+                status: "error",
+              }),
+            )
+            .finally(() => setIsSubmitting(false)),
+        );
+      })
       .finally(() => {
         setIsSubmitting(false);
         setIsEditing(false);
@@ -149,6 +179,8 @@ function CommentList({
   setIsSubmitting,
   userLogId,
   isAdmin,
+  sendRefreshToken,
+  setAccessToken,
 }) {
   const toast = useToast();
 
@@ -170,6 +202,8 @@ function CommentList({
                   onDeleteModalOpen={onDeleteModalOpen}
                   userLogId={userLogId}
                   isAdmin={isAdmin}
+                  sendRefreshToken={sendRefreshToken}
+                  setAccessToken={setAccessToken}
                 />
               ))}
           </Stack>
@@ -234,7 +268,7 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
         setTotalPage(response.data.totalPages);
       });
     }
-  }, [isSubmitting, boardId, currentPage]); //pageSize 삭제
+  }, [isSubmitting, boardId, currentPage, accessToken]); //pageSize 삭제
 
   const pageButton = [];
   for (let i = 0; i < totalPage; i++) {
@@ -260,7 +294,7 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
-
+    setIsSubmitting(true);
     if (refreshToken !== null) {
       return axios
         .get("/refreshToken", {
@@ -308,7 +342,6 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
         const re = sendRefreshToken();
         if (re !== undefined) {
           re.then(() => {
-            console.log("다음??");
             axios
               .post(
                 `/api/comment/add/${boardId}`,
@@ -354,12 +387,36 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
           status: "success",
         });
       })
-      .catch(() =>
-        toast({
-          description: "삭제 중 문제가 발생하였습니다.",
-          status: "error",
-        }),
-      )
+      .catch(() => {
+        const re = sendRefreshToken();
+        if (re !== undefined) {
+          re.then(() =>
+            axios
+              .delete("/api/comment/delete/" + commentIdRef.current, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "accessToken",
+                  )}`,
+                },
+              })
+              .then(() => {
+                toast({
+                  description: "리뷰를 삭제하였습니다.",
+                  status: "success",
+                });
+              })
+              .catch(() =>
+                toast({
+                  description: "삭제 중 문제가 발생하였습니다.",
+                  status: "error",
+                }),
+              )
+              .finally(() => {
+                setIsSubmitting(false);
+              }),
+          );
+        }
+      })
       .finally(() => {
         onClose();
         setIsSubmitting(false);
@@ -396,6 +453,8 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
         onDeleteModalOpen={handleDeleteModalOpen}
         userLogId={userLogId}
         isAdmin={isAdmin}
+        sendRefreshToken={sendRefreshToken}
+        setAccessToken={setAccessToken}
       />
 
       {/*삭제 모달*/}

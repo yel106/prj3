@@ -27,7 +27,6 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import CommentComponent from "../../component/CommentComponent";
 import { Icon } from "@chakra-ui/icons";
 
 export function BoardList() {
