@@ -51,6 +51,12 @@ function MyNumberInput({ max, onQuantityChange }) {
 export function CartDisplay() {
   const [quantities, setQuantities] = useState({});
 
+  // useEffect(() => {
+  //   axios.post('요청 날리기', { 헤더로 토큰 보내서 로그 아이디 추출 })
+  //     .then((response) => setItems(response.data))
+  //     .catch((error) => console.error('Error fetching data:', error));
+  // }, []);
+
   const items = [
     { name: "item1", info: "info", max: 6, price: 12000, fileUrl: "1" },
     { name: "item2", info: "item2 info", max: 8, price: 15000, fileUrl: "2" },
