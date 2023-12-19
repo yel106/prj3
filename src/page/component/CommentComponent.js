@@ -95,9 +95,11 @@ function CommentContent({
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
+          {/*{!isEditing && (*/}
           <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
             {comment.content}
           </Text>
+          {/*)}*/}
 
           {isEditing && (
             <Box>
