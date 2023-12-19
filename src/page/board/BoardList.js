@@ -144,6 +144,7 @@ export function BoardList() {
           boardId: board.id,
           title: board.title,
           price: board.price,
+          stockQuantity: board.stockQuantity,
         },
         {
           headers: { Authorization: `Bearer ${accessToken}` },

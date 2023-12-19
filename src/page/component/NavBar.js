@@ -63,7 +63,7 @@ export function NavBar(props) {
           setLoggedIn(true);
           console.log(response.data);
 
-          if (response.data === "ROLE_ADMIN") {
+          if (response.data.role === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }

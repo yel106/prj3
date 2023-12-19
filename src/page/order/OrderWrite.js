@@ -14,6 +14,10 @@ export function OrderWrite() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
+
+  // 총 가격
+  const [totalPrice, setTotalPrice] = useState(0);
+
   function getMember() {
     axios
       .get("/api/order", {
@@ -115,6 +119,7 @@ export function OrderWrite() {
     <div>
       <Heading>주문 페이지</Heading>
       <CartDisplay mb="4" accessToken={accessToken} />
+      {/*<Heading>{totalPrice}</Heading>*/}
       <Input
         type="text"
         value={name}
