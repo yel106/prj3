@@ -24,7 +24,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { isContentEditable } from "@testing-library/user-event/dist/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -41,6 +40,22 @@ function CommentContent({
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
   const [loggedIn, setLoggedIn] = useState(false);
+
+  const commentUpdate = {
+    updateTime: comment.updateTime,
+  };
+  const updateTime = new Date(comment.updateTime);
+
+  const commentUpdateTime = updateTime
+    .toLocaleString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+    .replace(/(\d+)\/(\d+)\/(\d+),?/, "$3/$1/$2");
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -74,7 +89,8 @@ function CommentContent({
           {comment.member.logId}님
         </Text>
         <Text fontSize="xs" color="gray">
-          {comment.member.updateTime}
+          {/*{comment.updateTime}*/}
+          {commentUpdateTime}
         </Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">

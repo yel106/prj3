@@ -192,7 +192,7 @@ export function MemberSignup() {
             <FormLabel>주소</FormLabel>
             <Flex>
               <Input
-                maxWidth={500}
+                maxWidth={600}
                 value={address}
                 onChange={(e) => {
                   setAddress(e.target.value);
@@ -222,6 +222,7 @@ export function MemberSignup() {
               type="text"
               placeholder="1"
               maxLength={1}
+              maxWidth={50}
               value={firstDigit}
               onChange={(e) => setFirstDigit(e.target.value)}
             />
