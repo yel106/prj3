@@ -14,6 +14,7 @@ import {
   IconButton,
   Image,
   SimpleGrid,
+  Spacer,
   Spinner,
   useToast,
 } from "@chakra-ui/react";
@@ -245,12 +246,6 @@ export function BoardList() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
-  // function handleClickHeart(e, board) {
-  //   e.stopPropagation();
-  //   console.log("heart!");
-  //   axios.postForm("/api/like", { id: board.id });
-  // }
-
   function handleInCart(board) {
     console.log("카트 클릭");
     axios.postForm("/api/cart", {
@@ -258,13 +253,15 @@ export function BoardList() {
       price: board.price,
       fileUrl: board.fileUrl,
     });
-    // TODO: djfskldjfkl
   }
 
   return (
     <>
       <Box>
+        <Spacer h={50} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
+        <Spacer h={50} />
+        <p>Album List</p>
         <SimpleGrid
           borderRadius="ml"
           placeItems="center"
@@ -341,6 +338,7 @@ export function BoardList() {
         </SimpleGrid>
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}
+        <Spacer h={50} />
         <Center>
           <ButtonGroup>
             <Button onClick={handlePreviousPage} disable={currentPage === 0}>
@@ -395,7 +393,7 @@ export function BoardList() {
             />
           </Box>
         </SimpleGrid>
-        {/*<CommentComponent />*/}
+        <Spacer h={200} />
       </Box>
     </>
   );

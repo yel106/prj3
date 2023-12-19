@@ -24,7 +24,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { isContentEditable } from "@testing-library/user-event/dist/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -45,7 +44,23 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  // const [loggedIn, setLoggedIn] = useState(false); //로그인 했을 때만 댓글 보이는거 안 됨
+  // const [loggedIn, setLoggedIn] = useState(false);
+
+  const commentUpdate = {
+    updateTime: comment.updateTime,
+  };
+  const updateTime = new Date(comment.updateTime);
+
+  const commentUpdateTime = updateTime
+    .toLocaleString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+    .replace(/(\d+)\/(\d+)\/(\d+),?/, "$3/$1/$2");
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -112,18 +127,21 @@ function CommentContent({
   return (
     <Box>
       <Flex justifyContent="space-between">
-        <Text fontSize="sm" color="dimgrey">
+        <Text size={10} fontSize="sm" color="dimgrey">
           {comment.member.logId}님
-        </Text>{" "}
+        </Text>
+        <Text fontSize="xs" color="gray">
+          {/*{comment.updateTime}*/}
+          {commentUpdateTime}
+        </Text>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
-          <Text fontSize="xs" color="gray">
-            {comment.member.updateTime}
-          </Text>
+          {/*{!isEditing && (*/}
           <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
             {comment.content}
           </Text>
+          {/*)}*/}
 
           {isEditing && (
             <Box>
@@ -260,7 +278,6 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
       const params = new URLSearchParams();
       params.set("id", boardId); //url에서 id에 boardId가 들어감
       params.set("page", currentPage);
-      // params.set("size", pageSize);
       params.set("size", commentPerPage);
 
       axios.get("/api/comment/list?" + params).then((response) => {
@@ -359,11 +376,18 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
                   status: "success",
                 });
               })
-              .catch(() => {
-                toast({
-                  description: "저장 중 문제가 발생하였습니다.",
-                  status: "error",
-                });
+              .catch((error) => {
+                if (error.response.status === 401) {
+                  toast({
+                    description: "로그인이 필요합니다.",
+                    status: "error",
+                  });
+                } else {
+                  toast({
+                    description: "저장 중 문제가 발생하였습니다.",
+                    status: "error",
+                  });
+                }
               })
               .finally(() => setIsSubmitting(false));
           });
