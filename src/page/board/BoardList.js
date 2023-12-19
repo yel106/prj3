@@ -9,42 +9,179 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Flex,
   Heading,
   IconButton,
   Image,
   SimpleGrid,
+  Spacer,
   Spinner,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartPlus,
   faChevronLeft,
   faChevronRight,
-  faHeart,
-  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import { Icon } from "@chakra-ui/icons";
+import YouTube from "react-youtube";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+
+function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
+  const toast = useToast();
+  const [like, setLike] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`/api/like/board/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((response) => setLike(response.data))
+      .catch((error) => {
+        if (error.response.status === 401) {
+          setLoggedIn(false);
+          sendRefreshToken();
+        } else {
+          console.error("Error fetching like data: ", error);
+        }
+      });
+  }, [boardId, loggedIn]);
+
+  if (like === null) {
+    return <center Spinner />;
+  }
+  function handleLike() {
+    if (loggedIn) {
+      axios
+        .get("/api/like/" + boardId, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => setLike(response.data))
+        .catch((error) => {
+          if (error.response.status === 401) {
+            setLoggedIn(false);
+            sendRefreshToken();
+          } else {
+            console.error("Error fetching like data: ", error);
+          }
+        })
+        .finally(() => console.log(like));
+    } else {
+      toast({
+        description: "로그인 후 이용가능한 서비스입니다",
+        status: "error",
+      });
+    }
+  }
+
+  return (
+    // <Flex gap={3} ml={400}>
+    <Flex>
+      <Button
+        size="sm"
+        onClick={handleLike}
+        leftIcon={
+          like.isLiked ? (
+            <FontAwesomeIcon icon={fullHeart} size="xl" />
+          ) : (
+            <FontAwesomeIcon icon={emptyHeart} size="xl" />
+          )
+        }
+      >
+        <Heading fontSize="md">{like.countLike}</Heading>
+      </Button>
+    </Flex>
+  );
+}
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const navigate = useNavigate();
   const [fileUrl, setFileUrl] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-  const navigate = useNavigate();
   const itemsPerPage = 10;
+  const [board, setBoard] = useState();
+  // const [like, setLike] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const toast = useToast();
+  // const { id } = useParams();
+  // const boardId = id;
+  const location = useLocation();
+
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+
+    axios
+      .get("/refreshToken", {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      })
+      .then((response) => {
+        console.log("sendRefreshToken()의 then 실행");
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
+        console.log("토큰들 업데이트 리프레시 토큰: ");
+        console.log(response.data.refreshToken);
+        setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log("sendRefreshToken()의 catch 실행");
+        localStorage.removeItem("refreshToken");
+
+        setLoggedIn(false);
+      });
+  }
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken") !== null) {
+      console.log(localStorage.getItem("accessToken"));
+      axios
+        .get("/accessToken", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => {
+          console.log("accessToken then 수행");
+          setLoggedIn(true);
+          console.log(response.data);
+        })
+        .catch(() => {
+          sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
+          localStorage.removeItem("accessToken");
+        })
+        .finally(() => console.log("finally loggedIn: ", loggedIn));
+    }
+    console.log("loggedIn: ", loggedIn);
+  }, [location]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/like/board/" + id)
+  //     .then((response) => setLike(response.data));
+  // }, []);
+  //
+  // if (board === null) {
+  //   return <Spinner />;
+  // }
+
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
     title: "",
     albumFormat: "",
     albumDetails: [],
   });
-  const toast = useToast();
-
   // 검색 조건을 업데이트하는 함수.
   const handleSearch = (params) => {
     setSearchParams(params);
@@ -65,6 +202,7 @@ export function BoardList() {
             : "",
           minPrice: searchParams.minPrice,
           maxPrice: searchParams.maxPrice,
+          stockQuantity: searchParams.stockQuantity,
         },
       })
       .then((response) => {
@@ -102,36 +240,9 @@ export function BoardList() {
   function handlePreviousPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
-  function LikeButton() {
-    const [liked, setLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
 
-    const handleLikeClick = () => {
-      if (liked) {
-        setLikeCount(likeCount - 1);
-      } else {
-        setLikeCount(likeCount + 1);
-      }
-      setLiked(!liked);
-    };
-    return (
-      <div onClick={handleLikeClick}>
-        <FontAwesomeIcon
-          icon={faHeart}
-          style={{ color: liked ? "#db7093" : "black", fontSize: "30px" }}
-        />
-        {likeCount}
-      </div>
-    );
-  }
   function handleNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
-  }
-
-  function handleClickHeart(e, board) {
-    e.stopPropagation();
-    console.log("heart!");
-    axios.postForm("/api/like", { id: board.id });
   }
 
   function handleInCart(board) {
@@ -167,96 +278,145 @@ export function BoardList() {
   }
 
   return (
-    //배경 css적용 테스트. <Box style={{ backgroundColor: "rgb(219, 112, 147)" }}>
-    <Box>
-      <Heading>Album list</Heading>
-      <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
-      <SimpleGrid
-        border="1px solid black"
-        placeItems="center"
-        templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-        gap={3} // 카드 사이의 간격
-      >
-        {boardList.map((board) => (
-          <Card
-            border="0px solid black"
-            key={board.fileUrl}
-            style={{ width: "100%" }}
-          >
-            <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {board.fileUrls &&
-                  board.fileUrls.map((url, index) => (
-                    <Image
-                      key={index}
-                      src={url}
-                      borderRadius="ml"
-                      border="0px solid black"
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ))}
-              </div>
-              <br />
-              <Heading size="md">{board.title}</Heading>
-              <Heading size="m">{board.artist}</Heading>
-              <Heading size="m">{board.price}</Heading>
-              <Heading size="s">{board.releaseDate}</Heading>
-              <Heading size="s">{board.albumFormat}</Heading>
-            </CardHeader>
-            <CardBody onClick={() => navigate(`/board/${board.id}`)}>
-              <Text>{board.content}</Text>
-            </CardBody>
-            <CardFooter>
-              <ButtonGroup spacing="2">
-                <IconButton
-                  aria-label="cart"
-                  variant="solid"
-                  colorScheme="pink"
-                  onClick={() => handleInCart(board)}
-                  icon={<FontAwesomeIcon icon={faCartPlus} />}
-                />
-                {/*<Button w={"40%"}>*/}
-                {/*  <FontAwesomeIcon*/}
-                {/*    icon={faHeart}*/}
-                {/*    style={{ color: "#db7093" }}*/}
-                {/*  />*/}
-                {/*</Button>*/}
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  onClick={(e) => handleClickHeart(e, board)}
-                  style={{ color: "#db7093", fontSize: "30px" }}
-                />
-              </ButtonGroup>
-            </CardFooter>
-          </Card>
-        ))}
-      </SimpleGrid>
-      {/*-----------------------------------------*/}
-      {/*페이지 네이션-------------------------------------------*/}
-      <Center>
-        <ButtonGroup>
-          <Button onClick={handlePreviousPage} disable={currentPage === 0}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-          {pageButton}
-          <Button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPage - 1}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </ButtonGroup>
-      </Center>
-    </Box>
+    <>
+      <Box>
+        <Spacer h={50} />
+        <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
+        <Spacer h={50} />
+        <p>Album List</p>
+        <SimpleGrid
+          borderRadius="ml"
+          placeItems="center"
+          templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
+          gap={3} // 카드 사이의 간격
+        >
+          {boardList.map((board) => (
+            <Card
+              border="1px solid blue"
+              key={board.fileUrl}
+              borderRadius="xl"
+              style={{ width: "100%", height: "85%" }}
+            >
+              <CardHeader>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onClick={() => navigate(`/board/${board.id}`)}
+                >
+                  {board.fileUrls &&
+                    board.fileUrls.map((url, index) => (
+                      <Image
+                        key={index}
+                        src={url}
+                        borderRadius="xl"
+                        border="1px solid red"
+                        style={{
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ))}
+                </div>
+                <div>
+                  <Heading size="md">
+                    {board.title} - {board.artist}
+                  </Heading>
+                  <Heading size="m" textAlign="right">
+                    {board.price}원
+                  </Heading>
+                  {/*<Heading justifyContent="flex-end" size="m">*/}
+                  {/*  {board.price}원*/}
+                  {/*</Heading>*/}
+                  {/*<Heading size="s">{board.releaseDate}</Heading>*/}
+                  {/*<Heading size="s">{board.albumFormat}</Heading>*/}
+                </div>
+              </CardHeader>
+              {/*<CardBody>*/}
+              {/*  <Text>{board.content}</Text>*/}
+              {/*</CardBody>*/}
+              <CardFooter>
+                <ButtonGroup spacing="2">
+                  <IconButton
+                    aria-label="cart"
+                    variant="solid"
+                    colorScheme="pink"
+                    onClick={() => handleInCart(board)}
+                    icon={<FontAwesomeIcon icon={faCartPlus} />}
+                  />
+                  <LikeContainer
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    boardId={board.id}
+                    sendRefreshToken={sendRefreshToken}
+                  />
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
+          ))}
+        </SimpleGrid>
+        {/*-----------------------------------------*/}
+        {/*페이지 네이션-------------------------------------------*/}
+        <Spacer h={50} />
+        <Center>
+          <ButtonGroup>
+            <Button onClick={handlePreviousPage} disable={currentPage === 0}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </Button>
+            {pageButton}
+            <Button
+              onClick={handleNextPage}
+              e
+              disabled={currentPage === totalPage - 1}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Button>
+          </ButtonGroup>
+        </Center>
+        <SimpleGrid minChildWidth="90px">
+          <Box>
+            <YouTube
+              videoId="2kCQEnm8nAg" //비디오 영상 주소
+              opts={{
+                width: "100%",
+                height: "270px",
+                playerVars: {
+                  autoplay: 1, //자동 재생 여부
+                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
+                  loop: 1, //반복 재생
+                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
+                },
+              }}
+              onReady={(e) => {
+                e.target.mute(); //소리 끔
+              }}
+            />
+          </Box>
+
+          <Box>
+            <YouTube
+              videoId="2kCQEnm8nAg" //비디오 영상 주소
+              opts={{
+                width: "100%",
+                height: "270px",
+                playerVars: {
+                  autoplay: 1, //자동 재생 여부
+                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
+                  loop: 1, //반복 재생
+                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
+                },
+              }}
+              onReady={(e) => {
+                e.target.mute(); //소리 끔
+              }}
+            />
+          </Box>
+        </SimpleGrid>
+        <Spacer h={200} />
+      </Box>
+    </>
   );
 }
