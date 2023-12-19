@@ -30,10 +30,9 @@ import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 
-function LikeContainer({ loggedIn, boardId }) {
+function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
   const [like, setLike] = useState(null);
-  // const { boardId } = useParams();
 
   useEffect(() => {
     axios
@@ -43,10 +42,15 @@ function LikeContainer({ loggedIn, boardId }) {
         },
       })
       .then((response) => setLike(response.data))
-      .catch((error) => console.error("Error fetching like data: ", error));
-  }, [boardId]);
-  //countLike = {reponse.data}
-  // axios.get -> repsonse
+      .catch((error) => {
+        if (error.response.status === 401) {
+          setLoggedIn(false);
+          sendRefreshToken();
+        } else {
+          console.error("Error fetching like data: ", error);
+        }
+      });
+  }, [boardId, loggedIn]);
 
   if (like === null) {
     return <center Spinner />;
@@ -60,7 +64,14 @@ function LikeContainer({ loggedIn, boardId }) {
           },
         })
         .then((response) => setLike(response.data))
-        .catch(() => console.log("ERROR"))
+        .catch((error) => {
+          if (error.response.status === 401) {
+            setLoggedIn(false);
+            sendRefreshToken();
+          } else {
+            console.error("Error fetching like data: ", error);
+          }
+        })
         .finally(() => console.log(like));
     } else {
       toast({
@@ -309,7 +320,12 @@ export function BoardList() {
                     onClick={handleInCart}
                     icon={<FontAwesomeIcon icon={faCartPlus} />}
                   />
-                  <LikeContainer loggedIn={loggedIn} boardId={board.id} />
+                  <LikeContainer
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    boardId={board.id}
+                    sendRefreshToken={sendRefreshToken}
+                  />
                 </ButtonGroup>
               </CardFooter>
             </Card>
