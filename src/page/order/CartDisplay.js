@@ -14,10 +14,14 @@ import {
   Input,
   Image,
   useToast,
+  Center,
+  AbsoluteCenter,
 } from "@chakra-ui/react";
 import { AddIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { useNumberInput } from "@chakra-ui/react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
   const handleAddCount = () => {
@@ -84,39 +88,15 @@ function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
   );
 }
 
-export function CartDisplay({ accessToken }) {
-  const [items, setItems] = useState([]);
-  const toast = useToast();
-
-  useEffect(() => {
-    fetchList();
-  }, []);
-
-  function fetchList() {
-    axios
-      .get("/cart/fetch", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
-      .then((response) => setItems(response.data))
-      .catch((error) => {
-        console.log(error.response.data);
-        toast({
-          description: "상품 불러오기에 실패했습니다.",
-          status: "error",
-        });
-      });
-  }
-
-  const totalPrice = items.reduce((total, item) => {
-    return total + (item.count || 0) * item.price;
-  }, 0);
-
-  const formattedTotalPrice = totalPrice.toLocaleString();
-  //TODO : totalPrice 넘기기
-  //TODO : item.title + 외 items.map.size() 건 으로 스트링 조합해서 주문건으로 넘기기 <- 얘로 타이틀
-  //TODO :
-
-  function handleDeleteItem({ item }) {
+export function CartDisplay({
+  accessToken,
+  orderName,
+  totalPrice,
+  items,
+  fetchList,
+  toast,
+}) {
+  const handleDeleteItem = ({ item }) => {
     console.log(item.title + "삭제 요청 전송하는 함수");
 
     axios
@@ -128,8 +108,6 @@ export function CartDisplay({ accessToken }) {
           description: "성공적으로 삭제했습니다.",
           status: "success",
         });
-
-        //
       })
       .catch((error) => {
         console.log(error.response.data);
@@ -142,61 +120,78 @@ export function CartDisplay({ accessToken }) {
         console.log("삭제 요청 끝");
         fetchList();
       });
-  }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">카트 주문명</Heading>
+        <Heading size="md">{orderName}</Heading>
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
-          {items.map((item, index) => (
-            <Box key={index}>
-              <Heading size="sm" mb="2">
-                {item.title}
-              </Heading>
-              <HStack justifyContent="space-between">
-                <Image
-                  src={item.fileUrl}
-                  alt={`Thumbnail for ${item.name}`}
-                  boxSize="30px"
-                  border="1px solid red"
-                />
-                <Box flex="1" marginLeft="4">
-                  <Text pt="2" fontSize="sm">
-                    {item.info}
+          {items && items.length > 0 ? (
+            items.map((item, index) => (
+              <Box key={index}>
+                <Heading size="sm" mb="2">
+                  {item.title}
+                </Heading>
+                <HStack justifyContent="space-between">
+                  <Image
+                    src={item.fileUrl}
+                    alt={`Thumbnail for ${item.name}`}
+                    boxSize="30px"
+                    border="1px solid red"
+                  />
+                  <Box flex="1" marginLeft="4">
+                    <Text pt="2" fontSize="sm">
+                      {item.info}
+                    </Text>
+                  </Box>
+                  <HStack maxW="150px">
+                    <MyNumberInput
+                      count={item.count}
+                      accessToken={accessToken}
+                      cartItemId={item.cartItemId}
+                      fetchList={fetchList}
+                      toast={toast}
+                    />
+                  </HStack>
+                  <Text fontWeight="bold" fontSize="lx">
+                    {item.price.toLocaleString()} 원
                   </Text>
-                </Box>
-                <HStack maxW="150px">
-                  <MyNumberInput
-                    count={item.count}
-                    accessToken={accessToken}
-                    cartItemId={item.cartItemId}
-                    fetchList={fetchList}
-                    toast={toast}
+                  <IconButton
+                    onClick={() => handleDeleteItem({ item })}
+                    aria-label="delete"
+                    variant="ghost"
+                    color="red"
+                    icon={<CloseIcon fontSize="xs" />}
                   />
                 </HStack>
-                <Text fontWeight="bold" fontSize="lx">
-                  {item.price.toLocaleString()} 원
-                </Text>
-                <IconButton
-                  onClick={() => handleDeleteItem({ item })}
-                  aria-label="delete"
-                  variant="ghost"
-                  color="red"
-                  icon={<CloseIcon fontSize="xs" />}
-                />
-              </HStack>
+              </Box>
+            ))
+          ) : (
+            <Box
+              h="200px"
+              border="2px dashed grey"
+              borderRadius="10"
+              opacity="30%"
+              textAlign="center"
+            >
+              <AbsoluteCenter mx="auto">
+                <FontAwesomeIcon icon={faShoppingCart} size="5x" color="grey" />
+                <Heading color="grey" size="md" mt="4">
+                  주문하신 상품이 없습니다
+                </Heading>
+              </AbsoluteCenter>
             </Box>
-          ))}
+          )}
         </Stack>
       </CardBody>
       <CardFooter>
         <HStack justifyContent="space-between" width="100%">
           <Heading size="md">Total Price:</Heading>
           <Heading size="md" textAlign="right">
-            {formattedTotalPrice} 원
+            {totalPrice.toLocaleString()} 원
           </Heading>
         </HStack>
       </CardFooter>

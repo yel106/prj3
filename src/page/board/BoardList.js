@@ -253,8 +253,6 @@ export function BoardList() {
         "/cart/add",
         {
           boardId: board.id,
-          title: board.title,
-          price: board.price,
           stockQuantity: board.stockQuantity,
         },
         {
@@ -270,10 +268,19 @@ export function BoardList() {
       })
       .catch((error) => {
         console.log(error.response.data);
-        toast({
-          description: `${board.title} 상품을 장바구니에 추가하지 못했습니다.\n다시 시도해주세요.`,
-          status: "error",
-        });
+        if (error.response.status === 409) {
+          toast({
+            title: "재고가 없습니다.",
+            description: "수량을 줄이시거나, 관리자에게 문의해주세요",
+            status: "error",
+          });
+        } else {
+          toast({
+            title: `${board.title} 상품을 장바구니에 추가하지 못했습니다.`,
+            description: "다시 한 번 시도해주세요",
+            status: "error",
+          });
+        }
       });
   }
 
