@@ -66,6 +66,7 @@ function LikeContainer({ loggedIn, boardId }) {
     <Flex>
       <Tooltip hasArrow label={"로그인 후 이용 가능한 서비스입니다"}>
         <Button
+          size="sm"
           onClick={handleLike}
           leftIcon={
             like.like ? (
@@ -243,10 +244,10 @@ export function BoardList() {
         >
           {boardList.map((board) => (
             <Card
-              border="0px solid black"
+              border="1px solid blue"
               key={board.fileUrl}
-              style={{ width: "100%" }}
-              onClick={() => navigate(`/board/${board.id}`)}
+              borderRadius="xl"
+              style={{ width: "100%", height: "85%" }}
             >
               <CardHeader>
                 <div
@@ -255,14 +256,15 @@ export function BoardList() {
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  onClick={() => navigate(`/board/${board.id}`)}
                 >
                   {board.fileUrls &&
                     board.fileUrls.map((url, index) => (
                       <Image
                         key={index}
                         src={url}
-                        borderRadius="ml"
-                        border="1px solid black"
+                        borderRadius="xl"
+                        border="1px solid red"
                         style={{
                           width: "200px",
                           height: "200px",
@@ -272,19 +274,22 @@ export function BoardList() {
                     ))}
                 </div>
                 <div>
-                  <Heading size="md">{board.title}</Heading>
-                  <Heading size="m">{board.artist}</Heading>
-                  {/*<Heading size="m">{board.price}</Heading>*/}
+                  <Heading size="md">
+                    {board.title} - {board.artist}
+                  </Heading>
+                  <Heading size="m" textAlign="right">
+                    {board.price}원
+                  </Heading>
+                  {/*<Heading justifyContent="flex-end" size="m">*/}
+                  {/*  {board.price}원*/}
+                  {/*</Heading>*/}
                   {/*<Heading size="s">{board.releaseDate}</Heading>*/}
                   {/*<Heading size="s">{board.albumFormat}</Heading>*/}
                 </div>
-              </CardHeader>
-              {/*<CardBody>*/}
-              {/*  <Text>{board.content}</Text>*/}
-              {/*</CardBody>*/}
-              <CardFooter>
                 <LikeContainer loggedIn={loggedIn} boardId={board.id} />
-              </CardFooter>
+              </CardHeader>
+              <CardBody></CardBody>
+              <CardFooter></CardFooter>
             </Card>
           ))}
         </SimpleGrid>
@@ -324,6 +329,9 @@ export function BoardList() {
               }}
             />
           </Box>
+
+          <br />
+          <br />
 
           <Box>
             <YouTube

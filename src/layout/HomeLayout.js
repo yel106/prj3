@@ -5,7 +5,8 @@ import React from "react";
 
 export function HomeLayout() {
   return (
-    <Box backgroundColor="yellow.100">
+    // <Box backgroundColor="yellow.100">
+    <Box>
       <NavBar colorScheme="white" />
       <Outlet colorScheme="white" />
       <Box mx={{ base: 0, md: 10, lg: 40 }}></Box>
