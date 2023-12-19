@@ -182,7 +182,6 @@ export function BoardList() {
     albumFormat: "",
     albumDetails: [],
   });
-
   // 검색 조건을 업데이트하는 함수.
   const handleSearch = (params) => {
     setSearchParams(params);
@@ -247,12 +246,35 @@ export function BoardList() {
   }
 
   function handleInCart(board) {
+    const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
-    axios.postForm("/api/cart", {
-      id: board.id,
-      price: board.price,
-      fileUrl: board.fileUrl,
-    });
+    axios
+      .postForm(
+        "/cart/add",
+        {
+          boardId: board.id,
+          title: board.title,
+          price: board.price,
+          stockQuantity: board.stockQuantity,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      )
+      .then((response) => {
+        console.log(board.id + "번 상품 카트에 추가");
+        toast({
+          description: `${board.title} 상품이 장바구니에 추가되었습니다.`,
+          status: "success",
+        });
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        toast({
+          description: `${board.title} 상품을 장바구니에 추가하지 못했습니다.\n다시 시도해주세요.`,
+          status: "error",
+        });
+      });
   }
 
   return (
@@ -322,7 +344,7 @@ export function BoardList() {
                     aria-label="cart"
                     variant="solid"
                     colorScheme="pink"
-                    onClick={handleInCart}
+                    onClick={() => handleInCart(board)}
                     icon={<FontAwesomeIcon icon={faCartPlus} />}
                   />
                   <LikeContainer
