@@ -181,7 +181,7 @@ export function BoardView() {
           userLogId={userLogId}
           isAdmin={isAdmin}
         />
-      </Box>
+      </Stack>
     </Center>
   );
 }
