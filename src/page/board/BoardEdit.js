@@ -124,7 +124,7 @@ export function BoardEdit() {
           content: board.content,
           fileURL: board.fileURL,
           releaseDate: board.releaseDate,
-          removeFileIds, //이미지도 전송
+          // removeFileIds, //이미지도 전송
           uploadFiles: boardFiles,
         },
         {

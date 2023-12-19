@@ -1,5 +1,5 @@
 import React from "react";
-// import { ItemAllPage } from "./component/ItemAllPage";
+
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -30,7 +30,6 @@ const routes = createBrowserRouter(
       <Route path="board/:id" element={<BoardView />} />
       {/*id는 useParams() 사용*/}
       <Route path="edit/:id" element={<BoardEdit />} />
-      {/*<Route path="category/:id" element={<Category_CD />} />*/}
       <Route path="signup" element={<MemberSignup />}></Route>
       <Route path="member/list" element={<MemberList />} />
       <Route path="member" element={<MemberView />} />

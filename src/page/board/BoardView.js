@@ -14,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Stack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -25,6 +26,7 @@ export function BoardView() {
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userLogId, setUserLogId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
   const toast = useToast();
@@ -59,7 +61,8 @@ export function BoardView() {
           console.log("accessToken then 수행");
           console.log(response.data);
           setLoggedIn(true);
-          if (response.data === "ROLE_ADMIN") {
+          setUserLogId(response.data.logId);
+          if (response.data.role === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
@@ -126,22 +129,25 @@ export function BoardView() {
   }
 
   return (
-    <Center bg="tomato">
-      <Box border="2px solid black" w="95%" h="90%" bg="white">
-        {fileURL.map((url) => (
-          <Box key={url}>
-            <Image src={url} border="1px solid black" />
-          </Box>
-        ))}
-        <Heading size="md">Title : {board.title}</Heading>
-        <br />
-        <Heading size="m">Artist : {board.artist}</Heading>
-        <Heading size="m">Album Introduction : {board.content}</Heading>
-        <br />
-        <Heading size="m">Album Price : {board.price}</Heading>
-        <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
-        <Heading size="s">Album Format : {board.albumFormat}</Heading>
-        <Heading size="s">Album Genre : {board.albumDetails}</Heading>
+    <Center>
+      <Stack direction={["column", "row"]} margin="0" justifyContent="">
+        <Box border="2px solid black" w="90%" h="90%" bg="white">
+          {fileURL.map((url) => (
+            <Box key={url}>
+              <Image src={url} w="600px" h="300px" border="1px solid black" />
+            </Box>
+          ))}
+        </Box>
+        <Box border="1px solid red">
+          <Heading size="md">Title : {board.title}</Heading>
+          <Heading size="m">Artist : {board.artist}</Heading>
+          <Heading size="m">Album Introduction : {board.content}</Heading>
+          <Heading size="m">Album Price : {board.price}</Heading>
+          <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
+          <Heading size="s">Album Format : {board.albumFormat}</Heading>
+          <Heading size="s">Album Genre : {board.albumDetails}</Heading>
+        </Box>
+        {/*관리자 권한 편집 기능*/}
         {isAdmin && (
           <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
             edit
@@ -169,7 +175,12 @@ export function BoardView() {
           </ModalContent>
         </Modal>
         {/* 댓글 */}
-        <CommentComponent boardId={id} loggedIn={loggedIn} />
+        <CommentComponent
+          boardId={id}
+          loggedIn={loggedIn}
+          userLogId={userLogId}
+          isAdmin={isAdmin}
+        />
       </Box>
     </Center>
   );
