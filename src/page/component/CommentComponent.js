@@ -39,7 +39,7 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  const [loggedIn, setLoggedIn] = useState(false);
+  // const [loggedIn, setLoggedIn] = useState(false);
 
   const commentUpdate = {
     updateTime: comment.updateTime,
@@ -95,9 +95,6 @@ function CommentContent({
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
-          {/*<Text fontSize="xs" color="gray">*/}
-          {/*  {comment.member.updateTime}*/}
-          {/*</Text>*/}
           <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
             {comment.content}
           </Text>
@@ -225,7 +222,6 @@ function CommentComponent({ boardId, loggedIn }) {
       const params = new URLSearchParams();
       params.set("id", boardId); //url에서 id에 boardId가 들어감
       params.set("page", currentPage);
-      // params.set("size", pageSize);
       params.set("size", commentPerPage);
 
       axios.get("/api/comment/list?" + params).then((response) => {
@@ -233,7 +229,7 @@ function CommentComponent({ boardId, loggedIn }) {
         setTotalPage(response.data.totalPages);
       });
     }
-  }, [isSubmitting, boardId, currentPage]); //pageSize 삭제
+  }, [isSubmitting, boardId, currentPage]);
 
   const pageButton = [];
   for (let i = 0; i < totalPage; i++) {
