@@ -53,23 +53,33 @@ function MyNumberInput({ max, onQuantityChange, cartItemId }) {
   };
 
   return (
-      <>
-        <IconButton {...inc} aria-label="inc" icon={<AddIcon />} onClick={handleAddCount} />
-        <Input {...input} readOnly />
-        <IconButton {...dec} aria-label="dec" icon={<MinusIcon />} onClick={handleSubtractCount} />
-      </>
+    <>
+      <IconButton
+        {...inc}
+        aria-label="inc"
+        icon={<AddIcon />}
+        onClick={handleAddCount}
+      />
+      <Input {...input} readOnly />
+      <IconButton
+        {...dec}
+        aria-label="dec"
+        icon={<MinusIcon />}
+        onClick={handleSubtractCount}
+      />
+    </>
   );
 }
 
-export function CartDisplay() {
+export function CartDisplay({ accessToken }) {
   const [quantities, setQuantities] = useState({});
-  const accessToken = localStorage.getItem("accessToken");
   const [items, setItems] = useState([]);
   const toast = useToast();
+  // const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     axios
-      .post("/cart/fetch", {
+      .get("/cart/fetch", {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((response) => setItems(response.data))
@@ -126,7 +136,7 @@ export function CartDisplay() {
         <Stack divider={<StackDivider />} spacing="4">
           {items.map((item, index) => (
             <Box key={index}>
-              <Heading size="xs">{item.name}</Heading>
+              <Heading size="xs">{item.title}</Heading>
               <HStack justifyContent="space-between">
                 <Image
                   src={item.fileUrl}

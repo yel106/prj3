@@ -114,7 +114,7 @@ export function OrderWrite() {
   return (
     <div>
       <Heading>주문 페이지</Heading>
-      <CartDisplay mb="4" />
+      <CartDisplay mb="4" accessToken={accessToken} />
       <Input
         type="text"
         value={name}
