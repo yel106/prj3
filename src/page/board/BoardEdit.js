@@ -111,9 +111,8 @@ export function BoardEdit() {
   //
   // }
 
-  function handleSubmit() {
+  function handleSubmit(e) {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(accessToken);
 
     axios
       .putForm(

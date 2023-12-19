@@ -30,6 +30,7 @@ import axios from "axios";
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const navigate = useNavigate();
   const urlParams = new URLSearchParams();
   const location = useLocation();
@@ -83,19 +84,92 @@ export function NavBar(props) {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
+
           if (response.data === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
         })
-        .catch(() => {
-          sendRefreshToken(); //TODO: 이런 곳에 axios. 해서 토큰 갱신
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
+        })
+        .catch((error) => {
+          sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
-        .finally(() => console.log("finally loggedIn: ", loggedIn));
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
+
+  useEffect(() => {
+    let countdownTimer;
+
+    if (loggedIn && isSocial) {
+      console.log("========== 소셜 로그인 멤버입니다 ==========");
+      console.log("==========" + new Date() + "==========");
+      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 3분
+      const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
+      //2분마다 떠야함
+      console.log("타이머 작동되는지 확인");
+
+      // 카운트다운 시작
+      const startCountdownTimer = async (expiresIn) => {
+        countdownTimer = setInterval(
+          async () => {
+            await refreshSocialAccessToken();
+          },
+          (expiresIn - refreshThreshold) * 1000,
+        );
+      };
+
+      const refreshSocialAccessToken = async () => {
+        try {
+          console.log("백엔드에 갱신 요청");
+          // 백엔드에 갱신 요청
+          const response = await axios.get("/api/auth/refreshToken", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+
+          if (response.status === 204) {
+            // 소셜 회원이 아닌데 타이머가 작동했다면 OAuthException으로 처리하여 HttpStatus.NO_CONTENT 리턴하도록 함
+            setIsSocial(false);
+          } else {
+            const newExpiresIn = response.data;
+            console.log("expiresIn:", newExpiresIn);
+            await startCountdownTimer(newExpiresIn);
+          }
+        } catch (error) {
+          //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
+          toast({
+            description: "다시 로그인해주세요.",
+            status: "error",
+          });
+          console.log(error.response.data);
+          navigate("/login");
+        }
+      };
+
+      startCountdownTimer(accessTokenExpiry);
+      console.log("========== 소셜 로그인 멤버 검증 완료 ==========");
+
+      return () => clearInterval(countdownTimer);
+    }
+  }, [loggedIn, isSocial]);
 
   function handleLogout() {
     console.log("handleLogout");
@@ -141,6 +215,14 @@ export function NavBar(props) {
             status: "success",
           });
         } else {
+          console.log(
+            "로컬스토리지 refreshToken 상태: ",
+            localStorage.getItem("refreshToken"),
+          );
+          console.log(
+            "로컬스토리지 accessToken 상태: ",
+            localStorage.getItem("accessToken"),
+          );
           toast({
             description: "로그아웃 도중 에러가 발생했습니다",
             status: "error",

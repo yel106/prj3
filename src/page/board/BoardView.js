@@ -19,13 +19,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import CommentComponent from "../../component/CommentComponent";
+import CommentComponent from "../component/CommentComponent";
 
 export function BoardView() {
   const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userLogId, setUserLogId] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -58,7 +60,9 @@ export function BoardView() {
         .then((response) => {
           console.log("accessToken then 수행");
           console.log(response.data);
-          if (response.data === "ROLE_ADMIN") {
+          setLoggedIn(true);
+          setUserLogId(response.data.logId);
+          if (response.data.role === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
@@ -86,11 +90,14 @@ export function BoardView() {
 
         console.log("토큰들 업데이트 리프레시 토큰: ");
         console.log(response.data.refreshToken);
+        setLoggedIn(true);
       })
       .catch((error) => {
         console.log("sendRefreshToken()의 catch 실행");
         localStorage.removeItem("refreshToken");
-      });
+        setLoggedIn(false);
+      })
+      .finally(() => console.log(loggedIn));
   }
 
   if (board === null) {
@@ -99,7 +106,6 @@ export function BoardView() {
 
   function handleDelete() {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(accessToken);
     axios
       .delete("/api/board/remove/" + id, {
         headers: {
@@ -132,7 +138,6 @@ export function BoardView() {
             </Box>
           ))}
         </Box>
-
         <Box border="1px solid red">
           <Heading size="md">Title : {board.title}</Heading>
           <Heading size="m">Artist : {board.artist}</Heading>
@@ -140,6 +145,7 @@ export function BoardView() {
           <Heading size="m">Album Price : {board.price}</Heading>
           <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
           <Heading size="s">Album Format : {board.albumFormat}</Heading>
+          <Heading size="s">Album Genre : {board.albumDetails}</Heading>
         </Box>
         {/*관리자 권한 편집 기능*/}
         {isAdmin && (
@@ -168,9 +174,14 @@ export function BoardView() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        {/*댓글 */}
-        <CommentComponent boardId={id} />
-      </Stack>
+        {/* 댓글 */}
+        <CommentComponent
+          boardId={id}
+          loggedIn={loggedIn}
+          userLogId={userLogId}
+          isAdmin={isAdmin}
+        />
+      </Box>
     </Center>
   );
 }

@@ -11,16 +11,17 @@ import {
   Center,
   Flex,
   Heading,
+  IconButton,
   Image,
   SimpleGrid,
   Spinner,
-  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCartPlus,
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
@@ -29,19 +30,27 @@ import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 
-function LikeContainer({ loggedIn, boardId }) {
+function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
   const [like, setLike] = useState(null);
-  // const { boardId } = useParams();
 
   useEffect(() => {
     axios
-      .get(`/api/like/board/${boardId}`)
+      .get(`/api/like/board/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
       .then((response) => setLike(response.data))
-      .catch((error) => console.error("Error fetching like data: ", error));
-  }, [boardId]);
-  //countLike = {reponse.data}
-  // axios.get -> repsonse
+      .catch((error) => {
+        if (error.response.status === 401) {
+          setLoggedIn(false);
+          sendRefreshToken();
+        } else {
+          console.error("Error fetching like data: ", error);
+        }
+      });
+  }, [boardId, loggedIn]);
 
   if (like === null) {
     return <center Spinner />;
@@ -49,10 +58,21 @@ function LikeContainer({ loggedIn, boardId }) {
   function handleLike() {
     if (loggedIn) {
       axios
-        .post("/api/like", { boardId })
+        .get("/api/like/" + boardId, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
         .then((response) => setLike(response.data))
-        .catch(() => console.log("ERROR"))
-        .finally(() => console.log("Lucky!!!"));
+        .catch((error) => {
+          if (error.response.status === 401) {
+            setLoggedIn(false);
+            sendRefreshToken();
+          } else {
+            console.error("Error fetching like data: ", error);
+          }
+        })
+        .finally(() => console.log(like));
     } else {
       toast({
         description: "로그인 후 이용가능한 서비스입니다",
@@ -64,21 +84,19 @@ function LikeContainer({ loggedIn, boardId }) {
   return (
     // <Flex gap={3} ml={400}>
     <Flex>
-      <Tooltip hasArrow label={"로그인 후 이용 가능한 서비스입니다"}>
-        <Button
-          size="sm"
-          onClick={handleLike}
-          leftIcon={
-            like.like ? (
-              <FontAwesomeIcon icon={fullHeart} size="xl" />
-            ) : (
-              <FontAwesomeIcon icon={emptyHeart} size="xl" />
-            )
-          }
-        >
-          <Heading fontSize="md">{like.countLike}</Heading>
-        </Button>
-      </Tooltip>
+      <Button
+        size="sm"
+        onClick={handleLike}
+        leftIcon={
+          like.isLiked ? (
+            <FontAwesomeIcon icon={fullHeart} size="xl" />
+          ) : (
+            <FontAwesomeIcon icon={emptyHeart} size="xl" />
+          )
+        }
+      >
+        <Heading fontSize="md">{like.countLike}</Heading>
+      </Button>
     </Flex>
   );
 }
@@ -91,9 +109,8 @@ export function BoardList() {
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
   const [board, setBoard] = useState();
-  const [like, setLike] = useState(null);
+  // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -138,10 +155,6 @@ export function BoardList() {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
-          if (response.data === "ROLE_ADMIN") {
-            console.log("setIsAdmin(true) 동작");
-            setIsAdmin(true);
-          }
         })
         .catch(() => {
           sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
@@ -232,6 +245,22 @@ export function BoardList() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
+  // function handleClickHeart(e, board) {
+  //   e.stopPropagation();
+  //   console.log("heart!");
+  //   axios.postForm("/api/like", { id: board.id });
+  // }
+
+  function handleInCart(board) {
+    console.log("카트 클릭");
+    axios.postForm("/api/cart", {
+      id: board.id,
+      price: board.price,
+      fileUrl: board.fileUrl,
+    });
+    // TODO: djfskldjfkl
+  }
+
   return (
     <>
       <Box>
@@ -286,10 +315,27 @@ export function BoardList() {
                   {/*<Heading size="s">{board.releaseDate}</Heading>*/}
                   {/*<Heading size="s">{board.albumFormat}</Heading>*/}
                 </div>
-                <LikeContainer loggedIn={loggedIn} boardId={board.id} />
               </CardHeader>
-              <CardBody></CardBody>
-              <CardFooter></CardFooter>
+              {/*<CardBody>*/}
+              {/*  <Text>{board.content}</Text>*/}
+              {/*</CardBody>*/}
+              <CardFooter>
+                <ButtonGroup spacing="2">
+                  <IconButton
+                    aria-label="cart"
+                    variant="solid"
+                    colorScheme="pink"
+                    onClick={handleInCart}
+                    icon={<FontAwesomeIcon icon={faCartPlus} />}
+                  />
+                  <LikeContainer
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    boardId={board.id}
+                    sendRefreshToken={sendRefreshToken}
+                  />
+                </ButtonGroup>
+              </CardFooter>
             </Card>
           ))}
         </SimpleGrid>
@@ -329,9 +375,6 @@ export function BoardList() {
               }}
             />
           </Box>
-
-          <br />
-          <br />
 
           <Box>
             <YouTube
