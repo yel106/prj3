@@ -117,18 +117,28 @@ export function BoardEdit() {
   // }
 
   function handleSubmit(e) {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios
-      .putForm("/api/board/edit/" + id, {
-        title: board.title,
-        artist: board.artist,
-        price: board.price,
-        content: board.content,
-        stockQuantity: board.stockQuantity,
-        fileURL: board.fileURL,
-        releaseDate: board.releaseDate,
-        removeFileIds, //이미지도 전송
-        uploadFiles: boardFiles,
-      })
+      .putForm(
+        "/api/board/edit/" + id,
+        {
+          title: board.title,
+          artist: board.artist,
+          price: board.price,
+          content: board.content,
+          fileURL: board.fileURL,
+          releaseDate: board.releaseDate,
+          stockQuantity: board.stockQuantity,
+          // removeFileIds, //이미지도 전송
+          uploadFiles: boardFiles,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
       .then((response) =>
         toast({
           description: id + "번 앨범이 수정되었습니다.",

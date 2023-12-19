@@ -50,7 +50,7 @@ export function BoardWrite() {
           albumDetails:
             Array.isArray(albumDetails) && albumDetails.length > 1 //값이 배열이고, 배열길이 1보다 큰지 확인
               ? albumDetails.join(",")
-              : albumDetails,
+              : albumDetails.toString(),
           releaseDate,
           agency,
           price,
@@ -78,6 +78,9 @@ export function BoardWrite() {
             description: "작성한 내용을 확인 해주세요",
             status: "error",
           });
+        } else if (error.response.status === 401) {
+          // refresh token으로 access token 갱신 시도
+          sendRefreshToken();
         } else {
           toast({
             description: "저장 중에 문제가 발생하였습니다.",
@@ -89,7 +92,35 @@ export function BoardWrite() {
         setIsSubmitting(false);
       });
   }
+  function sendRefreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    console.log("리프레시 토큰: ", refreshToken);
+    if (refreshToken !== null) {
+      return axios
+        .get("/refreshToken", {
+          headers: { Authorization: `Bearer ${refreshToken}` },
+        })
+        .then((response) => {
+          console.log("sendRefreshToken()의 then 실행");
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
 
+          console.log("토큰들 업데이트 리프레시 토큰: ");
+          console.log(response.data.refreshToken);
+
+          handleSubmit();
+        })
+        .catch((error) => {
+          console.log("sendRefreshToken()의 catch 실행");
+          localStorage.removeItem("refreshToken");
+          toast({
+            description: "로그인 되어 있지 않습니다.",
+            status: "warning",
+          });
+          navigate(0);
+        });
+    }
+  }
   return (
     <Center>
       <Card w={"lg"}>
