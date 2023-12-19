@@ -166,16 +166,6 @@ export function BoardList() {
     console.log("loggedIn: ", loggedIn);
   }, [location]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/like/board/" + id)
-  //     .then((response) => setLike(response.data));
-  // }, []);
-  //
-  // if (board === null) {
-  //   return <Spinner />;
-  // }
-
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
     title: "",

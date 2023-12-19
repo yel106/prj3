@@ -10,7 +10,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  flexbox,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -26,6 +25,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { startSocialLoginTimer } from "./authUtils";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -42,7 +42,6 @@ export function NavBar(props) {
 
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
-    navigate("/");
   };
 
   function sendRefreshToken() {
@@ -115,60 +114,19 @@ export function NavBar(props) {
   }, [location]);
 
   useEffect(() => {
-    let countdownTimer;
-
     if (loggedIn && isSocial) {
-      console.log("========== 소셜 로그인 멤버입니다 ==========");
-      console.log("==========" + new Date() + "==========");
-      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 3분
-      const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
-      //2분마다 떠야함
-      console.log("타이머 작동되는지 확인");
+      const cleanupTimer = startSocialLoginTimer(
+        180, // accessTokenExpiry
+        60, // refreshThreshold
+        setIsSocial,
+        toast,
+        navigate,
+      );
 
-      // 카운트다운 시작
-      const startCountdownTimer = async (expiresIn) => {
-        countdownTimer = setInterval(
-          async () => {
-            await refreshSocialAccessToken();
-          },
-          (expiresIn - refreshThreshold) * 1000,
-        );
-      };
-
-      const refreshSocialAccessToken = async () => {
-        try {
-          console.log("백엔드에 갱신 요청");
-          // 백엔드에 갱신 요청
-          const response = await axios.get("/api/auth/refreshToken", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
-            },
-          });
-
-          if (response.status === 204) {
-            // 소셜 회원이 아닌데 타이머가 작동했다면 OAuthException으로 처리하여 HttpStatus.NO_CONTENT 리턴하도록 함
-            setIsSocial(false);
-          } else {
-            const newExpiresIn = response.data;
-            console.log("expiresIn:", newExpiresIn);
-            await startCountdownTimer(newExpiresIn);
-          }
-        } catch (error) {
-          //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
-          toast({
-            description: "다시 로그인해주세요.",
-            status: "error",
-          });
-          console.log(error.response.data);
-          navigate("/login");
-        }
-      };
-
-      startCountdownTimer(accessTokenExpiry);
-      console.log("========== 소셜 로그인 멤버 검증 완료 ==========");
-
-      return () => clearInterval(countdownTimer);
+      return cleanupTimer;
     }
+
+    return () => {};
   }, [loggedIn, isSocial]);
 
   function handleLogout() {
@@ -259,7 +217,7 @@ export function NavBar(props) {
                 borderBottomWidth="1px"
                 onClick={() => {
                   onCloseDrawer();
-                  navigate("/");
+                  // navigate("/");
                 }}
                 display="flex"
               >
@@ -268,7 +226,7 @@ export function NavBar(props) {
                   size="md"
                   onClick={() => {
                     onClose();
-                    navigate("/");
+                    // navigate("/");
                   }}
                   position="absolute"
                   right="5"

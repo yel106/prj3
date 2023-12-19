@@ -26,6 +26,7 @@ export function BoardView() {
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const [userLogId, setUserLogId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -66,12 +67,27 @@ export function BoardView() {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch(() => {
           localStorage.removeItem("accessToken");
           sendRefreshToken();
         })
-        .finally(() => console.log());
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
   }, []);
 
