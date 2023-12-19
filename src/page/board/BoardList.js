@@ -112,6 +112,7 @@ export function BoardList() {
   const [board, setBoard] = useState();
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -156,12 +157,27 @@ export function BoardList() {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch(() => {
-          sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
+          sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
-        .finally(() => console.log("finally loggedIn: ", loggedIn));
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
