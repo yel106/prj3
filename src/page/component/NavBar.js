@@ -42,7 +42,7 @@ export function NavBar(props) {
 
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
-    navigate("/");
+    // navigate(0);
   };
 
   function sendRefreshToken() {
@@ -154,7 +154,10 @@ export function NavBar(props) {
             await startCountdownTimer(newExpiresIn);
           }
         } catch (error) {
-          //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
+          //TODO: 소셜일 때 JWT 토큰 만료시키는 코드 추가 요망
+          // 로컬 스토리지의 accessToken, refreshToken 지우기
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
           toast({
             description: "다시 로그인해주세요.",
             status: "error",
@@ -259,16 +262,15 @@ export function NavBar(props) {
                 borderBottomWidth="1px"
                 onClick={() => {
                   onCloseDrawer();
-                  navigate("/");
                 }}
                 display="flex"
               >
+                {/*TODO: 로고 클릭 하면 홈으로 이동*/}
                 🎵 MUSIC IS MY LIFE 🎵
                 <CloseButton
                   size="md"
                   onClick={() => {
                     onClose();
-                    navigate("/");
                   }}
                   position="absolute"
                   right="5"

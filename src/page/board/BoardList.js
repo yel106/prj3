@@ -31,7 +31,14 @@ import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 
-function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
+function LikeContainer({
+  loggedIn,
+  setLoggedIn,
+  updatingLike,
+  setUpdatingLike,
+  boardId,
+  sendRefreshToken,
+}) {
   const toast = useToast();
   const [like, setLike] = useState(null);
 
@@ -51,12 +58,14 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
           console.error("Error fetching like data: ", error);
         }
       });
-  }, [boardId, loggedIn]);
+  }, [boardId, loggedIn, updatingLike]);
 
   if (like === null) {
     return <center Spinner />;
   }
   function handleLike() {
+    console.log("handleLike updatingLike:", updatingLike);
+    // setUpdatingLike(true);
     if (loggedIn) {
       axios
         .get("/api/like/" + boardId, {
@@ -64,22 +73,46 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         })
-        .then((response) => setLike(response.data))
+        .then((response) => {
+          console.log("then", response.data);
+          setLike(response.data);
+        })
         .catch((error) => {
           if (error.response.status === 401) {
-            setLoggedIn(false);
-            sendRefreshToken();
+            const re = sendRefreshToken();
+            if (re !== undefined) {
+              re.then(() => {
+                axios
+                  .get("/api/like/" + boardId, {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem(
+                        "accessToken",
+                      )}`,
+                    },
+                  })
+                  .then((response) => {
+                    setLike(response.data);
+                  })
+                  .catch((error) =>
+                    console.error("Error fetching like data: ", error),
+                  );
+              });
+            }
+            // sendRefreshToken();
+            // handleLike();
+            console.log("401에러 캐치문");
           } else {
             console.error("Error fetching like data: ", error);
           }
-        })
-        .finally(() => console.log(like));
+        });
+      // .finally(() => setUpdatingLike(false));
     } else {
       toast({
         description: "로그인 후 이용가능한 서비스입니다",
         status: "error",
       });
     }
+    console.log("handleLike 끝");
   }
 
   return (
@@ -112,6 +145,7 @@ export function BoardList() {
   const [board, setBoard] = useState();
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [updatingLike, setUpdatingLike] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -121,26 +155,28 @@ export function BoardList() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axios
-      .get("/refreshToken", {
-        headers: { Authorization: `Bearer ${refreshToken}` },
-      })
-      .then((response) => {
-        console.log("sendRefreshToken()의 then 실행");
+    if (refreshToken !== null) {
+      return axios
+        .get("/refreshToken", {
+          headers: { Authorization: `Bearer ${refreshToken}` },
+        })
+        .then((response) => {
+          console.log("sendRefreshToken()의 then 실행");
 
-        localStorage.setItem("accessToken", response.data.accessToken);
-        localStorage.setItem("refreshToken", response.data.refreshToken);
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
 
-        console.log("토큰들 업데이트 리프레시 토큰: ");
-        console.log(response.data.refreshToken);
-        setLoggedIn(true);
-      })
-      .catch((error) => {
-        console.log("sendRefreshToken()의 catch 실행");
-        localStorage.removeItem("refreshToken");
+          console.log("토큰들 업데이트 리프레시 토큰: ");
+          console.log(response.data.refreshToken);
+          setLoggedIn(true);
+        })
+        .catch((error) => {
+          console.log("sendRefreshToken()의 catch 실행");
+          localStorage.removeItem("refreshToken");
 
-        setLoggedIn(false);
-      });
+          setLoggedIn(false);
+        });
+    }
   }
 
   useEffect(() => {
@@ -350,6 +386,8 @@ export function BoardList() {
                   <LikeContainer
                     loggedIn={loggedIn}
                     setLoggedIn={setLoggedIn}
+                    setUpdatingLike={setUpdatingLike}
+                    updatingLike={updatingLike}
                     boardId={board.id}
                     sendRefreshToken={sendRefreshToken}
                   />

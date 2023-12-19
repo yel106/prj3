@@ -67,6 +67,11 @@ export function MemberList() {
     axios
       .get(
         `/member/list?page=${currentPage}&size=${itemsPerPage}&k=${keyword}&c=${category}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
       )
       .then((response) => {
         setList(response.data.content);
