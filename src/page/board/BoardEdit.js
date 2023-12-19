@@ -94,6 +94,11 @@ export function BoardEdit() {
       draft.content = e.target.value;
     });
   }
+  function handleQuantityEdit(e) {
+    updateBoard((draft) => {
+      draft.stockQuantity = e.target.value;
+    });
+  }
 
   // 이미지 수정 코드
   // function handleImageUpload(e){}
@@ -124,6 +129,7 @@ export function BoardEdit() {
           content: board.content,
           fileURL: board.fileURL,
           releaseDate: board.releaseDate,
+          stockQuantity: board.stockQuantity,
           // removeFileIds, //이미지도 전송
           uploadFiles: boardFiles,
         },
@@ -203,6 +209,11 @@ export function BoardEdit() {
           value={board.releaseDate}
           onChange={handleReleaseDateEdit}
         />
+      </FormControl>
+      {/*수량 수정 */}
+      <FormControl>
+        <FormLabel>stockQuantity Edit</FormLabel>
+        <Input value={board.stockQuantity} onChange={handleQuantityEdit} />
       </FormControl>
       {/*가격 수정 */}
       <FormControl>

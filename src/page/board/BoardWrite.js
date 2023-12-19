@@ -35,6 +35,7 @@ export function BoardWrite() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const [stockQuantity, setStockQuantity] = useState("");
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -54,6 +55,7 @@ export function BoardWrite() {
           agency,
           price,
           content,
+          stockQuantity,
           uploadFiles,
         },
         {
@@ -211,6 +213,16 @@ export function BoardWrite() {
               value={agency}
               onChange={(e) => setAgency(e.target.value)}
               placeholder="해당 앨범의 발매회사를 입력해주세요"
+            />
+          </FormControl>
+          {/*수량 입력란*/}
+          <FormControl mt={4}>
+            <FormLabel>수량</FormLabel>
+            <Input
+              type="number"
+              value={stockQuantity}
+              onChange={(e) => setStockQuantity(e.target.value)}
+              min="0"
             />
           </FormControl>
 
