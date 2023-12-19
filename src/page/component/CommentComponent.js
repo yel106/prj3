@@ -271,12 +271,19 @@ function CommentComponent({ boardId, loggedIn }) {
           status: "success",
         }),
       )
-      .catch((error) =>
-        toast({
-          description: "저장 중 문제가 발생하였습니다.",
-          status: "error",
-        }),
-      )
+      .catch((error) => {
+        if (error.response.status === 401) {
+          toast({
+            description: "로그인이 필요합니다.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "저장 중 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
+      })
       .finally(
         () => setIsSubmitting(false), //제출 완료되면 버튼 활성화
       );

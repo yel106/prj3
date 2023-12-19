@@ -241,14 +241,13 @@ export function MemberSignup() {
           {/*</FormControl>*/}
         </CardBody>
 
-        <Spacer h={100} />
         <CardFooter>
           <Button onClick={handleSubmit} backgroundColor="#b4c0ea">
             회원 가입
           </Button>
         </CardFooter>
-        <Spacer h={20} />
       </Card>
+      <Spacer h={500} />
     </Box>
   );
 }
