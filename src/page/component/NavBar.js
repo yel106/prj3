@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  CloseButton,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  flexbox,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBars,
   faDollarSign,
-  faHome,
   faRecordVinyl,
   faRightFromBracket,
   faRightToBracket,
@@ -22,6 +35,15 @@ export function NavBar(props) {
   const urlParams = new URLSearchParams();
   const location = useLocation();
   const toast = useToast();
+  const [titleIconOpen, setTitleIconOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [placement, setPlacement] = React.useState("left");
+
+  const onCloseDrawer = () => {
+    setTitleIconOpen(false);
+    navigate("/");
+  };
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -76,7 +98,9 @@ export function NavBar(props) {
         })
         .then((response) => {
           console.log("isSocialMember = " + response.data);
-          setIsSocial(true);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch((error) => {
           sendRefreshToken();
@@ -94,8 +118,11 @@ export function NavBar(props) {
     let countdownTimer;
 
     if (loggedIn && isSocial) {
-      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 5분
+      console.log("========== 소셜 로그인 멤버입니다 ==========");
+      console.log("==========" + new Date() + "==========");
+      const accessTokenExpiry = 180; // 액세스 토큰 유효 기간 // 3분
       const refreshThreshold = 60; // 5분 남았을 때 요청할 것 //1분
+      //2분마다 떠야함
       console.log("타이머 작동되는지 확인");
 
       // 카운트다운 시작
@@ -117,10 +144,17 @@ export function NavBar(props) {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
           });
-          const newExpiresIn = response.data;
-          console.log("expiresIn:", newExpiresIn);
-          await startCountdownTimer(newExpiresIn);
+
+          if (response.status === 204) {
+            // 소셜 회원이 아닌데 타이머가 작동했다면 OAuthException으로 처리하여 HttpStatus.NO_CONTENT 리턴하도록 함
+            setIsSocial(false);
+          } else {
+            const newExpiresIn = response.data;
+            console.log("expiresIn:", newExpiresIn);
+            await startCountdownTimer(newExpiresIn);
+          }
         } catch (error) {
+          //TODO: JWT 소셜 토큰 만료시키는 코드 추가 요망
           toast({
             description: "다시 로그인해주세요.",
             status: "error",
@@ -131,9 +165,7 @@ export function NavBar(props) {
       };
 
       startCountdownTimer(accessTokenExpiry);
-
-      console.log("소셜 로그인 멤버입니다.");
-      console.log("==========" + new Date() + "==========");
+      console.log("========== 소셜 로그인 멤버 검증 완료 ==========");
 
       return () => clearInterval(countdownTimer);
     }
@@ -183,6 +215,14 @@ export function NavBar(props) {
             status: "success",
           });
         } else {
+          console.log(
+            "로컬스토리지 refreshToken 상태: ",
+            localStorage.getItem("refreshToken"),
+          );
+          console.log(
+            "로컬스토리지 accessToken 상태: ",
+            localStorage.getItem("accessToken"),
+          );
           toast({
             description: "로그아웃 도중 에러가 발생했습니다",
             status: "error",
@@ -195,92 +235,189 @@ export function NavBar(props) {
   }
 
   return (
-    <Flex>
-      <Button
-        borderRadius={0}
-        variant="ghost"
-        size="lg"
-        leftIcon={<FontAwesomeIcon icon={faHome} />}
-        onClick={() => navigate("/")}
+    <>
+      <Flex flexDirection="column">
+        <Box position="fixed" top={0} left={0}>
+          <Button
+            variant="ghost"
+            size="lg"
+            leftIcon={<FontAwesomeIcon icon={faBars} />}
+            onClick={onOpen}
+          />
+          {/* 바 누르면 */}
+          <Drawer
+            bg="gray.100"
+            placement="left"
+            isOpen={isOpen}
+            onClose={onClose}
+            size={"sm"}
+          >
+            {/*펼쳐지고*/}
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerHeader
+                borderBottomWidth="1px"
+                onClick={() => {
+                  onCloseDrawer();
+                  navigate("/");
+                }}
+                display="flex"
+              >
+                🎵 MUSIC IS MY LIFE 🎵
+                <CloseButton
+                  size="md"
+                  onClick={() => {
+                    onClose();
+                    navigate("/");
+                  }}
+                  position="absolute"
+                  right="5"
+                />
+              </DrawerHeader>
+              <DrawerBody>
+                {/*새로운 음반 등록 시스템 : 관리자만이 접근 가능.*/}
+                {isAdmin && (
+                  <Button
+                    border="1px solid black"
+                    borderRadius={0}
+                    variant="ghost"
+                    size="lg"
+                    leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
+                    onClick={() => navigate("/write")}
+                  >
+                    > ALBUM REGISTER SYSTEM
+                  </Button>
+                )}
+                {/*로그인으로 가기 */}
+                {loggedIn || (
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    _hover={{ bg: "none" }}
+                    onClick={() => navigate("/login")}
+                    leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+                  >
+                    Log in
+                  </Button>
+                )}
+                {/*멤버로 가입하기 */}
+                {loggedIn || (
+                  <Button
+                    borderRadius={0}
+                    variant="ghost"
+                    size="lg"
+                    leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+                    onClick={() => navigate("/signup")}
+                  >
+                    Sign Up
+                  </Button>
+                )}
+                <br />
+                {/*회원들의 정보" 관리자의 경우 열람 가능 */}
+                {loggedIn && (
+                  <Button
+                    borderRadius={0}
+                    variant="ghost"
+                    size="lg"
+                    leftIcon={<FontAwesomeIcon icon={faUser} />}
+                    onClick={() => navigate("/member?" + urlParams.toString())}
+                  >
+                    Member Info
+                  </Button>
+                )}
+                {/*회원 리스트*/}
+                {isAdmin && (
+                  <Button
+                    borderRadius={0}
+                    variant="ghost"
+                    size="lg"
+                    leftIcon={<FontAwesomeIcon icon={faUsers} />}
+                    onClick={() => navigate("/member/list")}
+                  >
+                    Member List
+                  </Button>
+                )}
+                {/*주문 버튼 */}
+                <Button
+                  borderRadius={0}
+                  variant="ghost"
+                  size="lg"
+                  leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
+                  onClick={() => navigate("/order")}
+                >
+                  Order
+                </Button>
+                <br />
+                {/*<Button*/}
+                {/*  borderRadius={0}*/}
+                {/*  variant="ghost"*/}
+                {/*  size="lg"*/}
+                {/*  leftIcon={<FontAwesomeIcon icon={faMusic} />}*/}
+                {/*  onClick={() => navigate("/")}*/}
+                {/*>*/}
+                {/*  All Item*/}
+                {/*</Button>*/}
+                {/*로그아웃 버튼 : 로그인 한 경우 */}
+                {loggedIn && (
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    onClick={handleLogout}
+                    leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+                  >
+                    Log out
+                  </Button>
+                )}
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
+        </Box>
+        {/*회원 가입 버튼*/}
+      </Flex>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center", // Align items vertically in the center
+          width: "100%", // Ensuring the nav takes full width
+        }}
       >
-        Records Home
-      </Button>
-      {isAdmin && (
-        <Button
-          borderRadius={0}
-          variant="ghost"
-          size="lg"
-          leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-          onClick={() => navigate("/write")}
-        >
-          앨범 등록
-        </Button>
-      )}
-      {loggedIn || (
-        <Button
-          borderRadius={0}
-          variant="ghost"
-          size="lg"
-          leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-          onClick={() => navigate("/signup")}
-        >
-          회원가입
-        </Button>
-      )}
-      {loggedIn && (
-        <Button
-          borderRadius={0}
-          variant="ghost"
-          size="lg"
-          leftIcon={<FontAwesomeIcon icon={faUser} />}
-          onClick={() => navigate("/member?" + urlParams.toString())}
-        >
-          회원정보
-        </Button>
-      )}
-      {isAdmin && (
-        <Button
-          borderRadius={0}
-          variant="ghost"
-          size="lg"
-          leftIcon={<FontAwesomeIcon icon={faUsers} />}
-          onClick={() => navigate("/member/list")}
-        >
-          회원목록
-        </Button>
-      )}
-      <Button
-        borderRadius={0}
-        variant="ghost"
-        size="lg"
-        leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
-        onClick={() => navigate("/order")}
-      >
-        주문하기
-      </Button>
-      {loggedIn || (
-        <Button
-          variant="ghost"
-          size="lg"
-          _hover={{ bg: "none" }}
-          onClick={() => navigate("/login")}
-          leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-        >
-          로그인
-        </Button>
-      )}
-      {loggedIn && (
-        <Button
-          variant="ghost"
-          size="lg"
-          _hover={{ bg: "none" }}
-          onClick={handleLogout}
-          leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-        >
-          로그아웃
-        </Button>
-      )}
-    </Flex>
+        {""}
+        {loggedIn || (
+          <Button
+            borderRadius={0}
+            variant="ghost"
+            size="lg"
+            leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </Button>
+        )}
+        {!loggedIn && (
+          <Button
+            variant="ghost"
+            size="lg"
+            _hover={{ bg: "none" }}
+            onClick={() => navigate("/login")}
+            leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+          >
+            Log in
+          </Button>
+        )}
+        {loggedIn && (
+          <Button
+            variant="ghost"
+            size="lg"
+            _hover={{ bg: "none" }}
+            onClick={handleLogout}
+            leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+          >
+            log out
+          </Button>
+        )}
+      </nav>
+    </>
   );
 }
 
