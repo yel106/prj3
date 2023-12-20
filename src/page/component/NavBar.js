@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
-  Button,
+  Button, Card,
   CloseButton,
   Drawer,
   DrawerBody,
-  DrawerContent,
+  DrawerContent, DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
@@ -242,11 +242,34 @@ export function NavBar(props) {
             border: "1px solid navy",
             w: "97%",
             h: "auto",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center", // Align items vertically in the center
             width: "100%", // Ensuring the nav takes full width
           }}
         >
+          <Button
+              variant="ghost"
+              size="lg"
+              border="1px solid red"
+              _hover={{ bg: "none" }}
+              onClick={() => navigate("/")}
+          >희연</Button>
+          <Button
+              variant="ghost"
+              size="lg"
+              border="1px solid red"
+              _hover={{ bg: "none" }}
+              onClick={() => navigate("/search")}
+              leftIcon={<FontAwesomeIcon icon={faSearch} />}
+          >Vinyl</Button>
+          <Button
+              variant="ghost"
+              size="lg"
+              border="1px solid red"
+              _hover={{ bg: "none" }}
+              onClick={() => navigate("/search")}
+              leftIcon={<FontAwesomeIcon icon={faSearch} />}
+          >CASSETTE TAPE</Button>
           <Button
             variant="ghost"
             size="lg"
@@ -263,7 +286,7 @@ export function NavBar(props) {
               size="lg"
               leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
               onClick={() => navigate("/signup")}
-            ></Button>
+            >회원가입</Button>
           )}
           {!loggedIn && (
             <Button
@@ -273,7 +296,7 @@ export function NavBar(props) {
               _hover={{ bg: "none" }}
               onClick={() => navigate("/login")}
               leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-            ></Button>
+            >로그인</Button>
           )}
           {loggedIn && (
             <Button
@@ -449,6 +472,11 @@ export function NavBar(props) {
                   </Button>
                 )}
               </DrawerBody>
+              <DrawerFooter>
+                <Card>
+                  희연
+                </Card>
+              </DrawerFooter>
             </DrawerContent>
           </Drawer>
         </Box>
