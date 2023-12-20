@@ -175,13 +175,13 @@ export function BoardView() {
           </ModalContent>
         </Modal>
         {/* 댓글 */}
-        <CommentComponent
-          boardId={id}
-          loggedIn={loggedIn}
-          userLogId={userLogId}
-          isAdmin={isAdmin}
-        />
       </Stack>
+      <CommentComponent
+        boardId={id}
+        loggedIn={loggedIn}
+        userLogId={userLogId}
+        isAdmin={isAdmin}
+      />
     </Center>
   );
 }

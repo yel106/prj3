@@ -46,7 +46,7 @@ export function NavBar(props) {
 
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
-    navigate("/");
+    // navigate("/");
   };
   const handle1Search = (params) => {
     setSearchParams(params);
@@ -333,19 +333,26 @@ export function NavBar(props) {
 
             <DrawerContent>
               <DrawerHeader
+                border="1px solid black"
                 borderBottomWidth="1px"
-                onClick={() => {
-                  onCloseDrawer();
-                  navigate("/");
-                }}
                 display="flex"
               >
-                🎵 MUSIC IS MY LIFE 🎵
-                <CloseButton
-                  size="md"
+                <Button
+                  border="1px solid red"
                   onClick={() => {
+                    onCloseDrawer();
                     onClose();
                     navigate("/");
+                  }}
+                >
+                  🎵 MUSIC IS MY LIFE 🎵
+                </Button>
+                <CloseButton
+                  size="md"
+                  border="1px solid blue"
+                  onClick={() => {
+                    onClose();
+                    // navigate("/");
                   }}
                   position="absolute"
                   right="5"

@@ -335,11 +335,6 @@ export function BoardList() {
                   {/*<Heading size="s">{board.releaseDate}</Heading>*/}
                   {/*<Heading size="s">{board.albumFormat}</Heading>*/}
                 </div>
-              </CardHeader>
-              {/*<CardBody>*/}
-              {/*  <Text>{board.content}</Text>*/}
-              {/*</CardBody>*/}
-              <CardFooter>
                 <ButtonGroup spacing="2">
                   <IconButton
                     aria-label="cart"
@@ -355,7 +350,24 @@ export function BoardList() {
                     sendRefreshToken={sendRefreshToken}
                   />
                 </ButtonGroup>
-              </CardFooter>
+              </CardHeader>
+              <CardBody>
+                {/*<ButtonGroup spacing="2">*/}
+                {/*  <IconButton*/}
+                {/*    aria-label="cart"*/}
+                {/*    variant="solid"*/}
+                {/*    colorScheme="pink"*/}
+                {/*    onClick={() => handleInCart(board)}*/}
+                {/*    icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
+                {/*  />*/}
+                {/*  <LikeContainer*/}
+                {/*    loggedIn={loggedIn}*/}
+                {/*    setLoggedIn={setLoggedIn}*/}
+                {/*    boardId={board.id}*/}
+                {/*    sendRefreshToken={sendRefreshToken}*/}
+                {/*  />*/}
+                {/*</ButtonGroup>*/}
+              </CardBody>
             </Card>
           ))}
         </SimpleGrid>
