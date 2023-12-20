@@ -117,8 +117,8 @@ export function NavBar(props) {
   useEffect(() => {
     if (loggedIn && isSocial) {
       const cleanupTimer = startSocialLoginTimer(
-        180, // accessTokenExpiry
-        60, // refreshThreshold
+        3600, // accessTokenExpiry
+        1800, // refreshThreshold
         setIsSocial,
         toast,
         navigate,
