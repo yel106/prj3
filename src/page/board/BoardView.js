@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import CommentComponent from "../component/CommentComponent";
+import axiosInstance from "../../axiosInstance";
 
 export function BoardView() {
   const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
@@ -36,14 +37,14 @@ export function BoardView() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get("/api/board/id/" + id)
       .then((response) => setBoard(response.data))
       .catch((error) => console.log(error))
       .finally(() => console.log("끝"));
   }, []);
   useEffect(() => {
-    axios
+    axiosInstance
       .get("/api/board/file/id/" + id)
       .then((response) => setFileURL(response.data))
       .catch((e) => console.log(e))
@@ -53,7 +54,7 @@ export function BoardView() {
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
-      axios
+      axiosInstance
         .get("/accessToken", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -69,7 +70,7 @@ export function BoardView() {
             setIsAdmin(true);
           }
 
-          return axios.get("/isSocialMember", {
+          return axiosInstance.get("/isSocialMember", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
@@ -96,7 +97,7 @@ export function BoardView() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axios
+    axiosInstance
       .get("/refreshToken", {
         headers: { Authorization: `Bearer ${refreshToken}` },
       })
@@ -123,7 +124,7 @@ export function BoardView() {
 
   function handleDelete() {
     const accessToken = localStorage.getItem("accessToken");
-    axios
+    axiosInstance
       .delete("/api/board/remove/" + id, {
         headers: {
           Authorization: `Bearer ${accessToken}`,

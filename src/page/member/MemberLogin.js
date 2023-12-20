@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 
 export function MemberLogin() {
   const [id, setId] = useState("");
@@ -24,7 +24,7 @@ export function MemberLogin() {
   useEffect(() => {
     const fetchImagePrefix = async () => {
       try {
-        const response = await axios.get("/api/login/image");
+        const response = await axiosInstance.get("/api/login/image");
         setImagePrefix(response.data);
       } catch (error) {
         console.error("error fetching image prefix", error);
@@ -34,7 +34,7 @@ export function MemberLogin() {
   }, []);
 
   function handleLogin() {
-    axios
+    axiosInstance
       .post("/login", { logId: id, password })
       .then((response) => {
         localStorage.setItem("accessToken", response.data.accessToken);
@@ -58,7 +58,7 @@ export function MemberLogin() {
   }
 
   const handleSocialLogin = (socialLoginType) => {
-    axios
+    axiosInstance
       .get(`/api/auth/${socialLoginType}`)
       .then((response) => {
         console.log(response.data);

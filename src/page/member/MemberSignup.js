@@ -11,13 +11,12 @@ import {
   FormLabel,
   Heading,
   Input,
-  Select,
   Spacer,
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../axiosInstance";
 
 export function MemberSignup() {
   const [logId, setLogId] = useState("");
@@ -38,7 +37,7 @@ export function MemberSignup() {
   let idChecked = sameOriginId || idAvailable;
 
   function handleSubmit() {
-    axios
+    axiosInstance
       .post("/member/add", {
         logId,
         password,
@@ -78,7 +77,7 @@ export function MemberSignup() {
   function handleEmailCheck() {
     const params = new URLSearchParams();
     params.set("email", email);
-    axios
+    axiosInstance
       .get("/member/check", {
         params: params,
       })
@@ -103,7 +102,7 @@ export function MemberSignup() {
   function handleIdCheck() {
     const params = new URLSearchParams();
     params.set("logId", logId);
-    axios
+    axiosInstance
       .get("/member/check", {
         params: params,
       })

@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 
 export function MemberView() {
   const [member, setMember] = useState(null);
@@ -30,13 +30,13 @@ export function MemberView() {
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
     console.log("엑세스 토큰", accessToken);
-    axios
+    axiosInstance
       .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         console.log("getMember()의 then 실행");
         console.log(response.data);
         setMember(response.data);
-        return axios.get(`/member/${response.data.logId}/orders`, {
+        return axiosInstance.get(`/member/${response.data.logId}/orders`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
       })
@@ -76,7 +76,7 @@ export function MemberView() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axios
+    axiosInstance
       .get("/refreshToken", {
         headers: { Authorization: `Bearer ${refreshToken}` },
       })
@@ -110,7 +110,7 @@ export function MemberView() {
   }
 
   function handleDelete() {
-    axios
+    axiosInstance
       .delete("/member/delete/" + member.id, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

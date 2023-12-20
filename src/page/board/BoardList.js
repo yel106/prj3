@@ -30,13 +30,14 @@ import { Search } from "./Search";
 import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "../../axiosInstance";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
   const [like, setLike] = useState(null);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`/api/like/board/${boardId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -58,7 +59,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   }
   function handleLike() {
     if (loggedIn) {
-      axios
+      axiosInstance
         .get("/api/like/update/" + boardId, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -73,7 +74,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
             const re = sendRefreshToken();
             if (re !== undefined) {
               re.then(() => {
-                axios
+                axiosInstance
                   .get("/api/like/update/" + boardId, {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem(
@@ -145,7 +146,7 @@ export function BoardList() {
     console.log("리프레시 토큰: ", refreshToken);
     // setLoggedIn(false);
     if (refreshToken !== null) {
-      return axios
+      return axiosInstance
         .get("/refreshToken", {
           headers: { Authorization: `Bearer ${refreshToken}` },
         })
@@ -171,7 +172,7 @@ export function BoardList() {
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
-      axios
+      axiosInstance
         .get("/accessToken", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -182,7 +183,7 @@ export function BoardList() {
           setLoggedIn(true);
           console.log(response.data);
 
-          return axios.get("/isSocialMember", {
+          return axiosInstance.get("/isSocialMember", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
@@ -219,7 +220,7 @@ export function BoardList() {
   };
   useEffect(() => {
     // searchParams 상태를 사용하여 API 호출을 업데이트.
-    axios
+    axiosInstance
       .get(`/api/board/list`, {
         params: {
           page: currentPage,
@@ -278,7 +279,7 @@ export function BoardList() {
   function handleInCart(board) {
     const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
-    axios
+    axiosInstance
       .postForm(
         "/cart/add",
         {
