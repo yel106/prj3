@@ -18,6 +18,7 @@ import {
   InputGroup,
   InputRightAddon,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -159,7 +160,7 @@ export function BoardWrite() {
           {/*======================================*/}
           <FormControl mb={5}>
             <FormLabel>Album Introduction</FormLabel>
-            <Input
+            <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="음반 소개 글을 입력해주세요"
@@ -223,6 +224,7 @@ export function BoardWrite() {
               value={stockQuantity}
               onChange={(e) => setStockQuantity(e.target.value)}
               min="0"
+              placeholder="기본 재고는 80입니다. 80으로 설정해주세요"
             />
           </FormControl>
 
@@ -236,6 +238,7 @@ export function BoardWrite() {
                 onChange={(e) => setPrice(e.target.value)}
                 type="number"
                 min="0"
+                placeholder="xx,000원으로 끝나도록 입력해주세요"
               />
             </InputGroup>
           </FormControl>

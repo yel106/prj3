@@ -11,6 +11,9 @@ import {
   DrawerOverlay,
   Flex,
   flexbox,
+  Spacer,
+  Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -26,6 +29,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { Search } from "../board/Search";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -37,13 +41,24 @@ export function NavBar(props) {
   const toast = useToast();
   const [titleIconOpen, setTitleIconOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
   const [placement, setPlacement] = React.useState("left");
 
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
-    navigate("/");
+    // navigate("/");
   };
+  const handle1Search = (params) => {
+    setSearchParams(params);
+    setCurrentPage(0); // 검색 시 첫 페이지로 이동.
+  };
+  const [searchParams, setSearchParams] = useState({
+    title: "",
+    albumFormat: "",
+    albumDetails: [],
+  });
+  // 검색 조건을 업데이트하는 함수.
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -237,6 +252,65 @@ export function NavBar(props) {
   return (
     <>
       <Flex flexDirection="column">
+        <Text
+          justifyContent="space-evenly"
+          border="0px solid black"
+          margin="8"
+          marginTop="70px"
+          variant="ghost"
+          w="97%"
+          h="auto"
+          fontFamily="Segoe Print"
+          fontSize="80px"
+          text-decoration="underline"
+          textShadow="0 0 2px black"
+          _hover={{ fontWeight: "bold", cursor: "pointer" }}
+          onClick={() => {
+            onCloseDrawer();
+            navigate("/");
+          }}
+        >
+          MUE_RECORDS SHOP
+        </Text>
+        <nav
+          style={{
+            marginTop: "30px",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center", // Align items vertically in the center
+            width: "100%", // Ensuring the nav takes full width
+          }}
+        >
+          {loggedIn || (
+            <Button
+              borderRadius={0}
+              variant="ghost"
+              size="lg"
+              leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+              onClick={() => navigate("/signup")}
+            ></Button>
+          )}
+          {!loggedIn && (
+            <Button
+              variant="ghost"
+              size="lg"
+              _hover={{ bg: "none" }}
+              onClick={() => navigate("/login")}
+              leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+            ></Button>
+          )}
+          {loggedIn && (
+            <Button
+              variant="ghost"
+              size="lg"
+              _hover={{ bg: "none" }}
+              onClick={handleLogout}
+              leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+            >
+              log out
+            </Button>
+          )}
+        </nav>
         <Box position="fixed" top={0} left={0}>
           <Button
             variant="ghost"
@@ -254,21 +328,31 @@ export function NavBar(props) {
           >
             {/*펼쳐지고*/}
             <DrawerOverlay />
+
             <DrawerContent>
               <DrawerHeader
+                border="1px solid black"
                 borderBottomWidth="1px"
-                onClick={() => {
-                  onCloseDrawer();
-                  navigate("/");
-                }}
                 display="flex"
               >
-                🎵 MUSIC IS MY LIFE 🎵
-                <CloseButton
-                  size="md"
+                <Button
+                  border="1px solid red"
+                  variant="ghost"
+                  fontSize={25}
                   onClick={() => {
+                    onCloseDrawer();
                     onClose();
                     navigate("/");
+                  }}
+                >
+                  🎵 MUSIC IS MY LIFE 🎵
+                </Button>
+                <CloseButton
+                  size="md"
+                  border="1px solid blue"
+                  onClick={() => {
+                    onClose();
+                    // navigate("/");
                   }}
                   position="absolute"
                   right="5"
@@ -289,29 +373,41 @@ export function NavBar(props) {
                   </Button>
                 )}
                 {/*로그인으로 가기 */}
-                {loggedIn || (
-                  <Button
-                    variant="ghost"
-                    size="lg"
-                    _hover={{ bg: "none" }}
-                    onClick={() => navigate("/login")}
-                    leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-                  >
-                    Log in
-                  </Button>
-                )}
-                {/*멤버로 가입하기 */}
-                {loggedIn || (
+                <Stack
+                  direction={["column", "row"]}
+                  justifyContent="space-evenly"
+                >
+                  {loggedIn || (
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      _hover={{ bg: "none" }}
+                      onClick={() => navigate("/login")}
+                    >
+                      Log in
+                    </Button>
+                  )}
+                  {/*멤버로 가입하기 */}
+                  {loggedIn || (
+                    <Button
+                      borderRadius={0}
+                      variant="ghost"
+                      size="lg"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Sign Up
+                    </Button>
+                  )}
                   <Button
                     borderRadius={0}
                     variant="ghost"
                     size="lg"
-                    leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-                    onClick={() => navigate("/signup")}
+                    onClick={() => navigate("/order")}
                   >
-                    Sign Up
+                    Order
                   </Button>
-                )}
+                </Stack>
+
                 <br />
                 {/*회원들의 정보" 관리자의 경우 열람 가능 */}
                 {loggedIn && (
@@ -319,12 +415,12 @@ export function NavBar(props) {
                     borderRadius={0}
                     variant="ghost"
                     size="lg"
-                    leftIcon={<FontAwesomeIcon icon={faUser} />}
                     onClick={() => navigate("/member?" + urlParams.toString())}
                   >
                     Member Info
                   </Button>
                 )}
+
                 {/*회원 리스트*/}
                 {isAdmin && (
                   <Button
@@ -338,16 +434,8 @@ export function NavBar(props) {
                   </Button>
                 )}
                 {/*주문 버튼 */}
-                <Button
-                  borderRadius={0}
-                  variant="ghost"
-                  size="lg"
-                  leftIcon={<FontAwesomeIcon icon={faDollarSign} />}
-                  onClick={() => navigate("/order")}
-                >
-                  Order
-                </Button>
                 <br />
+                <Search onSearch={handle1Search} />
                 {/*<Button*/}
                 {/*  borderRadius={0}*/}
                 {/*  variant="ghost"*/}
@@ -374,49 +462,6 @@ export function NavBar(props) {
         </Box>
         {/*회원 가입 버튼*/}
       </Flex>
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center", // Align items vertically in the center
-          width: "100%", // Ensuring the nav takes full width
-        }}
-      >
-        {""}
-        {loggedIn || (
-          <Button
-            borderRadius={0}
-            variant="ghost"
-            size="lg"
-            leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-            onClick={() => navigate("/signup")}
-          >
-            Sign Up
-          </Button>
-        )}
-        {!loggedIn && (
-          <Button
-            variant="ghost"
-            size="lg"
-            _hover={{ bg: "none" }}
-            onClick={() => navigate("/login")}
-            leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-          >
-            Log in
-          </Button>
-        )}
-        {loggedIn && (
-          <Button
-            variant="ghost"
-            size="lg"
-            _hover={{ bg: "none" }}
-            onClick={handleLogout}
-            leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-          >
-            log out
-          </Button>
-        )}
-      </nav>
     </>
   );
 }
