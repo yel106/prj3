@@ -279,9 +279,9 @@ export function BoardList() {
   function handleInCart(board) {
     const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
-    axios
-      .postForm(
-        "https://api.muemalaf.click/cart/add",
+    axiosInstance
+      .post(
+        "/cart/add",
         {
           boardId: board.id,
           stockQuantity: board.stockQuantity,
