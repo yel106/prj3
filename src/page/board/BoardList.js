@@ -113,6 +113,7 @@ export function BoardList() {
   const [board, setBoard] = useState();
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -157,25 +158,30 @@ export function BoardList() {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch(() => {
-          sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
+          sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
-        .finally(() => console.log("finally loggedIn: ", loggedIn));
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/like/board/" + id)
-  //     .then((response) => setLike(response.data));
-  // }, []);
-  //
-  // if (board === null) {
-  //   return <Spinner />;
-  // }
 
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
@@ -254,8 +260,6 @@ export function BoardList() {
         "/cart/add",
         {
           boardId: board.id,
-          title: board.title,
-          price: board.price,
           stockQuantity: board.stockQuantity,
         },
         {
@@ -271,10 +275,19 @@ export function BoardList() {
       })
       .catch((error) => {
         console.log(error.response.data);
-        toast({
-          description: `${board.title} 상품을 장바구니에 추가하지 못했습니다.\n다시 시도해주세요.`,
-          status: "error",
-        });
+        if (error.response.status === 409) {
+          toast({
+            title: "재고가 없습니다.",
+            description: "수량을 줄이시거나, 관리자에게 문의해주세요",
+            status: "error",
+          });
+        } else {
+          toast({
+            title: `${board.title} 상품을 장바구니에 추가하지 못했습니다.`,
+            description: "다시 한 번 시도해주세요",
+            status: "error",
+          });
+        }
       });
   }
 

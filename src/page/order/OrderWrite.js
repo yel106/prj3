@@ -15,8 +15,51 @@ export function OrderWrite() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
 
-  // 총 가격
+  // =======================================
+
   const [totalPrice, setTotalPrice] = useState(0);
+  const [orderName, setOrderName] = useState("");
+  const [items, setItems] = useState([]);
+
+  const fetchList = () => {
+    axios
+      .get("/cart/fetch", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((response) => {
+        setItems(response.data);
+
+        if (response.data.length > 1) {
+          const newOrderName = `${response.data[0].title} 외 ${
+            response.data.length - 1
+          } 건`;
+          setOrderName(newOrderName);
+        } else if (response.data.length === 1) {
+          const newOrderName = `${response.data[0].title}`;
+          setOrderName(newOrderName);
+        } else {
+          setOrderName("주문 없음");
+        }
+
+        const newTotalPrice = response.data.reduce((total, item) => {
+          return total + (item.count || 0) * item.price;
+        }, 0);
+        setTotalPrice(newTotalPrice);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        toast({
+          description: "상품 불러오기에 실패했습니다.",
+          status: "error",
+        });
+      });
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  // ===========================================
 
   function getMember() {
     axios
@@ -118,8 +161,15 @@ export function OrderWrite() {
   return (
     <div>
       <Heading>주문 페이지</Heading>
-      <CartDisplay mb="4" accessToken={accessToken} />
-      {/*<Heading>{totalPrice}</Heading>*/}
+      <CartDisplay
+        mb="4"
+        accessToken={accessToken}
+        orderName={orderName}
+        totalPrice={totalPrice}
+        items={items}
+        fetchList={fetchList}
+        toast={toast}
+      />
       <Input
         type="text"
         value={name}
