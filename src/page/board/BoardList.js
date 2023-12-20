@@ -31,14 +31,7 @@ import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 
-function LikeContainer({
-  loggedIn,
-  setLoggedIn,
-  updatingLike,
-  setUpdatingLike,
-  boardId,
-  sendRefreshToken,
-}) {
+function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
   const [like, setLike] = useState(null);
 
@@ -58,14 +51,12 @@ function LikeContainer({
           console.error("Error fetching like data: ", error);
         }
       });
-  }, [boardId, loggedIn, updatingLike]);
+  }, [boardId, loggedIn]);
 
   if (like === null) {
     return <center Spinner />;
   }
   function handleLike() {
-    console.log("handleLike updatingLike:", updatingLike);
-    // setUpdatingLike(true);
     if (loggedIn) {
       axios
         .get("/api/like/update/" + boardId, {
@@ -83,7 +74,7 @@ function LikeContainer({
             if (re !== undefined) {
               re.then(() => {
                 axios
-                  .get("/api/like/" + boardId, {
+                  .get("/api/like/update/" + boardId, {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem(
                         "accessToken",
@@ -98,8 +89,6 @@ function LikeContainer({
                   );
               });
             }
-            // sendRefreshToken();
-            // handleLike();
             console.log("401에러 캐치문");
           } else {
             console.error("Error fetching like data: ", error);
@@ -112,7 +101,6 @@ function LikeContainer({
         status: "error",
       });
     }
-    console.log("handleLike 끝");
   }
 
   return (
@@ -145,7 +133,6 @@ export function BoardList() {
   const [board, setBoard] = useState();
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [updatingLike, setUpdatingLike] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -154,7 +141,7 @@ export function BoardList() {
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
-
+    // setLoggedIn(false);
     if (refreshToken !== null) {
       return axios
         .get("/refreshToken", {
@@ -386,8 +373,6 @@ export function BoardList() {
                   <LikeContainer
                     loggedIn={loggedIn}
                     setLoggedIn={setLoggedIn}
-                    setUpdatingLike={setUpdatingLike}
-                    updatingLike={updatingLike}
                     boardId={board.id}
                     sendRefreshToken={sendRefreshToken}
                   />
