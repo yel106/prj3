@@ -123,8 +123,8 @@ export function OrderWrite() {
       // 요청을 위한 데이터 생성
       const requestData = {
         orderId: nanoid(),
-        orderName: "아이템 일부 이름", // 실제 아이템 이름의 일부를 사용
-        amount: quantity * itemPrice,
+        orderName: orderName, // 실제 아이템 이름의 일부를 사용
+        amount: totalPrice,
         // 나머지 필요한 데이터
         name,
         address,
@@ -181,13 +181,6 @@ export function OrderWrite() {
         value={address}
         onChange={(e) => setAddress(e.target.value)}
         placeholder="주소"
-      />
-      <Input
-        type="number"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-        placeholder="수량"
-        min="1"
       />
       <Input
         type="email"

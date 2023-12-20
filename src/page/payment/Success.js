@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Link } from "@chakra-ui/react";
+import { Link, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import axios from "axios";
 import data from "bootstrap/js/src/dom/data";
@@ -7,6 +7,8 @@ import data from "bootstrap/js/src/dom/data";
 export function Success() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const toast = useToast();
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const requestData = {
@@ -30,13 +32,24 @@ export function Success() {
           requestData,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           },
         );
         console.log(response.data); // 성공 응답 데이터 출력
         // TODO: 구매 완료 비즈니스 로직 구현
         // 예: 성공 메시지 표시, 다른 페이지로 리디렉션 등
+        toast({
+          title: "결제 성공",
+          description: `결제 금액: ${Number(
+            searchParams.get("amount"),
+          ).toLocaleString()}원이 성공적으로 처리되었습니다.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+          onCloseComplete: () => navigate("/"),
+        });
         console.log("결제 성공!");
       } catch (error) {
         console.error(error.response ? error.response.data : error.message);
@@ -59,7 +72,7 @@ export function Success() {
     //     })
     //     .then(() => console.log("성공"));
     // });
-  }, []);
+  }, [toast]);
 
   return (
     <div className="result wrapper">
@@ -71,8 +84,6 @@ export function Success() {
           />
           결제 성공
         </h2>
-        <p>{`paymentKey = ${searchParams.get("paymentKey")}`}</p>
-        <p>{`orderId = ${searchParams.get("orderId")}`}</p>
         <p>{`amount = ${Number(
           searchParams.get("amount"),
         ).toLocaleString()}원`}</p>

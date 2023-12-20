@@ -126,6 +126,8 @@ export function MemberView() {
         console.log("해치웠나");
         onClose();
         navigate("/");
+        // 페이지 새로고침
+        window.location.reload();
       });
     //   axios.delete().then().catch();
     // 홈 화면으로 이동시킬 것
