@@ -130,7 +130,6 @@ export function NavBar(props) {
     console.log("loggedIn: ", loggedIn);
   }, [location]);
 
-  //TODO: 다른 파일에도 집어넣기
   useEffect(() => {
     if (loggedIn && isSocial) {
       const cleanupTimer = startSocialLoginTimer(
