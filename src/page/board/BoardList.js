@@ -111,12 +111,13 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
         onClick={handleLike}
         leftIcon={
           like.isLiked ? (
-            <FontAwesomeIcon icon={fullHeart} size="xl" />
+            <FontAwesomeIcon icon={fullHeart} size="xl" colorScheme="red" />
           ) : (
-            <FontAwesomeIcon icon={emptyHeart} size="xl" />
+            <FontAwesomeIcon icon={emptyHeart} size="xl" colorScheme="blue" />
           )
         }
       >
+        {/*TODO: CLICK -> Change heart's colorsheme : 12/19*/}
         <Heading fontSize="md">{like.countLike}</Heading>
       </Button>
     </Flex>
@@ -133,6 +134,7 @@ export function BoardList() {
   const [board, setBoard] = useState();
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -179,25 +181,30 @@ export function BoardList() {
           console.log("accessToken then 수행");
           setLoggedIn(true);
           console.log(response.data);
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch(() => {
-          sendRefreshToken(); //TODO: 소셜 멤버인지 체크하는 코드로 대체하기 (NavBar 참조)
+          sendRefreshToken();
           localStorage.removeItem("accessToken");
         })
-        .finally(() => console.log("finally loggedIn: ", loggedIn));
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/like/board/" + id)
-  //     .then((response) => setLike(response.data));
-  // }, []);
-  //
-  // if (board === null) {
-  //   return <Spinner />;
-  // }
 
   // 검색 조건을 상태로 관리.
   const [searchParams, setSearchParams] = useState({
@@ -276,8 +283,6 @@ export function BoardList() {
         "/cart/add",
         {
           boardId: board.id,
-          title: board.title,
-          price: board.price,
           stockQuantity: board.stockQuantity,
         },
         {
@@ -293,10 +298,19 @@ export function BoardList() {
       })
       .catch((error) => {
         console.log(error.response.data);
-        toast({
-          description: `${board.title} 상품을 장바구니에 추가하지 못했습니다.\n다시 시도해주세요.`,
-          status: "error",
-        });
+        if (error.response.status === 409) {
+          toast({
+            title: "재고가 없습니다.",
+            description: "수량을 줄이시거나, 관리자에게 문의해주세요",
+            status: "error",
+          });
+        } else {
+          toast({
+            title: `${board.title} 상품을 장바구니에 추가하지 못했습니다.`,
+            description: "다시 한 번 시도해주세요",
+            status: "error",
+          });
+        }
       });
   }
 
@@ -306,7 +320,6 @@ export function BoardList() {
         <Spacer h={50} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <Spacer h={50} />
-        <p>Album List</p>
         <SimpleGrid
           borderRadius="ml"
           placeItems="center"
@@ -357,11 +370,6 @@ export function BoardList() {
                   {/*<Heading size="s">{board.releaseDate}</Heading>*/}
                   {/*<Heading size="s">{board.albumFormat}</Heading>*/}
                 </div>
-              </CardHeader>
-              {/*<CardBody>*/}
-              {/*  <Text>{board.content}</Text>*/}
-              {/*</CardBody>*/}
-              <CardFooter>
                 <ButtonGroup spacing="2">
                   <IconButton
                     aria-label="cart"
@@ -377,7 +385,24 @@ export function BoardList() {
                     sendRefreshToken={sendRefreshToken}
                   />
                 </ButtonGroup>
-              </CardFooter>
+              </CardHeader>
+              <CardBody>
+                {/*<ButtonGroup spacing="2">*/}
+                {/*  <IconButton*/}
+                {/*    aria-label="cart"*/}
+                {/*    variant="solid"*/}
+                {/*    colorScheme="pink"*/}
+                {/*    onClick={() => handleInCart(board)}*/}
+                {/*    icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
+                {/*  />*/}
+                {/*  <LikeContainer*/}
+                {/*    loggedIn={loggedIn}*/}
+                {/*    setLoggedIn={setLoggedIn}*/}
+                {/*    boardId={board.id}*/}
+                {/*    sendRefreshToken={sendRefreshToken}*/}
+                {/*  />*/}
+                {/*</ButtonGroup>*/}
+              </CardBody>
             </Card>
           ))}
         </SimpleGrid>
@@ -399,45 +424,44 @@ export function BoardList() {
             </Button>
           </ButtonGroup>
         </Center>
-        <SimpleGrid minChildWidth="90px">
-          <Box>
-            <YouTube
-              videoId="2kCQEnm8nAg" //비디오 영상 주소
-              opts={{
-                width: "100%",
-                height: "270px",
-                playerVars: {
-                  autoplay: 1, //자동 재생 여부
-                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
-                  loop: 1, //반복 재생
-                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
-                },
-              }}
-              onReady={(e) => {
-                e.target.mute(); //소리 끔
-              }}
-            />
-          </Box>
-
-          <Box>
-            <YouTube
-              videoId="2kCQEnm8nAg" //비디오 영상 주소
-              opts={{
-                width: "100%",
-                height: "270px",
-                playerVars: {
-                  autoplay: 1, //자동 재생 여부
-                  modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부
-                  loop: 1, //반복 재생
-                  playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트
-                },
-              }}
-              onReady={(e) => {
-                e.target.mute(); //소리 끔
-              }}
-            />
-          </Box>
-        </SimpleGrid>
+        {/*<SimpleGrid minChildWidth="90px">*/}
+        {/*  <Box>*/}
+        {/*    <YouTube*/}
+        {/*      videoId="2kCQEnm8nAg" //비디오 영상 주소*/}
+        {/*      opts={{*/}
+        {/*        width: "100%",*/}
+        {/*        height: "270px",*/}
+        {/*        playerVars: {*/}
+        {/*          autoplay: 1, //자동 재생 여부*/}
+        {/*          modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부*/}
+        {/*          loop: 1, //반복 재생*/}
+        {/*          playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트*/}
+        {/*        },*/}
+        {/*      }}*/}
+        {/*      onReady={(e) => {*/}
+        {/*        e.target.mute(); //소리 끔*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </Box>*/}
+        {/*  <Box>*/}
+        {/*    <YouTube*/}
+        {/*      videoId="2kCQEnm8nAg" //비디오 영상 주소*/}
+        {/*      opts={{*/}
+        {/*        width: "100%",*/}
+        {/*        height: "270px",*/}
+        {/*        playerVars: {*/}
+        {/*          autoplay: 1, //자동 재생 여부*/}
+        {/*          modestbranding: 1, //컨트롤 바에 유튜브 로고 표시 여부*/}
+        {/*          loop: 1, //반복 재생*/}
+        {/*          playlist: "2kCQEnm8nAg", //반복 재생으로 재생할 플레이 리스트*/}
+        {/*        },*/}
+        {/*      }}*/}
+        {/*      onReady={(e) => {*/}
+        {/*        e.target.mute(); //소리 끔*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </Box>*/}
+        {/*</SimpleGrid>*/}
         <Spacer h={200} />
       </Box>
     </>

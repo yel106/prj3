@@ -62,6 +62,7 @@ export function MemberEdit() {
       .then((response) => {
         console.log("getMember()의 then 실행");
         setMember(response.data);
+        console.log("멤버 함수 결과 : " + response.data.id);
         setName(response.data.name);
         setAddress(response.data.address);
         setGender(response.data.gender);

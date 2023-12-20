@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -26,6 +27,7 @@ export function BoardView() {
   const [board, setBoard] = useState(null);
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const [userLogId, setUserLogId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -66,12 +68,27 @@ export function BoardView() {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
+
+          return axios.get("/isSocialMember", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            },
+          });
+        })
+        .then((response) => {
+          console.log("isSocialMember = " + response.data);
+          if (response.data) {
+            setIsSocial(true);
+          }
         })
         .catch(() => {
           localStorage.removeItem("accessToken");
           sendRefreshToken();
         })
-        .finally(() => console.log());
+        .finally(() => {
+          console.log("finally loggedIn: ", loggedIn);
+          console.log("isSocial: " + isSocial);
+        });
     }
   }, []);
 
@@ -129,59 +146,79 @@ export function BoardView() {
   }
 
   return (
-    <Center>
-      <Stack direction={["column", "row"]} margin="0" justifyContent="">
-        <Box border="2px solid black" w="90%" h="90%" bg="white">
-          {fileURL.map((url) => (
-            <Box key={url}>
-              <Image src={url} w="600px" h="300px" border="1px solid black" />
+    <>
+      <>
+        <Center>
+          <Stack direction={["column", "row"]} margin="0" justifyContent="">
+            <Box border="2px solid black" w="90%" h="90%" bg="white">
+              {fileURL.map((url) => (
+                <Box key={url}>
+                  <Image
+                    src={url}
+                    w="600px"
+                    h="300px"
+                    border="1px solid black"
+                  />
+                </Box>
+              ))}
             </Box>
-          ))}
-        </Box>
-        <Box border="1px solid red">
-          <Heading size="md">Title : {board.title}</Heading>
-          <Heading size="m">Artist : {board.artist}</Heading>
-          <Heading size="m">Album Introduction : {board.content}</Heading>
-          <Heading size="m">Album Price : {board.price}</Heading>
-          <Heading size="s">Album ReleaseDate : {board.releaseDate}</Heading>
-          <Heading size="s">Album Format : {board.albumFormat}</Heading>
-          <Heading size="s">Album Genre : {board.albumDetails}</Heading>
-        </Box>
-        {/*관리자 권한 편집 기능*/}
-        {isAdmin && (
-          <Button colorScheme="pink" onClick={() => navigate("/edit/" + id)}>
-            edit
-          </Button>
-        )}
-        {isAdmin && (
-          <Button colorScheme="orange" onClick={onOpen}>
-            delete
-          </Button>
-        )}
+            <Box border="1px solid red">
+              <Heading size="md">Title : {board.title}</Heading>
+              <Heading size="m">Artist : {board.artist}</Heading>
+              {/*<Heading size="m">Album Introduction : {board.content}</Heading>*/}
+              <Heading size="m">Album Price : {board.price}</Heading>
+              <Heading size="s">
+                Album ReleaseDate : {board.releaseDate}
+              </Heading>
+              <Heading size="s">Album Format : {board.albumFormat}</Heading>
+              <Heading size="s">Album Genre : {board.albumDetails}</Heading>
+            </Box>
 
-        {/* 삭제 모달 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Delete Message</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
-            <ModalFooter>
-              <Button onClose={onClose}>닫기</Button>
-              <Button onClick={handleDelete} colorScheme="red">
-                삭제
+            {/*관리자 권한 편집 기능*/}
+            {isAdmin && (
+              <Button
+                colorScheme="pink"
+                onClick={() => navigate("/edit/" + id)}
+              >
+                edit
               </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-        {/* 댓글 */}
-        <CommentComponent
-          boardId={id}
-          loggedIn={loggedIn}
-          userLogId={userLogId}
-          isAdmin={isAdmin}
-        />
-      </Stack>
-    </Center>
+            )}
+            {isAdmin && (
+              <Button colorScheme="orange" onClick={onOpen}>
+                delete
+              </Button>
+            )}
+
+            {/* 삭제 모달 */}
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Delete Message</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClose={onClose}>닫기</Button>
+                  <Button onClick={handleDelete} colorScheme="red">
+                    삭제
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            {/* 댓글 */}
+          </Stack>
+        </Center>
+        <Box>
+          <Text sx={{ whiteSpace: "pre-wrap" }} size="m">
+            Album Introduction : {board.content}
+          </Text>
+        </Box>
+      </>
+      <CommentComponent
+        boardId={id}
+        loggedIn={loggedIn}
+        userLogId={userLogId}
+        isAdmin={isAdmin}
+      />
+    </>
   );
 }
