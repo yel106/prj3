@@ -5,8 +5,6 @@ import {
   Button,
   ButtonGroup,
   Card,
-  CardBody,
-  CardFooter,
   CardHeader,
   Center,
   Flex,
@@ -18,18 +16,16 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartPlus,
   faChevronLeft,
   faChevronRight,
+  faHeart as fullHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
-import YouTube from "react-youtube";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../axiosInstance";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
@@ -322,10 +318,10 @@ export function BoardList() {
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <Spacer h={50} />
         <SimpleGrid
-          borderRadius="ml"
+          borderRadius="sm"
           placeItems="center"
-          templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-          gap={3} // 카드 사이의 간격
+          templateColumns="repeat(4, 3fr)" // 각 열에 4개의 카드를 나열
+          gap={2} // 카드 사이의 간격
         >
           {boardList.map((board) => (
             <Card

@@ -21,6 +21,7 @@ import { OrderWrite } from "./page/order/OrderWrite";
 import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
+import { Search } from "./page/board/Search";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +36,7 @@ const routes = createBrowserRouter(
       <Route path="member" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
       <Route path="login" element={<MemberLogin />} />
+      <Route path="search" element={<Search />} />
       <Route path="loginprocess/:type" element={<MemeberSocialLogin />} />
       <Route path="order" element={<OrderWrite />} />
       <Route path="payment" element={<Payment />} />

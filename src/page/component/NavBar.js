@@ -24,6 +24,8 @@ import {
   faRecordVinyl,
   faRightFromBracket,
   faRightToBracket,
+  faSearch,
+  faSearchDollar,
   faUser,
   faUserPlus,
   faUsers,
@@ -213,13 +215,13 @@ export function NavBar(props) {
       <Flex flexDirection="column">
         <Text
           justifyContent="space-evenly"
-          border="0px solid black"
+          border="1px solid black"
           margin="8"
           marginTop="70px"
           variant="ghost"
           w="97%"
           h="auto"
-          fontFamily="Segoe Print"
+          fontFamily=""
           fontSize="80px"
           text-decoration="underline"
           textShadow="0 0 2px black"
@@ -231,19 +233,33 @@ export function NavBar(props) {
         >
           MUE_RECORDS SHOP
         </Text>
+        <nav></nav>
         <nav
+          margin="8"
           style={{
             marginTop: "30px",
             display: "flex",
+            border: "1px solid navy",
+            w: "97%",
+            h: "auto",
             justifyContent: "flex-end",
             alignItems: "center", // Align items vertically in the center
             width: "100%", // Ensuring the nav takes full width
           }}
         >
+          <Button
+            variant="ghost"
+            size="lg"
+            border="1px solid red"
+            _hover={{ bg: "none" }}
+            onClick={() => navigate("/search")}
+            leftIcon={<FontAwesomeIcon icon={faSearch} />}
+          ></Button>
           {loggedIn || (
             <Button
               borderRadius={0}
               variant="ghost"
+              border="1px solid red"
               size="lg"
               leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
               onClick={() => navigate("/signup")}
@@ -253,6 +269,7 @@ export function NavBar(props) {
             <Button
               variant="ghost"
               size="lg"
+              border="1px solid red"
               _hover={{ bg: "none" }}
               onClick={() => navigate("/login")}
               leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
@@ -262,6 +279,7 @@ export function NavBar(props) {
             <Button
               variant="ghost"
               size="lg"
+              border="1px solid red"
               _hover={{ bg: "none" }}
               onClick={handleLogout}
               leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
@@ -273,11 +291,13 @@ export function NavBar(props) {
         <Box position="fixed" top={0} left={0}>
           <Button
             variant="ghost"
+            border="1px solid red"
             size="lg"
             leftIcon={<FontAwesomeIcon icon={faBars} />}
             onClick={onOpen}
           />
-          {/* 바 누르면 */}
+
+          {/*====---------------------------------------------------------------- 바 누르면 */}
           <Drawer
             bg="gray.100"
             placement="left"
@@ -311,12 +331,12 @@ export function NavBar(props) {
                   border="1px solid blue"
                   onClick={() => {
                     onClose();
-                    // navigate("/");
                   }}
                   position="absolute"
                   right="5"
                 />
               </DrawerHeader>
+
               <DrawerBody>
                 {/*새로운 음반 등록 시스템 : 관리자만이 접근 가능.*/}
                 {isAdmin && (
@@ -407,7 +427,7 @@ export function NavBar(props) {
                 )}
                 {/*주문 버튼 */}
                 <br />
-                <Search onSearch={handle1Search} />
+
                 {/*<Button*/}
                 {/*  borderRadius={0}*/}
                 {/*  variant="ghost"*/}
