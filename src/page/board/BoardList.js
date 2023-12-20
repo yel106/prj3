@@ -387,23 +387,7 @@ export function BoardList() {
                   />
                 </ButtonGroup>
               </CardHeader>
-              <CardBody>
-                {/*<ButtonGroup spacing="2">*/}
-                {/*  <IconButton*/}
-                {/*    aria-label="cart"*/}
-                {/*    variant="solid"*/}
-                {/*    colorScheme="pink"*/}
-                {/*    onClick={() => handleInCart(board)}*/}
-                {/*    icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
-                {/*  />*/}
-                {/*  <LikeContainer*/}
-                {/*    loggedIn={loggedIn}*/}
-                {/*    setLoggedIn={setLoggedIn}*/}
-                {/*    boardId={board.id}*/}
-                {/*    sendRefreshToken={sendRefreshToken}*/}
-                {/*  />*/}
-                {/*</ButtonGroup>*/}
-              </CardBody>
+              {/*<CardBody></CardBody>*/}
             </Card>
           ))}
         </SimpleGrid>

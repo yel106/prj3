@@ -328,7 +328,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
                     onClick={() => navigate("/write")}
                   >
-                    > ALBUM REGISTER SYSTEM
+                    {" "}
+                    ALBUM REGISTER SYSTEM
                   </Button>
                 )}
                 {/*로그인으로 가기 */}
@@ -341,7 +342,11 @@ export function NavBar(props) {
                       variant="ghost"
                       size="lg"
                       _hover={{ bg: "none" }}
-                      onClick={() => navigate("/login")}
+                      onClick={() => {
+                        onCloseDrawer();
+                        onClose();
+                        navigate("/login");
+                      }}
                     >
                       Log in
                     </Button>
@@ -352,7 +357,11 @@ export function NavBar(props) {
                       borderRadius={0}
                       variant="ghost"
                       size="lg"
-                      onClick={() => navigate("/signup")}
+                      onClick={() => {
+                        onCloseDrawer();
+                        onClose();
+                        navigate("/signup");
+                      }}
                     >
                       Sign Up
                     </Button>
@@ -361,7 +370,11 @@ export function NavBar(props) {
                     borderRadius={0}
                     variant="ghost"
                     size="lg"
-                    onClick={() => navigate("/order")}
+                    onClick={() => {
+                      onCloseDrawer();
+                      onClose();
+                      navigate("/order");
+                    }}
                   >
                     Order
                   </Button>
