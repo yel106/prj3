@@ -3,10 +3,10 @@ name: CI/CD prj3 to AWS S3
 on:
   push:
     branches:
-      - yelin
+      - master
   pull_request:
     branches:
-      - yelin
+      - master
 
 jobs:
   deploy:

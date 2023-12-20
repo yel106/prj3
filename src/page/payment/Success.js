@@ -1,8 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
-import axios from "axios";
-import data from "bootstrap/js/src/dom/data";
+import axiosInstance from "../../axiosInstance";
 
 export function Success() {
   const navigate = useNavigate();
@@ -27,7 +26,7 @@ export function Success() {
 
     async function confirm() {
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           "/payment/toss/success",
           requestData,
           {
@@ -63,15 +62,6 @@ export function Success() {
       }
     }
     confirm();
-    // confirm().then(() => {
-    //   axios
-    //     .post("/api/order/add", requestData, {
-    //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    //       },
-    //     })
-    //     .then(() => console.log("성공"));
-    // });
   }, [toast]);
 
   return (

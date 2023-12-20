@@ -44,12 +44,8 @@ const routes = createBrowserRouter(
   ),
 );
 
-function App(props) {
-  return (
-    // <LoginProvider>
-    <RouterProvider router={routes} />
-    // </LoginProvider>
-  );
+function App() {
+  return <RouterProvider router={routes} />;
 }
 
 export default App;

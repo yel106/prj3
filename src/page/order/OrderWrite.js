@@ -1,9 +1,9 @@
 import { Button, Heading, Input, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { CartDisplay } from "./CartDisplay";
+import axiosInstance from "../../axiosInstance";
 
 export function OrderWrite() {
   const [name, setName] = useState("");
@@ -15,14 +15,13 @@ export function OrderWrite() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
 
-  // =======================================
-
+  // 총 가격
   const [totalPrice, setTotalPrice] = useState(0);
   const [orderName, setOrderName] = useState("");
   const [items, setItems] = useState([]);
 
   const fetchList = () => {
-    axios
+    axiosInstance
       .get("/cart/fetch", {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
@@ -62,7 +61,7 @@ export function OrderWrite() {
   // ===========================================
 
   function getMember() {
-    axios
+    axiosInstance
       .get("/api/order", {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
@@ -91,7 +90,7 @@ export function OrderWrite() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axios
+    axiosInstance
       .get("/refreshToken", {
         headers: { Authorization: `Bearer ${refreshToken}` },
       })
@@ -141,7 +140,7 @@ export function OrderWrite() {
       delete requestData.orderId;
       delete requestData.orderName;
       // 서버에 POST 요청 보내기
-      const response = await axios.post("/payment/toss", serverData, {
+      const response = await axiosInstance.post("/payment/toss", serverData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

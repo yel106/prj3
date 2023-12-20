@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
 import { Button, useQuery } from "@chakra-ui/react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 const clientKey = "test_ck_QbgMGZzorzz0oMebq4lvrl5E1em4";
 const customerKey = nanoid();
