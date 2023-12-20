@@ -68,7 +68,7 @@ function LikeContainer({
     // setUpdatingLike(true);
     if (loggedIn) {
       axios
-        .get("/api/like/" + boardId, {
+        .get("/api/like/update/" + boardId, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },

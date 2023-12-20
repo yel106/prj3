@@ -81,11 +81,11 @@ export function MemberList() {
   if (list === null) {
     return <Spinner />;
   }
-  function handleTableRowClick(id) {
-    const params = new URLSearchParams();
-    params.set("id", id);
-    navigate("/member?" + params.toString());
-  }
+  // function handleTableRowClick(id) {
+  //   const params = new URLSearchParams();
+  //   params.set("id", id);
+  //   navigate("/member?" + params.toString());
+  // }
   function handlePreviousPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }
@@ -127,7 +127,7 @@ export function MemberList() {
             <Tr
               _hover={{ cursor: "pointer" }}
               key={member.logId}
-              onClick={() => handleTableRowClick(member.logId)}
+              // onClick={() => handleTableRowClick(member.logId)}
             >
               <Td>{member.logId}</Td>
               <Td>{member.name}</Td>
