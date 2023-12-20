@@ -280,7 +280,7 @@ export function BoardList() {
     const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
     axiosInstance
-      .post(
+      .postForm(
         "/cart/add",
         {
           boardId: board.id,
