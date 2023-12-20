@@ -12,6 +12,7 @@ import {
   Flex,
   flexbox,
   Spacer,
+  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -263,12 +264,13 @@ export function NavBar(props) {
           fontSize="80px"
           text-decoration="underline"
           textShadow="0 0 2px black"
+          _hover={{ fontWeight: "bold", cursor: "pointer" }}
           onClick={() => {
             onCloseDrawer();
             navigate("/");
           }}
         >
-          JJEE'S RECORD SHOP
+          MUE_RECORDS SHOP
         </Text>
         <nav
           style={{
@@ -286,9 +288,7 @@ export function NavBar(props) {
               size="lg"
               leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
               onClick={() => navigate("/signup")}
-            >
-              Sign Up
-            </Button>
+            ></Button>
           )}
           {!loggedIn && (
             <Button
@@ -297,9 +297,7 @@ export function NavBar(props) {
               _hover={{ bg: "none" }}
               onClick={() => navigate("/login")}
               leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-            >
-              Log in
-            </Button>
+            ></Button>
           )}
           {loggedIn && (
             <Button
@@ -339,6 +337,8 @@ export function NavBar(props) {
               >
                 <Button
                   border="1px solid red"
+                  variant="ghost"
+                  fontSize={25}
                   onClick={() => {
                     onCloseDrawer();
                     onClose();
@@ -373,27 +373,40 @@ export function NavBar(props) {
                   </Button>
                 )}
                 {/*로그인으로 가기 */}
-                {loggedIn || (
-                  <Button
-                    variant="ghost"
-                    size="lg"
-                    _hover={{ bg: "none" }}
-                    onClick={() => navigate("/login")}
-                  >
-                    Log in
-                  </Button>
-                )}
-                {/*멤버로 가입하기 */}
-                {loggedIn || (
+                <Stack
+                  direction={["column", "row"]}
+                  justifyContent="space-evenly"
+                >
+                  {loggedIn || (
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      _hover={{ bg: "none" }}
+                      onClick={() => navigate("/login")}
+                    >
+                      Log in
+                    </Button>
+                  )}
+                  {/*멤버로 가입하기 */}
+                  {loggedIn || (
+                    <Button
+                      borderRadius={0}
+                      variant="ghost"
+                      size="lg"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Sign Up
+                    </Button>
+                  )}
                   <Button
                     borderRadius={0}
                     variant="ghost"
                     size="lg"
-                    onClick={() => navigate("/signup")}
+                    onClick={() => navigate("/order")}
                   >
-                    Sign Up
+                    Order
                   </Button>
-                )}
+                </Stack>
 
                 <br />
                 {/*회원들의 정보" 관리자의 경우 열람 가능 */}
@@ -407,6 +420,7 @@ export function NavBar(props) {
                     Member Info
                   </Button>
                 )}
+
                 {/*회원 리스트*/}
                 {isAdmin && (
                   <Button
@@ -420,14 +434,6 @@ export function NavBar(props) {
                   </Button>
                 )}
                 {/*주문 버튼 */}
-                <Button
-                  borderRadius={0}
-                  variant="ghost"
-                  size="lg"
-                  onClick={() => navigate("/order")}
-                >
-                  Order
-                </Button>
                 <br />
                 <Search onSearch={handle1Search} />
                 {/*<Button*/}

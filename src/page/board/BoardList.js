@@ -284,7 +284,6 @@ export function BoardList() {
         <Spacer h={50} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <Spacer h={50} />
-        <p>Album List</p>
         <SimpleGrid
           borderRadius="ml"
           placeItems="center"

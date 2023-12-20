@@ -53,16 +53,9 @@ export const Search = ({ onSearch }) => {
   };
   return (
     <Box as="form" onSubmit={handleSubmit}>
-      <Button
-        type="button"
-        colorScheme='orange'
-        onClick={toggleSearchOptions}
-        mb={4}
-
-      >
-        {showSearchOptions ? "Hide Search" : "Show Search"}
+      <Button type="button" onClick={toggleSearchOptions} mb={4}>
+        {showSearchOptions ? "상세 조건 검색 " : "상세 조건 검색"}
       </Button>
-
       <Collapse in={showSearchOptions} animateOpacity>
         <Flex mb={4} gap={4} direction="column">
           <FormControl>
@@ -115,7 +108,7 @@ export const Search = ({ onSearch }) => {
             </FormControl>
           </Flex>
         </Flex>
-        <Button type="submit" colorScheme="blue" mt={4}>
+        <Button type="submit" mt={4}>
           Search
         </Button>
       </Collapse>
