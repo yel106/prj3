@@ -321,6 +321,7 @@ export function NavBar(props) {
               <Button
                 variant="ghost"
                 size="lg"
+                fontFamily="Constantia"
                 border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={() => navigate("/login")}
@@ -333,6 +334,7 @@ export function NavBar(props) {
               <Button
                 variant="ghost"
                 size="lg"
+                fontFamily="Constantia"
                 border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={handleLogout}
