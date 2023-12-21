@@ -160,6 +160,9 @@ export function NavBar(props) {
       })
       .then(() => {
         console.log("!!!!!!!!!!!!!!!!!!!");
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        console.log(accessToken, refreshToken);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setLoggedIn(false);
@@ -170,6 +173,7 @@ export function NavBar(props) {
           description: "성공적으로 로그아웃 되었습니다",
           status: "success",
         });
+        navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 302) {
