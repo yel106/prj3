@@ -245,7 +245,7 @@ export function NavBar(props) {
         >
           MUE_RECORDS SHOP
         </Text>
-        <nav
+        <Box
           margin="8"
           borderBottom="1px solid black"
           style={{
@@ -340,7 +340,7 @@ export function NavBar(props) {
               </Button>
             )}
           </Box>
-        </nav>
+        </Box>
         {/*여기는 햄버거 바 Drawer*/}
         <Box position="fixed" top={0} left={0}>
           <Button
