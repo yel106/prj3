@@ -151,7 +151,7 @@ export function BoardView() {
     <>
       <>
         <Divider />
-        <Box margin="50" border="1px solid black">
+        <Box margin="60">
           <Center>
             <Stack
               direction={["column", "row"]}
@@ -171,7 +171,7 @@ export function BoardView() {
                   </Box>
                 ))}
               </Box>
-              <Box textAlign={"center"} border="0px solid yellow">
+              <Box mt={20} ml={5} border="0px solid yellow">
                 <Heading size="md">앨범명 : {board.title}</Heading>
                 <br />
                 <br />
@@ -216,7 +216,7 @@ export function BoardView() {
             </Stack>
           </Center>
           <Divider />
-          <Center marginTop={12}>
+          <Center margin={50}>
             <Box w="80%" h="90%" bg="">
               <Text sx={{ whiteSpace: "pre-wrap" }} size="m">
                 Album Introduction : {board.content}
