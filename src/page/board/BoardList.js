@@ -341,30 +341,21 @@ export function BoardList() {
               borderRadius="xl"
               style={{ width: "100%", height: "85%" }}
             >
-              <CardHeader>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onClick={() => navigate(`/board/${board.id}`)}
-                >
-                  {board.fileUrls &&
-                    board.fileUrls.map((url, index) => (
-                      <Image
-                        key={index}
-                        src={url}
-                        borderRadius="xl"
-                        border="1px solid red"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ))}
-                </div>
+              <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
+                {board.fileUrls &&
+                  board.fileUrls.map((url, index) => (
+                    <Image
+                      key={index}
+                      src={url}
+                      borderRadius="xl"
+                      border="1px solid red"
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ))}
               </CardHeader>
               <CardBody onClick={() => navigate(`/board/${board.id}`)}>
                 <Heading size="md">
@@ -373,11 +364,6 @@ export function BoardList() {
                 <Heading size="m" textAlign="right">
                   {board.price}원
                 </Heading>
-                {/*<Heading justifyContent="flex-end" size="m">*/}
-                {/*  {board.price}원*/}
-                {/*</Heading>*/}
-                {/*<Heading size="s">{board.releaseDate}</Heading>*/}
-                {/*<Heading size="s">{board.albumFormat}</Heading>*/}
               </CardBody>
               <CardFooter>
                 <ButtonGroup spacing="2">
