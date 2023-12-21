@@ -9,6 +9,7 @@ import {
   HStack,
   Img,
   Input,
+  Spacer,
   Spinner,
   useToast,
   VStack,
@@ -96,7 +97,9 @@ export function MemberLogin() {
       <Button colorScheme="blue" onClick={handleLogin}>
         로그인
       </Button>
+      <Spacer h={20} />
       <Divider />
+      <Spacer h={20} />
       <VStack spacing={3} mt={3}>
         <Button
           style={{
