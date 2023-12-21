@@ -95,7 +95,6 @@ export function NavBar(props) {
         setLoggedIn(false);
       });
   }
-  // TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
@@ -213,12 +212,11 @@ export function NavBar(props) {
         console.log("로그아웃 finally");
       });
   }
-  // TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
   return (
     <>
       <Flex flexDirection="column" mb={2}>
         <Text
-          border="1px solid black"
+          border="0px solid black"
           margin=""
           marginTop="70px"
           variant="ghost"
@@ -328,12 +326,11 @@ export function NavBar(props) {
             )}
           </Box>
         </nav>
-        {/*// TODO:TODO:TODO:TOD: 여기 보드 리스트의 메뉴바*/}
         {/*여기는 햄버거 바 Drawer*/}
         <Box position="fixed" top={0} left={0}>
           <Button
             variant="ghost"
-            border="1px solid red"
+            border="0px solid red"
             size="lg"
             leftIcon={<FontAwesomeIcon icon={faBars} />}
             onClick={onOpen}
@@ -469,7 +466,7 @@ export function NavBar(props) {
                   margin="center"
                   w="100%"
                   h="0 auto"
-                  border="1px solid black"
+                  border="0px solid black"
                   onClick={() => {
                     onCloseDrawer();
                     onClose();
@@ -524,7 +521,7 @@ export function NavBar(props) {
                   {/*" 관리자의 경우 열람 가능 */}
                   {isAdmin && (
                     <Button
-                      border="1px solid black"
+                      border="0px solid black"
                       borderRadius={0}
                       variant="ghost"
                       size="lg"
@@ -563,7 +560,7 @@ export function NavBar(props) {
                 {/*</Button>*/}
                 {/*로그아웃 버튼 : 로그인 한 경우 */}
               </DrawerBody>
-              <DrawerFooter border={"1px solid black"} w="100%" h="100px">
+              <DrawerFooter border={"0px solid gray"} w="100%" h="100px">
                 <Box>
                   <p>Company: 뮤레코드 owner: 주예린</p>
                   <p>E-mail: muerecords@gmail.com</p>
