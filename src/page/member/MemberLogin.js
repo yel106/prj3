@@ -75,7 +75,7 @@ export function MemberLogin() {
       <Heading textAlign="center" mb={10}>
         Login
       </Heading>
-      <VStack>
+      <VStack border="1px solid black">
         <FormControl mb={5}>
           <FormLabel>아이디</FormLabel>
           <Input
@@ -101,7 +101,7 @@ export function MemberLogin() {
         로그인
       </Button>
       {/*카카오톡 로그인*/}
-      <VStack spacing={3}>
+      <VStack border="1px solid black" spacing={3}>
         <Button
           style={{
             backgroundImage: `url('${imagePrefix}kakao_login_medium_narrow.png')`,
