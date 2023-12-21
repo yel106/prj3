@@ -4,7 +4,8 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Heading, HStack,
+  Heading,
+  HStack,
   Img,
   Input,
   Spinner,
@@ -78,7 +79,7 @@ export function MemberLogin() {
         <FormControl mb={5}>
           <FormLabel>아이디</FormLabel>
           <Input
-            w:"80%"
+            w="80%"
             type="text"
             value={id}
             placeholder="아이디를 입력하세요"
