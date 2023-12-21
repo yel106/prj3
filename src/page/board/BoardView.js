@@ -153,7 +153,12 @@ export function BoardView() {
         <Divider />
         <Box margin="50" border="1px solid black">
           <Center>
-            <Stack direction={["column", "row"]} margin="50" justifyContent="">
+            <Stack
+              direction={["column", "row"]}
+              margin="50"
+              justifyContent=""
+              gap={4}
+            >
               <Box border="2px solid black" bg="orange">
                 {fileURL.map((url) => (
                   <Box key={url}>
@@ -166,14 +171,15 @@ export function BoardView() {
                   </Box>
                 ))}
               </Box>
-              <Box border="1px solid yellow">
+              <Box textAlign={"center"} border="0px solid yellow">
                 <Heading size="md">앨범명 : {board.title}</Heading>
                 <br />
                 <br />
+                <br />
+                <Heading size="s">음반 형태: {board.albumFormat}</Heading>
                 <Heading size="m">아티스트 : {board.artist}</Heading>
                 <Heading size="m">앨범 가격 : {board.price}</Heading>
                 <Heading size="s">발매일자 : {board.releaseDate}</Heading>
-                <Heading size="s">음반 형태: {board.albumFormat}</Heading>
               </Box>
 
               {/*관리자 권한 편집 기능*/}
