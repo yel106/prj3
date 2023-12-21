@@ -387,6 +387,7 @@ export function BoardList() {
                               left="50%"
                               transform="translate(-50%, -50%)"
                               textAlign="center"
+                              zIndex="1"
                             >
                               <Text
                                 style={{
