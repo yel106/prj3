@@ -165,10 +165,11 @@ export function NavBar(props) {
         console.log(accessToken, refreshToken);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        console.log(accessToken, refreshToken);
+        // if (isAdmin) {
+        //   setIsAdmin(false);
+        // }
         setLoggedIn(false);
-        if (isAdmin) {
-          setIsAdmin(false);
-        }
         toast({
           description: "성공적으로 로그아웃 되었습니다",
           status: "success",
