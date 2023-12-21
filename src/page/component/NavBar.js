@@ -174,7 +174,9 @@ export function NavBar(props) {
           });
           setLoggedIn(false);
         } catch (e) {
-          console.log(e);
+          console.log("에러 떴음");
+          // console.log("");
+          console.log(e.response.data);
         }
       })
       .catch((error) => {
