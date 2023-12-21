@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormLabel,
   Heading,
@@ -70,7 +71,7 @@ export function MemberLogin() {
   };
 
   return (
-    <Box p={10} borderRadius={10} border="1px solid gray">
+    <Box p={10} borderRadius={10} mt={5} w="60%" ml="20%">
       <Heading textAlign="center" mb={10}>
         Login
       </Heading>
@@ -95,8 +96,8 @@ export function MemberLogin() {
       <Button colorScheme="blue" onClick={handleLogin}>
         로그인
       </Button>
-
-      <VStack spacing={3}>
+      <Divider />
+      <VStack spacing={3} mt={3}>
         <Button
           style={{
             backgroundImage: `url('${imagePrefix}kakao_login_medium_narrow.png')`,
