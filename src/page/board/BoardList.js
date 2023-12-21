@@ -325,34 +325,6 @@ export function BoardList() {
       });
   }
 
-  const [interactionIndex, setInteractionIndex] = useState(null);
-
-  const imageStyles = {
-    borderRadius: 'xl',
-    width: '200px',
-    height: '200px',
-    objectFit: 'cover',
-    transition: 'filter 0.3s ease-in-out',
-  };
-
-  const interactionStyles = {
-    filter: 'blur(5px)',
-  };
-
-  const titleStyles = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    textAlign: 'center',
-    zIndex: '1',
-    width: '100%',
-    color: 'white',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: '10px',
-    borderRadius: '5px',
-  };
-
   return (
     <>
       <Box>
@@ -375,26 +347,17 @@ export function BoardList() {
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
                 <Center>
                   {board.fileUrls &&
-                      board.fileUrls.map((url, index) => (
-                          <Box
-                              key={index}
-                              position="relative"
-                              display="inline-block"
-                              overflow="hidden"
-                              onClick={() => setInteractionIndex(index)}
-                          >
-                            <Image
-                                src={url}
-                                style={{
-                                  ...imageStyles,
-                                  ...(index === interactionIndex && interactionStyles),
-                                }}
-                            />
-                            {index === interactionIndex && (
-                                <Text style={titleStyles}>{board.title}</Text>
-                            )}
-                          </Box>
-                      ))}
+                    board.fileUrls.map((url, index) => (
+                      <Image
+                        src={url}
+                        borderRadius="xl"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ))}
                 </Center>
               </CardHeader>
               <CardBody onClick={() => navigate(`/board/${board.id}`)}>
