@@ -127,8 +127,10 @@ export function MemberSignup() {
   return (
     <Box>
       <Spacer h={10} />
-      <Card backgroundColor={"#fae0ea"} overflow={"hidden"}>
-        <CardHeader backgroundColor="#b4c0ea">
+      {/* card안에 있던 내용//backgroundColor={"#fae0ea"} overflow={"hidden"}*/}
+      <Card>
+        {/*backgroundColor="#b4c0ea":헤더에 있던거*/}
+        <CardHeader>
           <Heading>회원 가입</Heading>
         </CardHeader>
         <CardBody>
@@ -241,7 +243,8 @@ export function MemberSignup() {
         </CardBody>
 
         <CardFooter>
-          <Button onClick={handleSubmit} backgroundColor="#b4c0ea">
+          <Button onClick={handleSubmit}>
+            {/*backgroundColor="#b4c0ea": 버튼 온 클릭뒤에 있던거*/}
             회원 가입
           </Button>
         </CardFooter>
