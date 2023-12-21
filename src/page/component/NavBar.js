@@ -228,6 +228,7 @@ export function NavBar(props) {
     <>
       <Flex flexDirection="column" mb={2}>
         <Text
+          textAlign="center"
           border="0px solid black"
           margin=""
           marginTop="70px"
@@ -236,8 +237,6 @@ export function NavBar(props) {
           h="auto"
           fontFamily="Constantia"
           fontSize="80px"
-          text-decoration="underline"
-          textShadow="0 0 2px black"
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
           onClick={() => {
