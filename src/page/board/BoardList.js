@@ -136,7 +136,7 @@ export function BoardList() {
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredBox, setHoveredBox] = useState(null);
 
   const toast = useToast();
   // const { id } = useParams();
@@ -355,8 +355,8 @@ export function BoardList() {
                         key={index}
                         position="relative"
                         display="inline-block"
-                        onMouseEnter={() => setHoveredIndex(index)}
-                        onMouseLeave={() => setHoveredIndex(null)}
+                        onMouseEnter={() => setHoveredBox(index)}
+                        onMouseLeave={() => setHoveredBox(null)}
                       >
                         <motion.div
                           whileHover={{ filter: "blur(5px)" }}
@@ -378,7 +378,7 @@ export function BoardList() {
                             }}
                           />
                         </motion.div>
-                        {hoveredIndex === index && (
+                        {hoveredBox === index && (
                           <motion.div
                             position="absolute"
                             top={0}
