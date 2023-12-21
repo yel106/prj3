@@ -136,7 +136,7 @@ export function BoardList() {
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const toast = useToast();
   // const { id } = useParams();
@@ -351,27 +351,26 @@ export function BoardList() {
                 <Center>
                   {board.fileUrls &&
                     board.fileUrls.map((url, index) => (
-                      <motion.div
+                      <Box
                         key={index}
-                        whileHover={{ filter: "blur(5px)" }}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                        style={{
-                          position: "relative",
-                          display: "inline-block",
-                        }}
+                        position="relative"
+                        display="inline-block"
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
                       >
-                        <Image
-                          src={url}
-                          borderRadius="xl"
-                          border="1px solid red"
-                          style={{
-                            width: "200px",
-                            height: "200px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        {isHovered && (
+                        <motion.div whileHover={{ filter: "blur(5px)" }}>
+                          <Image
+                            src={url}
+                            borderRadius="xl"
+                            border="1px solid red"
+                            style={{
+                              width: "200px",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </motion.div>
+                        {hoveredIndex === index && (
                           <Box
                             position="absolute"
                             top={0}
@@ -384,10 +383,10 @@ export function BoardList() {
                             color="white"
                             backgroundColor="rgba(0, 0, 0, 0.5)"
                           >
-                            <Text>{board.title}</Text>
+                            <p>{board.title}</p>
                           </Box>
                         )}
-                      </motion.div>
+                      </Box>
                     ))}
                 </Center>
               </CardHeader>
