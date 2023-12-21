@@ -228,7 +228,8 @@ export function NavBar(props) {
           fontSize="80px"
           text-decoration="underline"
           textShadow="0 0 2px black"
-          _hover={{ fontWeight: "bold", cursor: "pointer" }}
+          fontWeight="bold"
+          _hover={{ cursor: "pointer" }}
           onClick={() => {
             navigate("/");
           }}
