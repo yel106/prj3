@@ -1,9 +1,22 @@
-import { Button, Heading, Input, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Heading,
+  HStack,
+  Input,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { CartDisplay } from "./CartDisplay";
 import axiosInstance from "../../axiosInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 export function OrderWrite() {
   const [name, setName] = useState("");
@@ -159,9 +172,8 @@ export function OrderWrite() {
 
   return (
     <div>
-      <Heading>주문 페이지</Heading>
+      <Heading my={3}>주문 페이지</Heading>
       <CartDisplay
-        mb="4"
         accessToken={accessToken}
         orderName={orderName}
         totalPrice={totalPrice}
@@ -169,25 +181,54 @@ export function OrderWrite() {
         fetchList={fetchList}
         toast={toast}
       />
-      <Input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="이름"
-      />
-      <Input
-        type="text"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        placeholder="주소"
-      />
-      <Input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="이메일"
-      />
-      <Button onClick={handleSubmit}>주문하기</Button>
+      <Card my={5}>
+        <CardHeader>
+          <Heading size="md">
+            <FontAwesomeIcon icon={faPenToSquare} mr={3} /> 주문 정보 입력
+          </Heading>
+        </CardHeader>
+        <CardBody>
+          <HStack mb={2}>
+            <Text w="10%" fontWeight="bold" textAlign="center">
+              이름 :
+            </Text>
+            <Input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="이름"
+            />
+          </HStack>
+          <HStack mb={2}>
+            <Text w="10%" fontWeight="bold" textAlign="center">
+              배송지 :
+            </Text>
+            <Input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="주소"
+            />
+          </HStack>
+          <HStack mb={2}>
+            <Text w="10%" fontWeight="bold" textAlign="center">
+              이메일 :
+            </Text>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="이메일"
+            />
+          </HStack>
+        </CardBody>
+        <CardFooter style={{ display: "flex", justifyContent: "center" }}>
+          <Button colorScheme={"orange"} onClick={handleSubmit} mr={2}>
+            주문하기
+          </Button>
+          <Button onClick={() => navigate(-1)}>취소</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
