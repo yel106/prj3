@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
-  Button, Card,
+  Button,
+  ButtonGroup,
+  Card,
   CloseButton,
+  Collapse,
   Drawer,
   DrawerBody,
-  DrawerContent, DrawerFooter,
+  DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
@@ -21,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faDollarSign,
+  faMusic,
   faRecordVinyl,
   faRightFromBracket,
   faRightToBracket,
@@ -29,6 +34,7 @@ import {
   faUser,
   faUserPlus,
   faUsers,
+  faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { Search } from "../board/Search";
@@ -47,11 +53,11 @@ export function NavBar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [show, setShow] = React.useState(false);
+  const handleToggle = () => setShow(!show);
   const [placement, setPlacement] = React.useState("left");
-
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
-    // navigate("/");
   };
   const handle1Search = (params) => {
     setSearchParams(params);
@@ -89,7 +95,7 @@ export function NavBar(props) {
         setLoggedIn(false);
       });
   }
-
+  // TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
@@ -132,7 +138,6 @@ export function NavBar(props) {
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
-
   useEffect(() => {
     if (loggedIn && isSocial) {
       const cleanupTimer = startSocialLoginTimer(
@@ -146,7 +151,6 @@ export function NavBar(props) {
     }
     return () => {};
   }, [loggedIn, isSocial]);
-
   function handleLogout() {
     console.log("handleLogout");
     axiosInstance
@@ -209,7 +213,7 @@ export function NavBar(props) {
         console.log("로그아웃 finally");
       });
   }
-
+  // TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
   return (
     <>
       <Flex flexDirection="column">
@@ -234,6 +238,7 @@ export function NavBar(props) {
           MUE_RECORDS SHOP
         </Text>
         <nav></nav>
+        {/*// TODO:TODO:TODO:TODO:여기 보드 리스트의 메뉴바*/}
         <nav
           margin="8"
           style={{
@@ -242,75 +247,90 @@ export function NavBar(props) {
             border: "1px solid navy",
             w: "97%",
             h: "auto",
-            justifyContent: "space-between",
+            justifyContent: "space-evenly",
             alignItems: "center", // Align items vertically in the center
             width: "100%", // Ensuring the nav takes full width
           }}
         >
           <Button
-              variant="ghost"
-              size="lg"
-              border="1px solid red"
-              _hover={{ bg: "none" }}
-              onClick={() => navigate("/")}
-          >희연</Button>
+            variant="ghost"
+            size="lg"
+            border="1px solid red"
+            _hover={{ bg: "none" }}
+            onClick={() => navigate("/Cd")}
+            leftIcon={<FontAwesomeIcon icon={faMusic} />}
+          >
+            Cd
+          </Button>
           <Button
-              variant="ghost"
-              size="lg"
-              border="1px solid red"
-              _hover={{ bg: "none" }}
-              onClick={() => navigate("/search")}
-              leftIcon={<FontAwesomeIcon icon={faSearch} />}
-          >Vinyl</Button>
-          <Button
-              variant="ghost"
-              size="lg"
-              border="1px solid red"
-              _hover={{ bg: "none" }}
-              onClick={() => navigate("/search")}
-              leftIcon={<FontAwesomeIcon icon={faSearch} />}
-          >CASSETTE TAPE</Button>
+            variant="ghost"
+            size="lg"
+            border="1px solid red"
+            _hover={{ bg: "none" }}
+            onClick={() => navigate("/Vinly")}
+            leftIcon={<FontAwesomeIcon icon={faMusic} />}
+          >
+            Vinyl
+          </Button>
           <Button
             variant="ghost"
             size="lg"
             border="1px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/search")}
-            leftIcon={<FontAwesomeIcon icon={faSearch} />}
-          ></Button>
-          {loggedIn || (
-            <Button
-              borderRadius={0}
-              variant="ghost"
-              border="1px solid red"
-              size="lg"
-              leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-              onClick={() => navigate("/signup")}
-            >회원가입</Button>
-          )}
-          {!loggedIn && (
-            <Button
-              variant="ghost"
-              size="lg"
-              border="1px solid red"
-              _hover={{ bg: "none" }}
-              onClick={() => navigate("/login")}
-              leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-            >로그인</Button>
-          )}
-          {loggedIn && (
-            <Button
-              variant="ghost"
-              size="lg"
-              border="1px solid red"
-              _hover={{ bg: "none" }}
-              onClick={handleLogout}
-              leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-            >
-              log out
-            </Button>
-          )}
+            leftIcon={<FontAwesomeIcon icon={faMusic} />}
+          >
+            CASSETTE TAPE
+          </Button>
+          {/*<Button*/}
+          {/*  variant="ghost"*/}
+          {/*  size="lg"*/}
+          {/*  border="1px solid red"*/}
+          {/*  _hover={{ bg: "none" }}*/}
+          {/*  onClick={() => navigate("/search")}*/}
+          {/*  leftIcon={<FontAwesomeIcon icon={faSearch} />}*/}
+          {/*></Button>*/}
+          <Box>
+            {loggedIn || (
+              <Button
+                borderRadius={0}
+                variant="ghost"
+                border="1px solid red"
+                size="lg"
+                leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+                onClick={() => navigate("/signup")}
+              >
+                회원가입
+              </Button>
+            )}
+            {!loggedIn && (
+              <Button
+                variant="ghost"
+                size="lg"
+                border="1px solid red"
+                _hover={{ bg: "none" }}
+                onClick={() => navigate("/login")}
+                leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+              >
+                로그인
+              </Button>
+            )}
+            {loggedIn && (
+              <Button
+                variant="ghost"
+                size="lg"
+                border="1px solid red"
+                _hover={{ bg: "none" }}
+                onClick={handleLogout}
+                leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+              >
+                log out
+              </Button>
+            )}
+          </Box>
         </nav>
+        {/*// TODO:TODO:TODO:TOD: 여기 보드 리스트의 메뉴바*/}
+        {/*여기는 햄버거 바 Drawer*/}
         <Box position="fixed" top={0} left={0}>
           <Button
             variant="ghost"
@@ -319,7 +339,6 @@ export function NavBar(props) {
             leftIcon={<FontAwesomeIcon icon={faBars} />}
             onClick={onOpen}
           />
-
           {/*====---------------------------------------------------------------- 바 누르면 */}
           <Drawer
             bg="gray.100"
@@ -330,17 +349,18 @@ export function NavBar(props) {
           >
             {/*펼쳐지고*/}
             <DrawerOverlay />
-
             <DrawerContent>
+              {/*머리*/}
               <DrawerHeader
-                border="1px solid black"
+                border="0px solid black"
                 borderBottomWidth="1px"
                 display="flex"
               >
                 <Button
-                  border="1px solid red"
+                  marginTop="3"
+                  border="0px solid red"
                   variant="ghost"
-                  fontSize={25}
+                  fontSize={30}
                   onClick={() => {
                     onCloseDrawer();
                     onClose();
@@ -351,39 +371,32 @@ export function NavBar(props) {
                 </Button>
                 <CloseButton
                   size="md"
-                  border="1px solid blue"
+                  border="0px solid blue"
                   onClick={() => {
                     onClose();
                   }}
                   position="absolute"
                   right="5"
                 />
+                <br />
+                <br />
               </DrawerHeader>
-
+              {/*몸통*/}
               <DrawerBody>
                 {/*새로운 음반 등록 시스템 : 관리자만이 접근 가능.*/}
-                {isAdmin && (
-                  <Button
-                    border="1px solid black"
-                    borderRadius={0}
-                    variant="ghost"
-                    size="lg"
-                    leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-                    onClick={() => navigate("/write")}
-                  >
-                    {" "}
-                    ALBUM REGISTER SYSTEM
-                  </Button>
-                )}
                 {/*로그인으로 가기 */}
+                <br />
                 <Stack
                   direction={["column", "row"]}
                   justifyContent="space-evenly"
                 >
                   {loggedIn || (
                     <Button
+                      textDecoration="underline"
+                      // border="1px solid black"
                       variant="ghost"
                       size="lg"
+                      borderRadius={0}
                       _hover={{ bg: "none" }}
                       onClick={() => {
                         onCloseDrawer();
@@ -397,6 +410,8 @@ export function NavBar(props) {
                   {/*멤버로 가입하기 */}
                   {loggedIn || (
                     <Button
+                      textDecoration="underline"
+                      // border="1px solid black"
                       borderRadius={0}
                       variant="ghost"
                       size="lg"
@@ -410,6 +425,8 @@ export function NavBar(props) {
                     </Button>
                   )}
                   <Button
+                    textDecoration="underline"
+                    // border="1px solid black"
                     borderRadius={0}
                     variant="ghost"
                     size="lg"
@@ -421,33 +438,120 @@ export function NavBar(props) {
                   >
                     Order
                   </Button>
+                  {loggedIn && (
+                    <Button
+                      borderRadius={0}
+                      variant="ghost"
+                      size="lg"
+                      onClick={() =>
+                        navigate("/member?" + urlParams.toString())
+                      }
+                    >
+                      Member Info
+                    </Button>
+                  )}
+                  {loggedIn && (
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      onClick={handleLogout}
+                      leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+                    >
+                      Log out
+                    </Button>
+                  )}
                 </Stack>
-
                 <br />
-                {/*회원들의 정보" 관리자의 경우 열람 가능 */}
-                {loggedIn && (
+                <br />
+                <Card
+                  variant="ghost"
+                  margin="center"
+                  w="100%"
+                  h="0 auto"
+                  border="1px solid black"
+                  onClick={() => {
+                    onCloseDrawer();
+                    onClose();
+                  }}
+                >
                   <Button
-                    borderRadius={0}
-                    variant="ghost"
-                    size="lg"
-                    onClick={() => navigate("/member?" + urlParams.toString())}
+                    border="0px solid black"
+                    onClick={() => {
+                      navigate("/");
+                    }}
                   >
-                    Member Info
+                    Home
                   </Button>
-                )}
+                  <Button
+                    onClick={() => {
+                      navigate("/Cd");
+                    }}
+                    border="0px solid black"
+                  >
+                    CD
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate("/Vinyl");
+                    }}
+                    border="0px solid black"
+                  >
+                    VINYL
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate("/Cassette");
+                    }}
+                    border="0px solid black"
+                  >
+                    CASSETTE TAPE
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate("/Cassette");
+                    }}
+                    border="0px solid black"
+                  >
+                    Q & A
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                    border="0px solid black"
+                  >
+                    About Shop
+                  </Button>
+                </Card>
+                <Card>
+                  {/*" 관리자의 경우 열람 가능 */}
+                  {isAdmin && (
+                    <Button
+                      border="1px solid black"
+                      borderRadius={0}
+                      variant="ghost"
+                      size="lg"
+                      leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
+                      onClick={() => navigate("/write")}
+                    >
+                      {" "}
+                      ALBUM REGISTER SYSTEM
+                    </Button>
+                  )}
 
-                {/*회원 리스트*/}
-                {isAdmin && (
-                  <Button
-                    borderRadius={0}
-                    variant="ghost"
-                    size="lg"
-                    leftIcon={<FontAwesomeIcon icon={faUsers} />}
-                    onClick={() => navigate("/member/list")}
-                  >
-                    Member List
-                  </Button>
-                )}
+                  {/*회원 리스트*/}
+                  {isAdmin && (
+                    <Button
+                      borderRadius={0}
+                      variant="ghost"
+                      size="lg"
+                      leftIcon={<FontAwesomeIcon icon={faUsers} />}
+                      onClick={() => navigate("/member/list")}
+                    >
+                      Member List
+                    </Button>
+                  )}
+                </Card>
                 {/*주문 버튼 */}
                 <br />
 
@@ -461,21 +565,16 @@ export function NavBar(props) {
                 {/*  All Item*/}
                 {/*</Button>*/}
                 {/*로그아웃 버튼 : 로그인 한 경우 */}
-                {loggedIn && (
-                  <Button
-                    variant="ghost"
-                    size="lg"
-                    onClick={handleLogout}
-                    leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-                  >
-                    Log out
-                  </Button>
-                )}
               </DrawerBody>
-              <DrawerFooter>
-                <Card>
-                  희연
-                </Card>
+              <DrawerFooter border={"1px solid black"} w="100%" h="100px">
+                <Box>
+                  <p>Company: 뮤레코드 owner: 주예린</p>
+                  <p>E-mail: muerecords@gmail.com</p>
+                  <p>Address:제주도 서귀포시</p>
+                  <p>Bank info: 국민은행 284002-04-192958</p>
+                  <p></p>
+                  <p></p>
+                </Box>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>

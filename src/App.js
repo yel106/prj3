@@ -22,12 +22,18 @@ import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
 import { Search } from "./page/board/Search";
+import { Cd } from "./page/menu/Cd";
+import { Vinyl } from "./page/menu/Vinyl";
+import { Cassette } from "./page/menu/Cassette";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<HomeLayout />}>
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
+      <Route path="menu/cd" element={<Cd />} />
+      <Route path="menu/vinyl" element={<Vinyl />} />
+      <Route path="menu/cassette" element={<Cassette />} />
       <Route path="board/:id" element={<BoardView />} />
       {/*id는 useParams() 사용*/}
       <Route path="edit/:id" element={<BoardEdit />} />
