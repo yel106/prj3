@@ -36,50 +36,6 @@ export function BoardView() {
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [searchParms, setSearchParms] = useState({
-    title:"",
-    albumFormat:"",
-    albumDetails:[],
-  });
-  const handleNavSearch= (params)=>{
-    setSearchParms(params);
-    setCurrentPage(0);
-  }
-  useEffect(() => {
-    // searchParams 상태를 사용하여 API 호출을 업데이트.
-    axiosInstance
-        .get(`/api/board/list`, {
-          params: {
-            page: currentPage,
-            size: itemsPerPage,
-            title: searchParams.title,
-            albumFormat:
-                albumFormat && !searchParams.format
-                    ? albumFormat
-                    : searchParams.format,
-            // albumDetails가 undefined가 아닌 경우에만 join을 호출.
-            albumDetails: searchParams.genres
-                ? searchParams.genres.join(",")
-                : "",
-            minPrice: searchParams.minPrice,
-            maxPrice: searchParams.maxPrice,
-            stockQuantity: searchParams.stockQuantity,
-          },
-        })
-        .then((response) => {
-          const boards = response.data.content;
-
-          // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
-          const updatedBoards = boards.map((board) => {
-            // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
-            const fileUrls = board.boardFiles.map((file) => file.fileUrl);
-            return { ...board, fileUrls };
-          });
-
-          setBoardList(updatedBoards);
-          setTotalPage(response.data.totalPages);
-        });
-  }, [currentPage, searchParams, param]);
 
   useEffect(() => {
     axiosInstance
@@ -88,7 +44,6 @@ export function BoardView() {
       .catch((error) => console.log(error))
       .finally(() => console.log("끝"));
   }, []);
-
   useEffect(() => {
     axiosInstance
       .get("/api/board/file/id/" + id)
