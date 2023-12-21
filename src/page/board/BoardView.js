@@ -171,11 +171,9 @@ export function BoardView() {
                 <br />
                 <br />
                 <Heading size="m">아티스트 : {board.artist}</Heading>
-                {/*<Heading size="m">Album Introduction : {board.content}</Heading>*/}
                 <Heading size="m">앨범 가격 : {board.price}</Heading>
                 <Heading size="s">발매일자 : {board.releaseDate}</Heading>
                 <Heading size="s">음반 형태: {board.albumFormat}</Heading>
-                {/*<Heading size="s">장르 : {board.albumGenres}</Heading>*/}
               </Box>
 
               {/*관리자 권한 편집 기능*/}

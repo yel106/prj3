@@ -478,6 +478,7 @@ export function NavBar(props) {
                 <br />
                 <br />
                 <Card
+                  size="lg"
                   variant="ghost"
                   margin="center"
                   w="100%"
