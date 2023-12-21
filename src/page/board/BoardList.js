@@ -135,7 +135,6 @@ export function BoardList() {
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
-  const [clickedIndex, setClickedIndex] = useState(null);
 
   const toast = useToast();
   // const { id } = useParams();
@@ -325,7 +324,18 @@ export function BoardList() {
       });
   }
 
-  const clickedStyles = {
+  const [interactionIndex, setInteractionIndex] = useState(null);
+
+  const imageStyles = {
+    borderRadius: 'xl',
+    border: '1px solid red',
+    width: '200px',
+    height: '200px',
+    objectFit: 'cover',
+    transition: 'filter 0.3s ease-in-out',
+  };
+
+  const interactionStyles = {
     filter: 'blur(5px)',
   };
 
@@ -341,18 +351,6 @@ export function BoardList() {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     padding: '10px',
     borderRadius: '5px',
-  };
-
-  const imageStyles = {
-    borderRadius: 'xl',
-    width: '200px',
-    height: '200px',
-    objectFit: 'cover',
-    transition: 'filter 0.3s ease-in-out',
-  };
-
-  const hoverStyles = {
-    filter: 'blur(5px)',
   };
 
   return (
@@ -383,17 +381,16 @@ export function BoardList() {
                               position="relative"
                               display="inline-block"
                               overflow="hidden"
-                              onClick={() => setClickedIndex(index)}
+                              onClick={() => setInteractionIndex(index)}
                           >
                             <Image
                                 src={url}
                                 style={{
                                   ...imageStyles,
-                                  ...(index === clickedIndex && clickedStyles),
+                                  ...(index === interactionIndex && interactionStyles),
                                 }}
-                                _hover={hoverStyles}
                             />
-                            {index === clickedIndex && (
+                            {index === interactionIndex && (
                                 <Text style={titleStyles}>{board.title}</Text>
                             )}
                           </Box>
