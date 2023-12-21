@@ -159,7 +159,7 @@ export function NavBar(props) {
           Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
         },
       })
-      .then((response) => {
+      .then(() => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setLoggedIn(false);
@@ -170,7 +170,7 @@ export function NavBar(props) {
           description: "성공적으로 로그아웃 되었습니다",
           status: "success",
         });
-        navigate("/");
+        // navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 302) {
@@ -182,7 +182,7 @@ export function NavBar(props) {
           }
           // Open a new popup window for the logout URL
           const popupWindow = window.open(
-            "http://nid.naver.com/nidlogin.logout?url=http://localhost:8080",
+            "http://nid.naver.com/nidlogin.logout",
             "_blank",
           );
           if (popupWindow) {
