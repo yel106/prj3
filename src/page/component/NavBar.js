@@ -248,7 +248,7 @@ export function NavBar(props) {
           margin="8"
           border="1px solid black"
           style={{
-            marginTop: "30px",
+            marginTop: "60px",
             display: "flex",
             border: "0px solid navy",
             width: "97%",
