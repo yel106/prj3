@@ -345,6 +345,7 @@ export function NavBar(props) {
         {/*여기는 햄버거 바 Drawer*/}
         <Box position="fixed" top={0} left={0}>
           <Button
+            zIndex={1}
             variant="ghost"
             border="0px solid red"
             size="lg"
