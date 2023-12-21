@@ -443,9 +443,11 @@ export function NavBar(props) {
                       borderRadius={0}
                       variant="ghost"
                       size="lg"
-                      onClick={() =>
-                        navigate("/member?" + urlParams.toString())
-                      }
+                      onClick={() => {
+                        onCloseDrawer();
+                        onClose();
+                        navigate("/member?" + urlParams.toString());
+                      }}
                     >
                       Member Info
                     </Button>
