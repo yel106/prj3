@@ -249,7 +249,7 @@ export function MemberSignup() {
           </Button>
         </CardFooter>
       </Card>
-      <Spacer h={500} />
+      <Spacer h={50} />
     </Box>
   );
 }
