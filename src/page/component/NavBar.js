@@ -153,11 +153,6 @@ export function NavBar(props) {
   }, [loggedIn, isSocial]);
 
   useEffect(() => {
-    // try {
-    //   handleLogout();
-    // } catch (e) {
-    //   navigate("/");
-    // }
     navigate("/");
   }, [loggedIn]);
 
@@ -177,9 +172,9 @@ export function NavBar(props) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         console.log(accessToken, refreshToken);
-        // if (isAdmin) {
-        //   setIsAdmin(false);
-        // }
+        if (isAdmin) {
+          setIsAdmin(false);
+        }
         setLoggedIn(false);
         toast({
           description: "성공적으로 로그아웃 되었습니다",
@@ -232,25 +227,25 @@ export function NavBar(props) {
   return (
     <>
       <Flex flexDirection="column" mb={2}>
-        <Center>
-          <Text
-            border="0px solid black"
-            margin=""
-            marginTop="70px"
-            variant="ghost"
-            w="97%"
-            h="auto"
-            fontFamily="Constantia"
-            fontSize="80px"
-            fontWeight="bold"
-            _hover={{ cursor: "pointer" }}
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            MUE_RECORDS SHOP
-          </Text>
-        </Center>
+        <Text
+          border="0px solid black"
+          margin=""
+          marginTop="70px"
+          variant="ghost"
+          w="97%"
+          h="auto"
+          fontFamily="Constantia"
+          fontSize="80px"
+          text-decoration="underline"
+          textShadow="0 0 2px black"
+          fontWeight="bold"
+          _hover={{ cursor: "pointer" }}
+          onClick={() => {
+            location.reload();
+          }}
+        >
+          MUE_RECORDS SHOP
+        </Text>
         <nav
           margin="8"
           borderBottom="1px solid black"
@@ -480,8 +475,6 @@ export function NavBar(props) {
                     </Button>
                   )}
                 </Stack>
-                <br />
-                <br />
                 <Card
                   size="lg"
                   variant="ghost"
