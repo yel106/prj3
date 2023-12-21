@@ -98,9 +98,6 @@ export function MemberLogin() {
             />
           </FormControl>
         </VStack>
-        <Button colorScheme="blue" onClick={handleLogin}>
-          로그인
-        </Button>
         {/*카카오톡 로그인*/}
         <VStack border="1px solid black" spacing={3}>
           <Button

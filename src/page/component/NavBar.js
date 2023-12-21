@@ -250,14 +250,12 @@ export function NavBar(props) {
         >
           MUE_RECORDS SHOP
         </Text>
-        <nav></nav>
-        {/*// TODO:TODO:TODO:TODO:여기 보드 리스트의 메뉴바*/}
         <nav
           margin="8"
           style={{
             marginTop: "30px",
             display: "flex",
-            border: "1px solid navy",
+            border: "0px solid navy",
             width: "97%",
             height: "auto",
             justifyContent: "space-evenly",
@@ -267,7 +265,8 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            border="1px solid red"
+            fontFamily="Constantia"
+            border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "CD" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
@@ -277,7 +276,8 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            border="1px solid red"
+            fontFamily="Constantia"
+            border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "VINYL" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
@@ -287,7 +287,8 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            border="1px solid red"
+            fontFamily="Constantia"
+            border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
@@ -307,31 +308,32 @@ export function NavBar(props) {
               <Button
                 borderRadius={0}
                 variant="ghost"
-                border="1px solid red"
                 size="lg"
+                fontFamily="Constantia"
+                border="0px solid red"
                 leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
                 onClick={() => navigate("/signup")}
               >
-                회원가입
+                Sign up
               </Button>
             )}
             {!loggedIn && (
               <Button
                 variant="ghost"
                 size="lg"
-                border="1px solid red"
+                border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={() => navigate("/login")}
                 leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
               >
-                로그인
+                Log in
               </Button>
             )}
             {loggedIn && (
               <Button
                 variant="ghost"
                 size="lg"
-                border="1px solid red"
+                border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={handleLogout}
                 leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
