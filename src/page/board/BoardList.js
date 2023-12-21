@@ -358,43 +358,49 @@ export function BoardList() {
                               onMouseEnter={() => setHoveredIndex(index)}
                               onMouseLeave={() => setHoveredIndex(null)}
                           >
-                            <Image
-                                src={url}
-                                borderRadius="xl"
-                                border="1px solid red"
+                            <motion.div
+                                whileHover={{ filter: index === hoveredIndex ? 'blur(5px)' : 'none' }}
                                 style={{
+                                  position: 'relative',
                                   width: '200px',
                                   height: '200px',
-                                  objectFit: 'cover',
+                                  overflow: 'hidden',
                                 }}
-                            />
-                            {hoveredIndex === index && (
-                                <motion.div
-                                    position="absolute"
-                                    top={0}
-                                    bottom={0}
-                                    left={0}
-                                    right={0}
-                                    height="100%"
-                                    width="100%"
-                                    opacity={1}
-                                    transition=".5s ease"
-                                    backgroundColor="#008CBA"
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                >
-                                  <Text
-                                      style={{
-                                        color: 'white',
-                                        fontSize: '20px',
-                                        textAlign: 'center',
-                                      }}
+                            >
+                              <Image
+                                  src={url}
+                                  borderRadius="xl"
+                                  border="1px solid red"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    position: 'relative',
+                                    zIndex: '0',
+                                  }}
+                              />
+                              {hoveredIndex === index && (
+                                  <motion.div
+                                      position="absolute"
+                                      top="50%"
+                                      left="50%"
+                                      transform="translate(-50%, -50%)"
+                                      textAlign="center"
+                                      zIndex="1"
                                   >
-                                    {board.title}
-                                  </Text>
-                                </motion.div>
-                            )}
+                                    <Text
+                                        style={{
+                                          color: 'white',
+                                          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                          padding: '10px',
+                                          borderRadius: '5px',
+                                        }}
+                                    >
+                                      {board.title}
+                                    </Text>
+                                  </motion.div>
+                              )}
+                            </motion.div>
                           </Box>
                       ))}
                 </Center>
