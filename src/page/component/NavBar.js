@@ -263,7 +263,7 @@ export function NavBar(props) {
             size="lg"
             border="1px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "CD" } })}
+            // onClick={() => navigate("/", { state: { param: "CD" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             Cd
@@ -273,7 +273,7 @@ export function NavBar(props) {
             size="lg"
             border="1px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "VINYL" } })}
+            // onClick={() => navigate("/", { state: { param: "VINYL" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             Vinyl
@@ -283,7 +283,7 @@ export function NavBar(props) {
             size="lg"
             border="1px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
+            // onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             CASSETTE TAPE
@@ -490,25 +490,18 @@ export function NavBar(props) {
                     Home
                   </Button>
                   <Button
-                    onClick={() => navigate("/", { state: { param: "CD" } })}
+                    // onClick={() => navigate("/", { state: { param: "CD" } })}
                     border="0px solid black"
                   >
                     CD
                   </Button>
                   <Button
-                    onClick={() => navigate("/", { state: { param: "VINYL" } })}
+                    // onClick={() => navigate("/", { state: { param: "VINYL" } })}
                     border="0px solid black"
                   >
                     VINYL
                   </Button>
-                  <Button
-                    onClick={() =>
-                      navigate("/", { state: { param: "CASSETTE_TAPE" } })
-                    }
-                    border="0px solid black"
-                  >
-                    CASSETTE TAPE
-                  </Button>
+                  <Button border="0px solid black">CASSETTE TAPE</Button>
                   <Button
                     onClick={() => {
                       navigate("/Cassette");
