@@ -202,7 +202,9 @@ export function BoardView() {
                   <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
                   <ModalFooter>
                     <Button onClose={onClose}>닫기</Button>
-                    <Button onClick={handleDelete}>삭제</Button>
+                    <Button onClick={handleDelete} colorScheme="red">
+                      삭제
+                    </Button>
                   </ModalFooter>
                 </ModalContent>
               </Modal>
