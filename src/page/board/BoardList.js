@@ -5,6 +5,8 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CardBody,
+  CardFooter,
   CardHeader,
   Center,
   Flex,
@@ -229,9 +231,9 @@ export function BoardList() {
           size: itemsPerPage,
           title: searchParams.title,
           albumFormat:
-            albumFormat && !searchParams.format
-              ? albumFormat
-              : searchParams.format,
+            // albumFormat && !searchParams.format
+            //   ? albumFormat:
+            searchParams.format,
           // albumDetails가 undefined가 아닌 경우에만 join을 호출.
           albumDetails: searchParams.genres
             ? searchParams.genres.join(",")
@@ -254,8 +256,8 @@ export function BoardList() {
         setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
       });
-  }, [currentPage, searchParams, param]);
-
+  }, [currentPage, searchParams]);
+  // param
   if (boardList === null) {
     return <Spinner />;
   }
@@ -363,19 +365,21 @@ export function BoardList() {
                       />
                     ))}
                 </div>
-                <div>
-                  <Heading size="md">
-                    {board.title} - {board.artist}
-                  </Heading>
-                  <Heading size="m" textAlign="right">
-                    {board.price}원
-                  </Heading>
-                  {/*<Heading justifyContent="flex-end" size="m">*/}
-                  {/*  {board.price}원*/}
-                  {/*</Heading>*/}
-                  {/*<Heading size="s">{board.releaseDate}</Heading>*/}
-                  {/*<Heading size="s">{board.albumFormat}</Heading>*/}
-                </div>
+              </CardHeader>
+              <CardBody onClick={() => navigate(`/board/${board.id}`)}>
+                <Heading size="md">
+                  {board.title} - {board.artist}
+                </Heading>
+                <Heading size="m" textAlign="right">
+                  {board.price}원
+                </Heading>
+                {/*<Heading justifyContent="flex-end" size="m">*/}
+                {/*  {board.price}원*/}
+                {/*</Heading>*/}
+                {/*<Heading size="s">{board.releaseDate}</Heading>*/}
+                {/*<Heading size="s">{board.albumFormat}</Heading>*/}
+              </CardBody>
+              <CardFooter>
                 <ButtonGroup spacing="2">
                   <IconButton
                     aria-label="cart"
@@ -391,8 +395,7 @@ export function BoardList() {
                     sendRefreshToken={sendRefreshToken}
                   />
                 </ButtonGroup>
-              </CardHeader>
-              {/*<CardBody></CardBody>*/}
+              </CardFooter>
             </Card>
           ))}
         </SimpleGrid>
