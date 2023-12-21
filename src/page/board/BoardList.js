@@ -16,6 +16,7 @@ import {
   SimpleGrid,
   Spacer,
   Spinner,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -29,6 +30,7 @@ import {
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axiosInstance from "../../axiosInstance";
+import { motion } from "framer-motion";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -106,7 +108,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
     // <Flex gap={3} ml={400}>
     <Flex>
       <Button
-        size="sm"
+        size="md"
         onClick={handleLike}
         leftIcon={
           like.isLiked ? (
@@ -134,6 +136,8 @@ export function BoardList() {
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
   const toast = useToast();
   // const { id } = useParams();
   // const boardId = id;
@@ -231,9 +235,9 @@ export function BoardList() {
           size: itemsPerPage,
           title: searchParams.title,
           albumFormat:
-            // albumFormat && !searchParams.format
-            //   ? albumFormat:
-            searchParams.format,
+            albumFormat && !searchParams.format
+              ? albumFormat
+              : searchParams.format,
           // albumDetails가 undefined가 아닌 경우에만 join을 호출.
           albumDetails: searchParams.genres
             ? searchParams.genres.join(",")
@@ -344,20 +348,48 @@ export function BoardList() {
               // style={{ width: "100%", height: "85%" }}
             >
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
-                {board.fileUrls &&
-                  board.fileUrls.map((url, index) => (
-                    <Image
-                      key={index}
-                      src={url}
-                      borderRadius="xl"
-                      border="1px solid red"
-                      style={{
-                        width: "200px",
-                        height: "200px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ))}
+                <Center>
+                  {board.fileUrls &&
+                    board.fileUrls.map((url, index) => (
+                      <motion.div
+                        key={index}
+                        whileHover={{ filter: "blur(5px)" }}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        style={{
+                          position: "relative",
+                          display: "inline-block",
+                        }}
+                      >
+                        <Image
+                          src={url}
+                          borderRadius="xl"
+                          border="1px solid red"
+                          style={{
+                            width: "200px",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        {isHovered && (
+                          <Box
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            bottom={0}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            color="white"
+                            backgroundColor="rgba(0, 0, 0, 0.5)"
+                          >
+                            <Text>{board.title}</Text>
+                          </Box>
+                        )}
+                      </motion.div>
+                    ))}
+                </Center>
               </CardHeader>
               <CardBody onClick={() => navigate(`/board/${board.id}`)}>
                 <Heading size="md" mb={3}>
@@ -368,21 +400,23 @@ export function BoardList() {
                 </Heading>
               </CardBody>
               <CardFooter>
-                <ButtonGroup spacing="2">
-                  <IconButton
-                    aria-label="cart"
-                    variant="solid"
-                    colorScheme="pink"
-                    onClick={() => handleInCart(board)}
-                    icon={<FontAwesomeIcon icon={faCartPlus} />}
-                  />
-                  <LikeContainer
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
-                    boardId={board.id}
-                    sendRefreshToken={sendRefreshToken}
-                  />
-                </ButtonGroup>
+                <Center>
+                  <ButtonGroup spacing="2">
+                    <IconButton
+                      aria-label="cart"
+                      variant="solid"
+                      colorScheme="pink"
+                      onClick={() => handleInCart(board)}
+                      icon={<FontAwesomeIcon icon={faCartPlus} />}
+                    />
+                    <LikeContainer
+                      loggedIn={loggedIn}
+                      setLoggedIn={setLoggedIn}
+                      boardId={board.id}
+                      sendRefreshToken={sendRefreshToken}
+                    />
+                  </ButtonGroup>
+                </Center>
               </CardFooter>
             </Card>
           ))}
