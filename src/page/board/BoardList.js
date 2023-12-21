@@ -340,7 +340,7 @@ export function BoardList() {
               key={board.fileUrl}
               borderRadius="xl"
               w="100%"
-              h="85%"
+              h="100%"
               // style={{ width: "100%", height: "85%" }}
             >
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
