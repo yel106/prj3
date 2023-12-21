@@ -30,7 +30,6 @@ import {
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axiosInstance from "../../axiosInstance";
-import { motion } from "framer-motion";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -326,6 +325,19 @@ export function BoardList() {
       });
   }
 
+  const imageStyles = {
+    borderRadius: 'xl',
+    border: '1px solid red',
+    width: '200px',
+    height: '200px',
+    objectFit: 'cover',
+    transition: 'filter 0.3s ease-in-out',
+  };
+
+  const hoverStyles = {
+    filter: 'blur(5px)',
+  };
+
   return (
     <>
       <Box>
@@ -353,50 +365,15 @@ export function BoardList() {
                               key={index}
                               position="relative"
                               display="inline-block"
-                              onMouseEnter={() => setHoveredIndex(index)}
-                              onMouseLeave={() => setHoveredIndex(null)}
+                              overflow="hidden"
+                              onMouseEnter={(e) => (e.currentTarget.style.filter = 'blur(5px)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
                           >
-                            <motion.div
-                                whileHover={{ filter: index === hoveredIndex ? 'blur(5px)' : 'none' }}
-                                style={{
-                                  position: 'relative',
-                                  width: '200px',
-                                  height: '200px',
-                                  overflow: 'hidden',
-                                }}
-                            >
-                              <Image
-                                  src={url}
-                                  borderRadius="xl"
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                  }}
-                              />
-                              {hoveredIndex === index && (
-                                  <motion.div
-                                      position="absolute"
-                                      top="50%"
-                                      left="50%"
-                                      transform="translate(-50%, -50%)"
-                                      textAlign="center"
-                                      zIndex="1"
-                                      width="100%"
-                                  >
-                                    <Text
-                                        color="white"
-                                        backgroundColor="rgba(0, 0, 0, 0.5)"
-                                        p="10px"
-                                        borderRadius="5px"
-                                    >
-                                      <Heading size="m" textAlign="left">
-                                        {board.price.toLocaleString()} 원
-                                      </Heading>
-                                    </Text>
-                                  </motion.div>
-                              )}
-                            </motion.div>
+                            <Image
+                                src={url}
+                                style={{ ...imageStyles }}
+                                _hover={{ ...hoverStyles }}
+                            />
                           </Box>
                       ))}
                 </Center>
