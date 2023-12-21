@@ -177,7 +177,7 @@ export function NavBar(props) {
         navigate("/");
       })
       .catch((error) => {
-        if (error.response.status === 302) {
+        if (error.response && error.response.status === 302) {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           setLoggedIn(false);
