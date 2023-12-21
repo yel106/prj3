@@ -169,7 +169,7 @@ export function NavBar(props) {
           description: "성공적으로 로그아웃 되었습니다",
           status: "success",
         });
-        // navigate("/");
+        // navigate("/");!!
       })
       .catch((error) => {
         if (error.response.status === 302) {
