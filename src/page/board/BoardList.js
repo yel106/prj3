@@ -260,7 +260,7 @@ export function BoardList() {
         setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
       });
-  }, [currentPage, searchParams]);
+  }, [currentPage, searchParams, param]);
   // param
   if (boardList === null) {
     return <Spinner />;
