@@ -254,16 +254,15 @@ export function NavBar(props) {
         {/*// TODO:TODO:TODO:TODO:여기 보드 리스트의 메뉴바*/}
         <nav
           margin="8"
-          // style={{
-          //   marginTop: "30px",
-          //   display: "flex",
-          //   border: "1px solid navy",
-          //   w: "97%",
-          //   h: "auto",
-          //   justifyContent: "space-evenly",
-          //   alignItems: "center", // Align items vertically in the center
-          //   width: "100%", // Ensuring the nav takes full width
-          // }}
+          style={{
+            marginTop: "30px",
+            display: "flex",
+            border: "1px solid navy",
+            width: "97%",
+            height: "auto",
+            justifyContent: "space-evenly",
+            alignItems: "center", // Align items vertically in the center
+          }}
         >
           <Button
             variant="ghost"
