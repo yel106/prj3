@@ -329,7 +329,7 @@ export function BoardList() {
         <SimpleGrid
           borderRadius="sm"
           placeItems="center"
-          templateColumns="repeat(4, 3fr)" // 각 열에 4개의 카드를 나열
+          templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
           gap={2} // 카드 사이의 간격
         >
           {boardList.map((board) => (
