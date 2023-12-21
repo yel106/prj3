@@ -338,12 +338,7 @@ export function BoardList() {
           gap={5} // 카드 사이의 간격
         >
           {boardList.map((board) => (
-            <Card
-              key={board.fileUrl}
-              borderRadius="xl"
-              w="100%"
-              h="100%"
-            >
+            <Card key={board.fileUrl} borderRadius="xl" w="100%" h="100%">
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
                 <Center>
                   {board.fileUrls &&
@@ -352,8 +347,8 @@ export function BoardList() {
                         src={url}
                         borderRadius="xl"
                         style={{
-                          width: "100%",
-                          height: "100%",
+                          width: "200px",
+                          height: "200px",
                           objectFit: "cover",
                         }}
                       />
