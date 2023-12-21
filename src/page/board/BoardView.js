@@ -151,7 +151,7 @@ export function BoardView() {
     <>
       <>
         <Divider />
-        <Box margin="60">
+        <Box margin="40">
           <Center>
             <Stack
               direction={["column", "row"]}
@@ -159,7 +159,7 @@ export function BoardView() {
               justifyContent=""
               gap={4}
             >
-              <Box border="2px solid black" bg="orange">
+              <Box border="0px solid black" bg="orange">
                 {fileURL.map((url) => (
                   <Box key={url}>
                     <Image
@@ -171,7 +171,7 @@ export function BoardView() {
                   </Box>
                 ))}
               </Box>
-              <Box mt={20} ml={5} border="0px solid yellow">
+              <Box mt={25} ml={5} border="0px solid yellow">
                 <Heading size="md">앨범명 : {board.title}</Heading>
                 <br />
                 <br />

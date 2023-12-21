@@ -502,7 +502,7 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
       </Modal>
 
       <Center>
-        <ButtonGroup>
+        <ButtonGroup mt={20}>
           <Button
             onClick={handlePreviousPage}
             disable={currentPage === 0}

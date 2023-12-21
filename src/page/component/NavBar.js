@@ -232,7 +232,7 @@ export function NavBar(props) {
             window.location.reload();
           }}
         >
-          MUE_RECORDS SHOP
+          MUE_RECORDS SHOP!
         </Text>
         <Box
           margin="8"
@@ -360,8 +360,15 @@ export function NavBar(props) {
                     navigate("/");
                   }}
                 >
-                  <FontAwesomeIcon icon={faMusic} style={{color: "#000000",}} />
-                  MUSIC IS MY LIFE <FontAwesomeIcon icon={faMusic} style={{color: "#000000",}} />
+                  <FontAwesomeIcon
+                    icon={faMusic}
+                    style={{ color: "#000000" }}
+                  />
+                  MUSIC IS MY LIFE{" "}
+                  <FontAwesomeIcon
+                    icon={faMusic}
+                    style={{ color: "#000000" }}
+                  />
                 </Button>
                 <CloseButton
                   size="md"
