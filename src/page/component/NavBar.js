@@ -218,14 +218,13 @@ export function NavBar(props) {
     <>
       <Flex flexDirection="column" mb={2}>
         <Text
-          justifyContent="space-evenly"
           border="1px solid black"
-          margin="8"
+          margin=""
           marginTop="70px"
           variant="ghost"
           w="97%"
           h="auto"
-          fontFamily=""
+          fontFamily="Constantia"
           fontSize="80px"
           text-decoration="underline"
           textShadow="0 0 2px black"
