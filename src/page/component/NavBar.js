@@ -165,7 +165,6 @@ export function NavBar(props) {
         console.log(accessToken, refreshToken);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        console.log(accessToken, refreshToken);
         // if (isAdmin) {
         //   setIsAdmin(false);
         // }
@@ -174,7 +173,6 @@ export function NavBar(props) {
           description: "성공적으로 로그아웃 되었습니다",
           status: "success",
         });
-        navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 302) {
@@ -244,16 +242,16 @@ export function NavBar(props) {
         {/*// TODO:TODO:TODO:TODO:여기 보드 리스트의 메뉴바*/}
         <nav
           margin="8"
-          style={{
-            marginTop: "30px",
-            display: "flex",
-            border: "1px solid navy",
-            w: "97%",
-            h: "auto",
-            justifyContent: "space-evenly",
-            alignItems: "center", // Align items vertically in the center
-            width: "100%", // Ensuring the nav takes full width
-          }}
+          // style={{
+          //   marginTop: "30px",
+          //   display: "flex",
+          //   border: "1px solid navy",
+          //   w: "97%",
+          //   h: "auto",
+          //   justifyContent: "space-evenly",
+          //   alignItems: "center", // Align items vertically in the center
+          //   width: "100%", // Ensuring the nav takes full width
+          // }}
         >
           <Button
             variant="ghost"
