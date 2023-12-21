@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   Heading,
   Image,
   Modal,
@@ -149,69 +150,75 @@ export function BoardView() {
   return (
     <>
       <>
-        <Center>
-          <Stack direction={["column", "row"]} margin="0" justifyContent="">
-            <Box border="2px solid black" w="90%" h="90%" bg="white">
-              {fileURL.map((url) => (
-                <Box key={url}>
-                  <Image
-                    src={url}
-                    w="600px"
-                    h="300px"
-                    border="1px solid black"
-                  />
-                </Box>
-              ))}
-            </Box>
-            <Box border="1px solid red">
-              <Heading size="md">Title : {board.title}</Heading>
-              <Heading size="m">Artist : {board.artist}</Heading>
-              {/*<Heading size="m">Album Introduction : {board.content}</Heading>*/}
-              <Heading size="m">Album Price : {board.price}</Heading>
-              <Heading size="s">
-                Album ReleaseDate : {board.releaseDate}
-              </Heading>
-              <Heading size="s">Album Format : {board.albumFormat}</Heading>
-              <Heading size="s">Album Genre : {board.albumDetails}</Heading>
-            </Box>
+        <Divider />
+        <Box margin="50" border="1px solid black">
+          <Center>
+            <Stack direction={["column", "row"]} margin="50" justifyContent="">
+              <Box border="2px solid black" w="0 auto" h="90%" bg="orange">
+                {fileURL.map((url) => (
+                  <Box key={url}>
+                    <Image
+                      src={url}
+                      w="600px"
+                      h="300px"
+                      border="0px solid black"
+                    />
+                  </Box>
+                ))}
+              </Box>
+              <Box border="1px solid yellow">
+                <Heading size="md">앨범명 : {board.title}</Heading>
+                <br />
+                <br />
+                <Heading size="m">아티스트 : {board.artist}</Heading>
+                {/*<Heading size="m">Album Introduction : {board.content}</Heading>*/}
+                <Heading size="m">앨범 가격 : {board.price}</Heading>
+                <Heading size="s">발매일자 : {board.releaseDate}</Heading>
+                <Heading size="s">음반 형태: {board.albumFormat}</Heading>
+                <Heading size="s">장르 : {board.albumDetails}</Heading>
+              </Box>
 
-            {/*관리자 권한 편집 기능*/}
-            {isAdmin && (
-              <Button
-                colorScheme="pink"
-                onClick={() => navigate("/edit/" + id)}
-              >
-                edit
-              </Button>
-            )}
-            {isAdmin && (
-              <Button colorScheme="orange" onClick={onOpen}>
-                delete
-              </Button>
-            )}
+              {/*관리자 권한 편집 기능*/}
+              {isAdmin && (
+                <Button
+                  colorScheme="pink"
+                  onClick={() => navigate("/edit/" + id)}
+                >
+                  edit
+                </Button>
+              )}
+              {isAdmin && (
+                <Button colorScheme="orange" onClick={onOpen}>
+                  delete
+                </Button>
+              )}
 
-            {/* 삭제 모달 */}
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Delete Message</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
-                <ModalFooter>
-                  <Button onClose={onClose}>닫기</Button>
-                  <Button onClick={handleDelete} colorScheme="red">
-                    삭제
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            {/* 댓글 */}
-          </Stack>
-        </Center>
-        <Box>
-          <Text sx={{ whiteSpace: "pre-wrap" }} size="m">
-            Album Introduction : {board.content}
-          </Text>
+              {/* 삭제 모달 */}
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Delete Message</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+                  <ModalFooter>
+                    <Button onClose={onClose}>닫기</Button>
+                    <Button onClick={handleDelete} colorScheme="red">
+                      삭제
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+              {/* 댓글 */}
+            </Stack>
+          </Center>
+          <Divider />
+          <Center marginTop={12}>
+            <Box w="80%" h="90%" bg="red">
+              <Text sx={{ whiteSpace: "pre-wrap" }} size="m">
+                Album Introduction : {board.content}
+              </Text>
+            </Box>
+          </Center>
         </Box>
       </>
       <CommentComponent
