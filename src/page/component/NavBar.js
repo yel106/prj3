@@ -241,7 +241,7 @@ export function NavBar(props) {
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
           onClick={() => {
-            location.reload();
+            window.location.reload();
           }}
         >
           MUE_RECORDS SHOP
