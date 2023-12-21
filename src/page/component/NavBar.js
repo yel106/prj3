@@ -150,6 +150,16 @@ export function NavBar(props) {
     }
     return () => {};
   }, [loggedIn, isSocial]);
+
+  useEffect(() => {
+    // try {
+    //   handleLogout();
+    // } catch (e) {
+    //   navigate("/");
+    // }
+    navigate("/");
+  }, [loggedIn]);
+
   function handleLogout() {
     console.log("handleLogout");
     axiosInstance
