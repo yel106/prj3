@@ -76,31 +76,33 @@ export function MemberLogin() {
         Login
       </Heading>
       <HStack>
-        <FormControl mb={5}>
-          <FormLabel>아이디</FormLabel>
-          <Input
-            w="80%"
-            type="text"
-            value={id}
-            placeholder="아이디를 입력하세요"
-            onChange={(e) => setId(e.target.value)}
-          />
-        </FormControl>
-        <FormControl mb={5}>
-          <FormLabel>비밀번호</FormLabel>
-          <Input
-            w="80%"
-            type="password"
-            value={password}
-            placeholder="비밀번호를 입력하세요"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FormControl>
+        <VStack border="1px solid black">
+          <FormControl mb={5}>
+            <FormLabel>아이디</FormLabel>
+            <Input
+              w="80%"
+              type="text"
+              value={id}
+              placeholder="아이디를 입력하세요"
+              onChange={(e) => setId(e.target.value)}
+            />
+          </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>비밀번호</FormLabel>
+            <Input
+              w="80%"
+              type="password"
+              value={password}
+              placeholder="비밀번호를 입력하세요"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
+        </VStack>
         <Button colorScheme="blue" onClick={handleLogin}>
           로그인
         </Button>
         {/*카카오톡 로그인*/}
-        <VStack spacing={3}>
+        <VStack border="1px solid black" spacing={3}>
           <Button
             style={{
               backgroundImage: `url('${imagePrefix}kakao_login_medium_narrow.png')`,
