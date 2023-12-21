@@ -75,7 +75,7 @@ export function MemberLogin() {
       <Heading textAlign="center" mb={10}>
         Login
       </Heading>
-      <HStack>
+      <VStack>
         <FormControl mb={5}>
           <FormLabel>아이디</FormLabel>
           <Input
@@ -96,7 +96,7 @@ export function MemberLogin() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
-      </HStack>
+      </VStack>
       <Button colorScheme="blue" onClick={handleLogin}>
         로그인
       </Button>
