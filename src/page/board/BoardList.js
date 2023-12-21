@@ -135,7 +135,7 @@ export function BoardList() {
   // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [clickedIndex, setClickedIndex] = useState(null);
 
   const toast = useToast();
   // const { id } = useParams();
@@ -325,9 +325,26 @@ export function BoardList() {
       });
   }
 
+  const clickedStyles = {
+    filter: 'blur(5px)',
+  };
+
+  const titleStyles = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    zIndex: '1',
+    width: '100%',
+    color: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: '10px',
+    borderRadius: '5px',
+  };
+
   const imageStyles = {
     borderRadius: 'xl',
-    border: '1px solid red',
     width: '200px',
     height: '200px',
     objectFit: 'cover',
@@ -366,14 +383,19 @@ export function BoardList() {
                               position="relative"
                               display="inline-block"
                               overflow="hidden"
-                              onMouseEnter={(e) => (e.currentTarget.style.filter = 'blur(5px)')}
-                              onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
+                              onClick={() => setClickedIndex(index)}
                           >
                             <Image
                                 src={url}
-                                style={{ ...imageStyles }}
-                                _hover={{ ...hoverStyles }}
+                                style={{
+                                  ...imageStyles,
+                                  ...(index === clickedIndex && clickedStyles),
+                                }}
+                                _hover={hoverStyles}
                             />
+                            {index === clickedIndex && (
+                                <Text style={titleStyles}>{board.title}</Text>
+                            )}
                           </Box>
                       ))}
                 </Center>
