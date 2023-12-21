@@ -108,16 +108,17 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
     <Flex>
       <Button
         size="md"
+        variant="ghost"
+        colorScheme="pink"
         onClick={handleLike}
         leftIcon={
           like.isLiked ? (
-            <FontAwesomeIcon icon={fullHeart} size="xl" colorScheme="red" />
+            <FontAwesomeIcon icon={fullHeart} size="xl" />
           ) : (
-            <FontAwesomeIcon icon={emptyHeart} size="xl" colorScheme="blue" />
+            <FontAwesomeIcon icon={emptyHeart} size="xl" />
           )
         }
       >
-        {/*TODO: CLICK -> Change heart's colorsheme : 12/19*/}
         <Heading fontSize="md">{like.countLike}</Heading>
       </Button>
     </Flex>
@@ -328,7 +329,6 @@ export function BoardList() {
 
   const imageStyles = {
     borderRadius: 'xl',
-    border: '1px solid red',
     width: '200px',
     height: '200px',
     objectFit: 'cover',
