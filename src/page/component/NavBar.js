@@ -245,7 +245,7 @@ export function NavBar(props) {
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
           onClick={() => {
-            navigate("/");
+            location.reload();
           }}
         >
           MUE_RECORDS SHOP
@@ -268,7 +268,7 @@ export function NavBar(props) {
             fontFamily="Constantia"
             border="0px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "CD" } })}
+            onClick={() => navigate("/")}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             Cd
@@ -279,7 +279,7 @@ export function NavBar(props) {
             fontFamily="Constantia"
             border="0px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "VINYL" } })}
+            onClick={() => navigate("/")}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             Vinyl
@@ -290,7 +290,7 @@ export function NavBar(props) {
             fontFamily="Constantia"
             border="0px solid red"
             _hover={{ bg: "none" }}
-            onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
+            onClick={() => navigate("/")}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
             CASSETTE TAPE
@@ -478,8 +478,6 @@ export function NavBar(props) {
                     </Button>
                   )}
                 </Stack>
-                <br />
-                <br />
                 <Card
                   size="lg"
                   variant="ghost"
@@ -567,7 +565,6 @@ export function NavBar(props) {
                   )}
                 </Card>
                 {/*주문 버튼 */}
-                <br />
 
                 {/*<Button*/}
                 {/*  borderRadius={0}*/}
