@@ -578,13 +578,11 @@ export function NavBar(props) {
                 {/*로그아웃 버튼 : 로그인 한 경우 */}
               </DrawerBody>
               <DrawerFooter border={"0px solid gray"} w="100%" h="100px">
-                <Box>
-                  <p>Company: 뮤레코드 owner: 주예린</p>
-                  <p>E-mail: muerecords@gmail.com</p>
-                  <p>Address:제주도 서귀포시</p>
-                  <p>Bank info: 국민은행 284002-04-192958</p>
-                  <p></p>
-                  <p></p>
+                <Box textAlign="flex">
+                  <Text>Company: 뮤레코드 owner: 주예린</Text>
+                  <Text>E-mail: muerecords@gmail.com</Text>
+                  <Text>Address:제주도 서귀포시</Text>
+                  <Text>Bank info: 국민은행 284002-04-192958</Text>
                 </Box>
               </DrawerFooter>
             </DrawerContent>
