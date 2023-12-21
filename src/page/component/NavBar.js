@@ -160,6 +160,9 @@ export function NavBar(props) {
       })
       .then(() => {
         console.log("!!!!!!!!!!!!!!!!!!!");
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        console.log(accessToken, refreshToken);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setLoggedIn(false);
@@ -211,6 +214,7 @@ export function NavBar(props) {
       })
       .finally(() => {
         console.log("로그아웃 finally");
+        navigate("/");
       });
   }
   return (
