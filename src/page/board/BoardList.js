@@ -137,11 +137,11 @@ export function BoardList() {
   // const boardId = id;
   const location = useLocation();
 
-  const { state } = location;
-  const param = state?.param;
-  console.log("param: ", param);
-  const albumFormat = param ? param : "";
-  console.log(albumFormat);
+  // const { state } = location;
+  // const param = state?.param;
+  // console.log("param: ", param);
+  // const albumFormat = param ? param : "";
+  // console.log(albumFormat);
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -229,9 +229,9 @@ export function BoardList() {
           size: itemsPerPage,
           title: searchParams.title,
           albumFormat:
-            albumFormat && !searchParams.format
-              ? albumFormat
-              : searchParams.format,
+            // albumFormat && !searchParams.format
+            //   ? albumFormat:
+            searchParams.format,
           // albumDetails가 undefined가 아닌 경우에만 join을 호출.
           albumDetails: searchParams.genres
             ? searchParams.genres.join(",")
@@ -254,8 +254,8 @@ export function BoardList() {
         setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
       });
-  }, [currentPage, searchParams, param]);
-
+  }, [currentPage, searchParams]);
+  // param
   if (boardList === null) {
     return <Spinner />;
   }
