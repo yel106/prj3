@@ -358,7 +358,10 @@ export function BoardList() {
                         onMouseEnter={() => setHoveredIndex(index)}
                         onMouseLeave={() => setHoveredIndex(null)}
                       >
-                        <motion.div whileHover={{ filter: "blur(5px)" }}>
+                        <motion.div
+                          whileHover={{ filter: "blur(5px)" }}
+                          style={{ position: "relative" }}
+                        >
                           <Image
                             src={url}
                             borderRadius="xl"
@@ -369,23 +372,23 @@ export function BoardList() {
                               objectFit: "cover",
                             }}
                           />
+                          {hoveredIndex === index && (
+                            <Box
+                              position="absolute"
+                              top={0}
+                              left={0}
+                              right={0}
+                              bottom={0}
+                              display="flex"
+                              justifyContent="center"
+                              alignItems="center"
+                              color="white"
+                              backgroundColor="rgba(0, 0, 0, 0.5)"
+                            >
+                              <p>{board.title}</p>
+                            </Box>
+                          )}
                         </motion.div>
-                        {hoveredIndex === index && (
-                          <Box
-                            position="absolute"
-                            top={0}
-                            left={0}
-                            right={0}
-                            bottom={0}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                            color="white"
-                            backgroundColor="rgba(0, 0, 0, 0.5)"
-                          >
-                            <p>{board.title}</p>
-                          </Box>
-                        )}
                       </Box>
                     ))}
                 </Center>
