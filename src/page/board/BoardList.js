@@ -359,7 +359,10 @@ export function BoardList() {
                         onMouseLeave={() => setHoveredIndex(null)}
                       >
                         <motion.div
-                          whileHover={{ filter: "blur(5px)" }}
+                          whileHover={{
+                            filter:
+                              index === hoveredIndex ? "blur(5px)" : "none",
+                          }}
                           style={{
                             position: "relative",
                             width: "200px",
@@ -377,23 +380,27 @@ export function BoardList() {
                               objectFit: "cover",
                             }}
                           />
+                          {hoveredIndex === index && (
+                            <motion.div
+                              position="absolute"
+                              top="50%"
+                              left="50%"
+                              transform="translate(-50%, -50%)"
+                              textAlign="center"
+                            >
+                              <Text
+                                style={{
+                                  color: "white",
+                                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                  padding: "10px",
+                                  borderRadius: "5px",
+                                }}
+                              >
+                                {board.title}
+                              </Text>
+                            </motion.div>
+                          )}
                         </motion.div>
-                        {hoveredIndex === index && (
-                          <motion.div
-                            position="absolute"
-                            top={0}
-                            left={0}
-                            right={0}
-                            bottom={0}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                            color="white"
-                            backgroundColor="rgba(0, 0, 0, 0.5)"
-                          >
-                            <p>{board.title}</p>
-                          </motion.div>
-                        )}
                       </Box>
                     ))}
                 </Center>
