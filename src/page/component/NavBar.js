@@ -5,6 +5,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Center,
   CloseButton,
   Collapse,
   Drawer,
@@ -231,27 +232,28 @@ export function NavBar(props) {
   return (
     <>
       <Flex flexDirection="column" mb={2}>
-        <Text
-          border="0px solid black"
-          margin=""
-          marginTop="70px"
-          variant="ghost"
-          w="97%"
-          h="auto"
-          fontFamily="Constantia"
-          fontSize="80px"
-          text-decoration="underline"
-          textShadow="0 0 2px black"
-          fontWeight="bold"
-          _hover={{ cursor: "pointer" }}
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          MUE_RECORDS SHOP
-        </Text>
+        <Center>
+          <Text
+            border="0px solid black"
+            margin=""
+            marginTop="70px"
+            variant="ghost"
+            w="97%"
+            h="auto"
+            fontFamily="Constantia"
+            fontSize="80px"
+            fontWeight="bold"
+            _hover={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            MUE_RECORDS SHOP
+          </Text>
+        </Center>
         <nav
           margin="8"
+          borderBottom="1px solid black"
           style={{
             marginTop: "30px",
             display: "flex",
