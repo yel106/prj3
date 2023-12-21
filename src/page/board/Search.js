@@ -12,6 +12,7 @@ import {
   Select,
   Stack,
   Collapse,
+  Center,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -56,10 +57,12 @@ export const Search = ({ onSearch }) => {
   return (
     <>
       <Box as="form" onSubmit={handleSubmit}>
-        <Button type="button" onClick={toggleSearchOptions} mb={4}>
-          <FontAwesomeIcon icon={faSearch} />
-          {showSearchOptions}
-        </Button>
+        <Center>
+          <Button type="button" onClick={toggleSearchOptions} mb={4}>
+            <FontAwesomeIcon icon={faSearch} />
+            {showSearchOptions}
+          </Button>
+        </Center>
         <Collapse in={showSearchOptions} animateOpacity>
           <Flex mb={4} gap={4} direction="column">
             <FormControl>
