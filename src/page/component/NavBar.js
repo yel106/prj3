@@ -60,17 +60,6 @@ export function NavBar(props) {
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
   };
-  const handle1Search = (params) => {
-    setSearchParams(params);
-    setCurrentPage(0); // 검색 시 첫 페이지로 이동.
-  };
-  const [searchParams, setSearchParams] = useState({
-    title: "",
-    albumFormat: "",
-    albumDetails: [],
-  });
-  // 검색 조건을 업데이트하는 함수.
-
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -138,6 +127,7 @@ export function NavBar(props) {
     }
     console.log("loggedIn: ", loggedIn);
   }, [location]);
+
   useEffect(() => {
     if (loggedIn && isSocial) {
       const cleanupTimer = startSocialLoginTimer(
@@ -251,7 +241,7 @@ export function NavBar(props) {
             marginTop: "60px",
             display: "flex",
             border: "0px solid navy",
-            width: "97%",
+            width: "100%",
             height: "auto",
             justifyContent: "space-evenly",
             alignItems: "center", // Align items vertically in the center
@@ -290,14 +280,6 @@ export function NavBar(props) {
           >
             CASSETTE TAPE
           </Button>
-          {/*<Button*/}
-          {/*  variant="ghost"*/}
-          {/*  size="lg"*/}
-          {/*  border="1px solid red"*/}
-          {/*  _hover={{ bg: "none" }}*/}
-          {/*  onClick={() => navigate("/search")}*/}
-          {/*  leftIcon={<FontAwesomeIcon icon={faSearch} />}*/}
-          {/*></Button>*/}
           <Box>
             {loggedIn || (
               <Button
@@ -521,8 +503,7 @@ export function NavBar(props) {
                     }}
                     border="0px solid black"
                   >
-                    <Search onSearch={handleNavSearch} />
-                  {/*111*/}
+                    Q & A
                   </Button>
                   <Button
                     onClick={() => {

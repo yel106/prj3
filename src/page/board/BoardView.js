@@ -88,6 +88,7 @@ export function BoardView() {
       .catch((error) => console.log(error))
       .finally(() => console.log("끝"));
   }, []);
+
   useEffect(() => {
     axiosInstance
       .get("/api/board/file/id/" + id)
