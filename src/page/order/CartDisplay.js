@@ -12,12 +12,11 @@ import {
   HStack,
   IconButton,
   Image,
-  Center,
   AbsoluteCenter,
 } from "@chakra-ui/react";
 import { AddIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faList, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "../../axiosInstance";
 
 function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
@@ -122,7 +121,9 @@ export function CartDisplay({
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">{orderName}</Heading>
+        <Heading size="md">
+          <FontAwesomeIcon icon={faList} /> {orderName}
+        </Heading>
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
@@ -136,14 +137,12 @@ export function CartDisplay({
                   <Image
                     src={item.fileUrl}
                     alt={`Thumbnail for ${item.name}`}
-                    boxSize="30px"
+                    boxSize="50px"
                     border="1px solid red"
                   />
-                  <Box flex="1" marginLeft="4">
-                    <Text pt="2" fontSize="sm">
-                      {item.info}
-                    </Text>
-                  </Box>
+                  <Text fontWeight="bold" fontSize="lx">
+                    {item.price.toLocaleString()} 원
+                  </Text>
                   <HStack maxW="150px">
                     <MyNumberInput
                       count={item.count}
@@ -153,9 +152,6 @@ export function CartDisplay({
                       toast={toast}
                     />
                   </HStack>
-                  <Text fontWeight="bold" fontSize="lx">
-                    {item.price.toLocaleString()} 원
-                  </Text>
                   <IconButton
                     onClick={() => handleDeleteItem({ item })}
                     aria-label="delete"
