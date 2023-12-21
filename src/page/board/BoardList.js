@@ -336,16 +336,14 @@ export function BoardList() {
           borderRadius="sm"
           placeItems="center"
           templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-          gap={2} // 카드 사이의 간격
+          gap={5} // 카드 사이의 간격
         >
           {boardList.map((board) => (
             <Card
-              border="1px solid blue"
               key={board.fileUrl}
               borderRadius="xl"
               w="100%"
               h="100%"
-              // style={{ width: "100%", height: "85%" }}
             >
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
                 <Center>
@@ -370,13 +368,10 @@ export function BoardList() {
                               <Image
                                   src={url}
                                   borderRadius="xl"
-                                  border="1px solid red"
                                   style={{
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover',
-                                    position: 'relative',
-                                    zIndex: '0',
                                   }}
                               />
                               {hoveredIndex === index && (
@@ -387,16 +382,17 @@ export function BoardList() {
                                       transform="translate(-50%, -50%)"
                                       textAlign="center"
                                       zIndex="1"
+                                      width="100%"
                                   >
                                     <Text
-                                        style={{
-                                          color: 'white',
-                                          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                          padding: '10px',
-                                          borderRadius: '5px',
-                                        }}
+                                        color="white"
+                                        backgroundColor="rgba(0, 0, 0, 0.5)"
+                                        p="10px"
+                                        borderRadius="5px"
                                     >
-                                      {board.title}
+                                      <Heading size="m" textAlign="left">
+                                        {board.price.toLocaleString()} 원
+                                      </Heading>
                                     </Text>
                                   </motion.div>
                               )}
@@ -409,8 +405,8 @@ export function BoardList() {
                 <Heading size="md" mb={3}>
                   {board.title} - {board.artist}
                 </Heading>
-                <Heading size="m" textAlign="right">
-                  {board.price}원
+                <Heading size="m" textAlign="left">
+                  {board.price.toLocaleString()} 원
                 </Heading>
               </CardBody>
               <CardFooter>
