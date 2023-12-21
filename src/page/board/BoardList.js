@@ -339,6 +339,8 @@ export function BoardList() {
               border="1px solid blue"
               key={board.fileUrl}
               borderRadius="xl"
+              w="100%"
+              h="85%"
               // style={{ width: "100%", height: "85%" }}
             >
               <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
@@ -350,22 +352,22 @@ export function BoardList() {
                       borderRadius="xl"
                       border="1px solid red"
                       style={{
-                        width: "150px",
-                        height: "150px",
+                        width: "200px",
+                        height: "200px",
                         objectFit: "cover",
                       }}
                     />
                   ))}
               </CardHeader>
               <CardBody onClick={() => navigate(`/board/${board.id}`)}>
-                <Heading size="md">
+                <Heading size="md" mb={3}>
                   {board.title} - {board.artist}
                 </Heading>
                 <Heading size="m" textAlign="right">
                   {board.price}원
                 </Heading>
               </CardBody>
-              <CardFooter border={"1px solid red"}>
+              <CardFooter>
                 <ButtonGroup spacing="2">
                   <IconButton
                     aria-label="cart"
