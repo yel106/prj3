@@ -504,22 +504,6 @@ export function NavBar(props) {
                   >
                     CASSETTE TAPE
                   </Button>
-                  <Button
-                    onClick={() => {
-                      navigate("/Cassette");
-                    }}
-                    border="0px solid black"
-                  >
-                    Q & A
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      navigate("/");
-                    }}
-                    border="0px solid black"
-                  >
-                    About Shop
-                  </Button>
                 </Card>
                 <Card>
                   {/*" 관리자의 경우 열람 가능 */}
@@ -550,28 +534,8 @@ export function NavBar(props) {
                     </Button>
                   )}
                 </Card>
-                {/*주문 버튼 */}
                 <br />
-
-                {/*<Button*/}
-                {/*  borderRadius={0}*/}
-                {/*  variant="ghost"*/}
-                {/*  size="lg"*/}
-                {/*  leftIcon={<FontAwesomeIcon icon={faMusic} />}*/}
-                {/*  onClick={() => navigate("/")}*/}
-                {/*>*/}
-                {/*  All Item*/}
-                {/*</Button>*/}
-                {/*로그아웃 버튼 : 로그인 한 경우 */}
               </DrawerBody>
-              <DrawerFooter border={"0px solid gray"} w="100%" h="100px">
-                <Box textAlign="flex">
-                  <Text>Company: 뮤레코드 owner: 주예린</Text>
-                  <Text>E-mail: muerecords@gmail.com</Text>
-                  <Text>Address:제주도 서귀포시</Text>
-                  <Text>Bank info: 국민은행 284002-04-192958</Text>
-                </Box>
-              </DrawerFooter>
             </DrawerContent>
           </Drawer>
         </Box>
