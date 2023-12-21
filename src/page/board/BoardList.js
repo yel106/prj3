@@ -360,35 +360,40 @@ export function BoardList() {
                       >
                         <motion.div
                           whileHover={{ filter: "blur(5px)" }}
-                          style={{ position: "relative" }}
+                          style={{
+                            position: "relative",
+                            width: "200px",
+                            height: "200px",
+                            overflow: "hidden",
+                          }}
                         >
                           <Image
                             src={url}
                             borderRadius="xl"
                             border="1px solid red"
                             style={{
-                              width: "200px",
-                              height: "200px",
+                              width: "100%",
+                              height: "100%",
                               objectFit: "cover",
                             }}
                           />
-                          {hoveredIndex === index && (
-                            <Box
-                              position="absolute"
-                              top={0}
-                              left={0}
-                              right={0}
-                              bottom={0}
-                              display="flex"
-                              justifyContent="center"
-                              alignItems="center"
-                              color="white"
-                              backgroundColor="rgba(0, 0, 0, 0.5)"
-                            >
-                              <p>{board.title}</p>
-                            </Box>
-                          )}
                         </motion.div>
+                        {hoveredIndex === index && (
+                          <motion.div
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            bottom={0}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            color="white"
+                            backgroundColor="rgba(0, 0, 0, 0.5)"
+                          >
+                            <p>{board.title}</p>
+                          </motion.div>
+                        )}
                       </Box>
                     ))}
                 </Center>
