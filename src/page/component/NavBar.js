@@ -230,10 +230,9 @@ export function NavBar(props) {
         <Text
           textAlign="center"
           border="0px solid black"
-          margin=""
           marginTop="70px"
           variant="ghost"
-          w="97%"
+          w="100%"
           h="auto"
           fontFamily="Constantia"
           fontSize="80px"
@@ -247,7 +246,7 @@ export function NavBar(props) {
         </Text>
         <Box
           margin="8"
-          borderBottom="1px solid black"
+          border="1px solid black"
           style={{
             marginTop: "30px",
             display: "flex",
