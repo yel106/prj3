@@ -378,7 +378,8 @@ export function NavBar(props) {
                     navigate("/");
                   }}
                 >
-                  🎵 MUSIC IS MY LIFE 🎵
+                  <FontAwesomeIcon icon={faMusic} style={{color: "#000000",}} />
+                  MUSIC IS MY LIFE <FontAwesomeIcon icon={faMusic} style={{color: "#000000",}} />
                 </Button>
                 <CloseButton
                   size="md"
@@ -520,7 +521,8 @@ export function NavBar(props) {
                     }}
                     border="0px solid black"
                   >
-                    Q & A
+                    <Search onSearch={handleNavSearch} />
+                  {/*111*/}
                   </Button>
                   <Button
                     onClick={() => {
