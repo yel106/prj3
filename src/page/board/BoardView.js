@@ -198,13 +198,13 @@ export function BoardView() {
         <Box margin="50" border="1px solid black">
           <Center>
             <Stack direction={["column", "row"]} margin="50" justifyContent="">
-              <Box border="2px solid black" w="0 auto" h="90%" bg="orange">
+              <Box border="2px solid black" bg="orange">
                 {fileURL.map((url) => (
                   <Box key={url}>
                     <Image
                       src={url}
-                      w="300px"
-                      h="300px"
+                      w="400px"
+                      h="400px"
                       border="0px solid black"
                     />
                   </Box>
