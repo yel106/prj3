@@ -465,6 +465,7 @@ export function NavBar(props) {
                   )}
                 </Stack>
                 <Card
+                  mt={15}
                   size="lg"
                   variant="ghost"
                   margin="center"
