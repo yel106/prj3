@@ -99,7 +99,10 @@ export function MemberLogin() {
       </Button>
       <Spacer h={20} />
       <Divider />
-      <Spacer h={20} />
+      <Spacer h={10} />
+      <Heading size="mb" mb={5}>
+        소셜 로그인
+      </Heading>
       <VStack spacing={3} mt={3}>
         <Button
           style={{

@@ -25,12 +25,12 @@ export function HomeLayout() {
         backgroundColor="grey"
         color="white"
       >
-        <AbsoluteCenter>
-          <Text mb={2}>Company: 뮤레코드 대표: 주예린</Text>
-          <Text mb={2}>E-mail: muerecords@gmail.com</Text>
-          <Text mb={2}>Address: 제주도 서귀포시</Text>
-          <Text mb={2}>Bank info: 국민은행 284002-04-192958</Text>
-        </AbsoluteCenter>
+        <Text mt={10} mb={2}>
+          Company: 뮤레코드 대표: 주예린
+        </Text>
+        <Text mb={2}>E-mail: muerecords@gmail.com</Text>
+        <Text mb={2}>Address: 제주도 서귀포시</Text>
+        <Text mb={2}>Bank info: 국민은행 284002-04-192958</Text>
       </Box>
     </>
   );
