@@ -37,7 +37,7 @@ export function BoardEdit() {
   //
 
   useEffect(() => {
-    axiosInstance
+    axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
   }, []);

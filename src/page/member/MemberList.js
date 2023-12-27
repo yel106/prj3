@@ -18,7 +18,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import axiosInstance from "../../axiosInstance";
+import axios from "axios";
+// import axiosInstance from "../../axiosInstance";
 
 function SearchComponent() {
   const [keyword, setKeyword] = useState("");
@@ -64,7 +65,7 @@ export function MemberList() {
     const queryParams = new URLSearchParams(location.search);
     const keyword = queryParams.get("k");
     const category = queryParams.get("c");
-    axiosInstance
+    axios
       .get(
         `/member/list?page=${currentPage}&size=${itemsPerPage}&k=${keyword}&c=${category}`,
         {

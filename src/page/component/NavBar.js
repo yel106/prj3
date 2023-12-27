@@ -40,7 +40,7 @@ import {
 import axios from "axios";
 import { Search } from "../board/Search";
 import { startSocialLoginTimer } from "./authUtils";
-import axiosInstance from "../../axiosInstance";
+// import axiosInstance from "../../axiosInstance";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -64,7 +64,7 @@ export function NavBar(props) {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axiosInstance
+    axios
       .get("/refreshToken", {
         headers: { Authorization: `Bearer ${refreshToken}` },
       })
@@ -88,7 +88,7 @@ export function NavBar(props) {
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
-      axiosInstance
+      axios
         .get("/accessToken", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -104,7 +104,7 @@ export function NavBar(props) {
             setIsAdmin(true);
           }
 
-          return axiosInstance.get("/isSocialMember", {
+          return axios.get("/isSocialMember", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },
@@ -148,7 +148,7 @@ export function NavBar(props) {
 
   function handleLogout() {
     console.log("handleLogout");
-    axiosInstance
+    axios
       .get("/api/logout", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
@@ -229,7 +229,7 @@ export function NavBar(props) {
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
           onClick={() => {
-            window.location.reload();
+            navigate("/");
           }}
         >
           MUE_RECORDS SHOP

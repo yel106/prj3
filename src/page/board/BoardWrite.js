@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axiosInstance";
+// import axiosInstance from "../../axiosInstance";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
@@ -42,7 +42,7 @@ export function BoardWrite() {
   function handleSubmit() {
     setIsSubmitting(true);
 
-    axiosInstance
+    axios
       .postForm(
         "/api/board/add",
         {
@@ -98,7 +98,7 @@ export function BoardWrite() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
     if (refreshToken !== null) {
-      return axiosInstance
+      return axios
         .get("/refreshToken", {
           headers: { Authorization: `Bearer ${refreshToken}` },
         })

@@ -17,11 +17,12 @@ import {
 import { AddIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import axiosInstance from "../../axiosInstance";
+import axios from "axios";
+// import axiosInstance from "../../axiosInstance";
 
 function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
   const handleAddCount = () => {
-    axiosInstance
+    axios
       .get(`/cart/addCount/${cartItemId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
@@ -43,7 +44,7 @@ function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
 
   const handleSubtractCount = () => {
     if (count !== 1) {
-      axiosInstance
+      axios
         .get(`/cart/subtractCount/${cartItemId}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
@@ -95,7 +96,7 @@ export function CartDisplay({
   const handleDeleteItem = ({ item }) => {
     console.log(item.title + "삭제 요청 전송하는 함수");
 
-    axiosInstance
+    axios
       .delete(`/cart/delete/${item.cartItemId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
