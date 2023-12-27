@@ -232,7 +232,7 @@ export function NavBar(props) {
             window.location.reload();
           }}
         >
-          MUE_RECORDS SHOP
+          MUE_RECORDS SHOP!!
         </Text>
         <Box
           margin="8"
