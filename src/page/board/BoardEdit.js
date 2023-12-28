@@ -122,7 +122,7 @@ export function BoardEdit() {
 
     axios
       .putForm(
-        "https://api.muemalaf.click/api/board/edit/" + id,
+        "/api/board/edit/" + id,
         {
           title: board.title,
           artist: board.artist,
