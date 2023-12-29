@@ -256,7 +256,7 @@ export function NavBar(props) {
             onClick={() => navigate("/", { state: { param: "CD" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
-            Cd
+            CD
           </Button>
           <Button
             variant="ghost"
@@ -267,7 +267,7 @@ export function NavBar(props) {
             onClick={() => navigate("/", { state: { param: "VINYL" } })}
             leftIcon={<FontAwesomeIcon icon={faMusic} />}
           >
-            Vinyl
+            VINYL
           </Button>
           <Button
             variant="ghost"
