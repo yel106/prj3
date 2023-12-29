@@ -232,7 +232,7 @@ export function NavBar(props) {
             navigate("/");
           }}
         >
-          MUE_RECORDS SHOP
+          Play_Hub
         </Text>
         <Box
           margin="8"

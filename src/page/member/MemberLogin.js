@@ -1,12 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Center,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Img,
   Input,
   Spacer,
@@ -16,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 // import axiosInstance from "../../axiosInstance";
 
 export function MemberLogin() {
@@ -74,36 +76,48 @@ export function MemberLogin() {
 
   return (
     <Box p={10} borderRadius={10} mt={5} w="60%" ml="20%">
-      <Heading textAlign="center" mb={10}>
+      <Heading mb={20} textAlign="center">
         Login
       </Heading>
-      <FormControl mb={5}>
-        <FormLabel>아이디</FormLabel>
+      <Center mb={5}>
         <Input
           type="text"
           value={id}
-          placeholder="아이디를 입력하세요"
+          placeholder="아이디"
+          maxWidth="400"
+          borderColor="black"
           onChange={(e) => setId(e.target.value)}
         />
-      </FormControl>
-      <FormControl mb={5}>
-        <FormLabel>비밀번호</FormLabel>
+      </Center>
+      <Center mb={5}>
         <Input
           type="password"
           value={password}
-          placeholder="비밀번호를 입력하세요"
+          placeholder="비밀번호"
+          maxWidth="400"
+          borderColor="black"
+          mb={5}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </FormControl>
-      <Button colorScheme="blue" onClick={handleLogin}>
-        로그인
-      </Button>
-      <Spacer h={20} />
+      </Center>
+      <Center>
+        <Button
+          backgroundColor="grey"
+          color="white"
+          onClick={handleLogin}
+          mb={10}
+          size="md"
+          width="400px" // {400}
+        >
+          로그인
+        </Button>
+      </Center>
+
       <Divider />
       <Spacer h={10} />
-      <Heading size="mb" mb={5}>
+      <Center size="mb" mb={5}>
         소셜 로그인
-      </Heading>
+      </Center>
       <VStack spacing={3} mt={3}>
         <Button
           style={{
