@@ -1,10 +1,4 @@
-import {
-  AbsoluteCenter,
-  Box,
-  DrawerFooter,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Spacer, Text, Heading } from "@chakra-ui/react";
 import NavBar from "../page/component/NavBar";
 import { Outlet } from "react-router-dom";
 import React from "react";
@@ -17,6 +11,7 @@ export function HomeLayout() {
         <Outlet />
       </Box>
       <Spacer h={100} />
+
       <Box
         w="100%"
         h="150px"

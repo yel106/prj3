@@ -22,8 +22,6 @@ import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
 import { Search } from "./page/board/Search";
-import { Global } from "@emotion/react";
-import globalStyles from "./GlobalStyles";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -51,7 +49,6 @@ const routes = createBrowserRouter(
 function App() {
   return (
     <div>
-      <Global styles={globalStyles} />
       <RouterProvider router={routes} />
     </div>
   );

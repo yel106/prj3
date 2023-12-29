@@ -224,7 +224,7 @@ export function NavBar(props) {
           variant="ghost"
           w="100%"
           h="auto"
-          fontFamily="Constantia"
+          fontFamily="SOGANGUNIVERSITYTTF"
           fontSize="80px"
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
@@ -250,7 +250,7 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            fontFamily="Constantia"
+            fontFamily="SOGANGUNIVERSITYTTF"
             border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "CD" } })}
@@ -261,7 +261,7 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            fontFamily="Constantia"
+            fontFamily="SOGANGUNIVERSITYTTF"
             border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "VINYL" } })}
@@ -272,7 +272,7 @@ export function NavBar(props) {
           <Button
             variant="ghost"
             size="lg"
-            fontFamily="Constantia"
+            fontFamily="SOGANGUNIVERSITYTTF"
             border="0px solid red"
             _hover={{ bg: "none" }}
             onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
@@ -286,7 +286,7 @@ export function NavBar(props) {
                 borderRadius={0}
                 variant="ghost"
                 size="lg"
-                fontFamily="Constantia"
+                fontFamily="SOGANGUNIVERSITYTTF"
                 border="0px solid red"
                 leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
                 onClick={() => navigate("/signup")}
@@ -298,7 +298,7 @@ export function NavBar(props) {
               <Button
                 variant="ghost"
                 size="lg"
-                fontFamily="Constantia"
+                fontFamily="SOGANGUNIVERSITYTTF"
                 border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={() => navigate("/login")}
@@ -311,7 +311,7 @@ export function NavBar(props) {
               <Button
                 variant="ghost"
                 size="lg"
-                fontFamily="Constantia"
+                fontFamily="SOGANGUNIVERSITYTTF"
                 border="0px solid red"
                 _hover={{ bg: "none" }}
                 onClick={handleLogout}
